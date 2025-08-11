@@ -8,12 +8,14 @@ class SearchBarComponent extends StatelessWidget {
     this.hintText = 'Buscar personagem...',
     required this.onSubmitted,
     required this.onClear,
+    this.isLoading = false,
   });
 
   final TextEditingController controller;
   final String hintText;
   final ValueChanged<String> onSubmitted;
   final VoidCallback onClear;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +23,7 @@ class SearchBarComponent extends StatelessWidget {
       valueListenable: controller,
       builder: (context, value, _) {
         final hasText = value.text.isNotEmpty;
+
         return TextField(
           controller: controller,
           textInputAction: TextInputAction.search,
@@ -32,18 +35,34 @@ class SearchBarComponent extends StatelessWidget {
             filled: true,
             fillColor: AppColors.primaryColorLight,
             isDense: true,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 12,
-            ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             prefixIcon: const Icon(Icons.search, color: Colors.white),
-            suffixIcon: hasText
-                ? IconButton(
+
+            // spinner + clear quando tem texto
+            suffixIcon: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (isLoading)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 4),
+                    child: SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    ),
+                  ),
+                if (hasText)
+                  IconButton(
                     onPressed: onClear,
                     icon: const Icon(Icons.close, color: Colors.white),
                     tooltip: 'Limpar',
-                  )
-                : null,
+                  ),
+              ],
+            ),
+
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(color: Colors.white.withOpacity(0.35)),
@@ -52,9 +71,9 @@ class SearchBarComponent extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(color: Colors.white.withOpacity(0.35)),
             ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: Colors.white, width: 1),
+            focusedBorder: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              borderSide: BorderSide(color: Colors.white, width: 1),
             ),
           ),
         );

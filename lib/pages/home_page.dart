@@ -66,11 +66,13 @@ class _HomePageState extends State<HomePage> {
       body: FutureBuilder<PaginatedCharacters>(
         future: _charactersFuture,
         builder: (context, snapshot) {
+          final isLoading = snapshot.connectionState == ConnectionState.waiting;
+
           if (snapshot.hasData) {
             final data = snapshot.data!;
             final results = data.results;
             final apiPages = data.info.pages;
-            final totalPages = apiPages == 0 ? 1 : apiPages; // evita dropdown quebrar
+            final totalPages = apiPages == 0 ? 1 : apiPages;
             final showEmpty = results.isEmpty;
 
             final itemCount = showEmpty ? 3 : results.length + 2;
@@ -82,7 +84,7 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.symmetric(vertical: 7.5),
               itemCount: itemCount,
               itemBuilder: (context, index) {
-                // barra de busca
+                // barra de busca com spinner
                 if (index == 0) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 7.5, horizontal: 20),
@@ -90,6 +92,7 @@ class _HomePageState extends State<HomePage> {
                       controller: _searchController,
                       onSubmitted: _applySearch,
                       onClear: _clearSearch,
+                      isLoading: isLoading, 
                     ),
                   );
                 }
@@ -147,6 +150,7 @@ class _HomePageState extends State<HomePage> {
               ),
             );
           } else {
+            // carregamento inicial
             return const Center(child: CircularProgressIndicator());
           }
         },
