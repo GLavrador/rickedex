@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rick_morty_app/models/character.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
+import 'package:rick_morty_app/theme/app_typography.dart';
 
 class CharacterDetailsCard extends StatelessWidget {
   const CharacterDetailsCard({
@@ -125,42 +126,28 @@ class CharacterDetailsCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         '${character.status} - ${character.species.isNotEmpty ? character.species : 'Unknown'}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12.5,
-                        ),
+                        style: AppTypography.answer(context)
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 15),
 
-                const Text(
+                Text(
                   'Last known location:',
-                  style: TextStyle(
-                    fontSize: 12.5,
-                    color: Colors.white,
-                  ),
+                  style: AppTypography.attribute(context)
                 ),
                 const SizedBox(height: 4),
 
                 Text(
                   character.location.name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12.5,
-                    color: Colors.white,
-                  ),
+                  style: AppTypography.answer(context)
                 ),
                 const SizedBox(height: 15),
 
-                const Text(
+                Text(
                   'First seen in:',
-                  style: TextStyle(
-                    fontSize: 12.5,
-                    color: Colors.white,
-                  ),
+                  style: AppTypography.attribute(context)
                 ),
                 const SizedBox(height: 4),
 
@@ -168,30 +155,19 @@ class CharacterDetailsCard extends StatelessWidget {
                   firstSeenIn ?? '—',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12.5,
-                    color: Colors.white,
-                  ),
+                  style: AppTypography.answer(context)
                 ),
                 const SizedBox(height: 15),
 
-                const Text(
+                Text(
                   'Episodes:',
-                  style: TextStyle(
-                    fontSize: 12.5,
-                    color: Colors.white,
-                  ),
+                  style: AppTypography.attribute(context)
                 ),
                 const SizedBox(height: 4),
 
                 Text(
                   '${character.episode.length} appearances',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12.5,
-                    color: Colors.white,
-                  ),
+                  style: AppTypography.answer(context)
                 ),
 
                 // distância entre última frase e fim do card 43px
