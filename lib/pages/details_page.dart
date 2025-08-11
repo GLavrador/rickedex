@@ -22,10 +22,23 @@ class DetailsPage extends StatefulWidget {
 class _DetailsPageState extends State<DetailsPage> {
   Future<Character>? characterFuture;
 
+  static const double _minImageHeight = 160.0;
+  static const double _maxImageHeight = 380.0;
+
+  double _imageHeight = _minImageHeight;
+  double _imageAlignY = 0;
+
   @override
   void initState() {
     super.initState();
     characterFuture = Repository.getCharacterDetails(widget.characterId);
+  }
+
+  void _onImageDragUpdate(double dy) {
+    setState(() {
+      _imageHeight =
+          (_imageHeight + dy).clamp(_minImageHeight, _maxImageHeight);
+    });
   }
 
   @override
@@ -40,7 +53,15 @@ class _DetailsPageState extends State<DetailsPage> {
             final data = snapshot.data!;
             return ListView(
               children: [
-                CharacterDetailsCard(character: data),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 9.5),
+                  child: CharacterDetailsCard(
+                    character: data,
+                    imageHeight: _imageHeight,
+                    imageAlignmentY: _imageAlignY,
+                    onImageDragUpdate: _onImageDragUpdate,
+                  ),
+                ),
               ],
             );
           } else if (snapshot.hasError) {
