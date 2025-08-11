@@ -43,23 +43,50 @@ class CharacterDetailsCard extends StatelessWidget {
                 child: SizedBox(
                   height: imageHeight,
                   width: double.infinity,
-                  child: Image.network(
-                    character.image,
-                    fit: BoxFit.cover,
-                    alignment: Alignment(0, imageAlignmentY),
-                    loadingBuilder: (context, child, progress) {
-                      if (progress == null) return child;
-                      return SizedBox(
-                        height: imageHeight,
-                        child: const Center(child: CircularProgressIndicator()),
-                      );
-                    },
-                    errorBuilder: (_, __, ___) => SizedBox(
-                      height: imageHeight,
-                      child: Center(
-                        child: Icon(Icons.broken_image, color: AppColors.white),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Image.network(
+                        character.image,
+                        fit: BoxFit.cover,
+                        alignment: Alignment(0, imageAlignmentY),
+                        loadingBuilder: (context, child, progress) {
+                          if (progress == null) return child;
+                          return SizedBox(
+                            height: imageHeight,
+                            child: const Center(child: CircularProgressIndicator()),
+                          );
+                        },
+                        errorBuilder: (_, __, ___) => SizedBox(
+                          height: imageHeight,
+                          child: Center(
+                            child: Icon(Icons.broken_image, color: AppColors.white),
+                          ),
+                        ),
                       ),
-                    ),
+                      Positioned(
+                        right: 8,
+                        bottom: 8,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.35),
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Colors.white.withOpacity(0.6),
+                              width: 0.75,
+                            ),
+                          ),
+                          child: Icon(
+                            imageHeight >= 380.0
+                                ? Icons.expand_less
+                                : Icons.expand_more, 
+                            size: 16,
+                            color: Colors.white.withOpacity(0.9),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
