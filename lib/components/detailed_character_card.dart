@@ -101,13 +101,15 @@ class CharacterDetailsCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  character.name,
+                  character.name.toUpperCase(),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppColors.white,
                     fontWeight: FontWeight.w900,
-                    fontSize: 18,
+                    fontSize: 14.5,
+                    height: 1.0,
+                    letterSpacing: 0.0,
                   ),
                 ),
                 const SizedBox(height: 10),
