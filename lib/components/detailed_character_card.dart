@@ -125,7 +125,7 @@ class CharacterDetailsCard extends StatelessWidget {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        '${character.status} - ${character.species.isNotEmpty ? character.species : 'Unknown'}',
+                        '${character.status} - ${character.species.isNotEmpty ? character.species : 'Unknown'} - ${character.gender}',
                         style: AppTypography.answer(context)
                       ),
                     ),
@@ -153,6 +153,20 @@ class CharacterDetailsCard extends StatelessWidget {
 
                 Text(
                   firstSeenIn ?? '—',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.answer(context)
+                ),
+                const SizedBox(height: 15),
+
+                Text(
+                  'Origin:',
+                  style: AppTypography.attribute(context)
+                ),
+                const SizedBox(height: 4),
+
+                Text(
+                  character.origin.name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTypography.answer(context)
