@@ -21,7 +21,6 @@ class CharacterDetailsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final episodesCount = character.episode.length;
 
     return Card(
       color: AppColors.primaryColorLight,
@@ -95,24 +94,21 @@ class CharacterDetailsCard extends StatelessWidget {
           ),
 
           Padding(
-            padding:
-                const EdgeInsets.only(top: 12, left: 16, right: 16, bottom: 20),
+            padding: const EdgeInsets.only(top: 12, left: 16, right: 16, bottom: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  character.name.toUpperCase(),
+                  character.name,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.white,
+                  style: const TextStyle(
+                    color: Colors.white,
                     fontWeight: FontWeight.w900,
-                    fontSize: 14.5,
-                    height: 1.0,
-                    letterSpacing: 0.0,
+                    fontSize: 14.5, 
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 38),
 
                 Row(
                   children: [
@@ -138,7 +134,7 @@ class CharacterDetailsCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 15),
 
                 const Text(
                   'Last known location:',
@@ -147,6 +143,8 @@ class CharacterDetailsCard extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
+                const SizedBox(height: 4),
+
                 Text(
                   character.location.name,
                   style: const TextStyle(
@@ -155,8 +153,7 @@ class CharacterDetailsCard extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-
-                const SizedBox(height: 16),
+                const SizedBox(height: 15),
 
                 const Text(
                   'First seen in:',
@@ -165,6 +162,8 @@ class CharacterDetailsCard extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
+                const SizedBox(height: 4),
+
                 Text(
                   firstSeenIn ?? '—',
                   maxLines: 1,
@@ -175,8 +174,8 @@ class CharacterDetailsCard extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
+                const SizedBox(height: 15),
 
-                const SizedBox(height: 16),
                 const Text(
                   'Episodes:',
                   style: TextStyle(
@@ -184,17 +183,22 @@ class CharacterDetailsCard extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
+                const SizedBox(height: 4),
+
                 Text(
-                  '$episodesCount appearances',
+                  '${character.episode.length} appearances',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 12.5,
                     color: Colors.white,
                   ),
                 ),
+
+                // distância entre última frase e fim do card 43px
+                const SizedBox(height: 23),
               ],
             ),
-          ),
+          )
         ],
       ),
     );
