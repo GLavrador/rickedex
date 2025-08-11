@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:rick_morty_app/models/character.dart';
+import 'package:rick_morty_app/models/episode.dart';
 import 'package:rick_morty_app/models/paginated_characters.dart';
 
 abstract class Repository {
@@ -29,5 +30,11 @@ abstract class Repository {
   static Future<PaginatedCharacters> getCharactersFromUrl(String url) async {
     final response = await _dio.getUri(Uri.parse(url));
     return PaginatedCharacters.fromJson(response.data);
+  }
+
+  // buscar episódio a partir da URL
+  static Future<Episode> getEpisodeFromUrl(String url) async {
+    final response = await _dio.getUri(Uri.parse(url));
+    return Episode.fromJson(response.data);
   }
 }
