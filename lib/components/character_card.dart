@@ -28,23 +28,26 @@ class CharacterCard extends StatelessWidget {
           children: [
             Hero(
               tag: 'character-${character.id}',
-              child: Image.network(
-                character.image,
-                width: double.infinity,
-                height: 120,         
-                fit: BoxFit.cover,          
-                alignment: const Alignment(0, -0.25), // foca um pouco mais no topo
-                loadingBuilder: (context, child, progress) {
-                  if (progress == null) return child;
-                  return const SizedBox(
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+                child: Image.network(
+                  character.image,
+                  width: double.infinity,
+                  height: 120,         
+                  fit: BoxFit.cover,          
+                  alignment: const Alignment(0, -0.25), // foca um pouco mais no topo
+                  loadingBuilder: (context, child, progress) {
+                    if (progress == null) return child;
+                    return const SizedBox(
+                      height: 120,
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  },
+                  errorBuilder: (_, __, ___) => SizedBox(
                     height: 120,
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                },
-                errorBuilder: (_, __, ___) => SizedBox(
-                  height: 120,
-                  child: Center(
-                    child: Icon(Icons.broken_image, color: AppColors.white),
+                    child: Center(
+                      child: Icon(Icons.broken_image, color: AppColors.white),
+                    ),
                   ),
                 ),
               ),
