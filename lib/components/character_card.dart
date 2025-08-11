@@ -31,41 +31,42 @@ class CharacterCard extends StatelessWidget {
               child: Image.network(
                 character.image,
                 width: double.infinity,
-                height: 160,
-                fit: BoxFit.cover,
-                // feedback de carregamento
+                height: 120,         
+                fit: BoxFit.cover,          
+                alignment: const Alignment(0, -0.25), // foca um pouco mais no topo
                 loadingBuilder: (context, child, progress) {
                   if (progress == null) return child;
-                  return SizedBox(
-                    height: 160,
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        value: progress.expectedTotalBytes != null
-                            ? progress.cumulativeBytesLoaded /
-                                (progress.expectedTotalBytes!)
-                            : null,
-                      ),
-                    ),
+                  return const SizedBox(
+                    height: 120,
+                    child: Center(child: CircularProgressIndicator()),
                   );
                 },
                 errorBuilder: (_, __, ___) => SizedBox(
-                  height: 160,
+                  height: 120,
                   child: Center(
                     child: Icon(Icons.broken_image, color: AppColors.white),
                   ),
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Text(
-                character.name.toUpperCase(),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: AppColors.white,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 14.5,
+            SizedBox(
+              height: 40,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    character.name.toUpperCase(),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.white,
+                      fontWeight: FontWeight.w900, 
+                      fontSize: 14.5,
+                      height: 1.0,                
+                      letterSpacing: 0.0,
+                    ),
+                  ),
                 ),
               ),
             ),
