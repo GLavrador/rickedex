@@ -23,7 +23,6 @@ PreferredSizeWidget appBarComponent(BuildContext context, {bool isSecondPage = f
           child: Icon(
             isSecondPage ? Icons.arrow_back : Icons.menu,
             color: Color(0xFFE6E1E5),
-            size: 28,
           ),
         ),
       ),
@@ -37,7 +36,7 @@ PreferredSizeWidget appBarComponent(BuildContext context, {bool isSecondPage = f
           child: Icon(
             Icons.account_circle,
             color: Color(0xFFCAC4D0),
-            size: 30,
+            size: 26,
           ),
         ),
       ),
