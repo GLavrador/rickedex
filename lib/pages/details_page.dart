@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart'; // <-- adicionado
 import 'package:flutter/material.dart';
 import 'package:rick_morty_app/components/app_bar_component.dart';
 import 'package:rick_morty_app/components/detailed_character_card.dart';
@@ -26,12 +27,19 @@ class _DetailsPageState extends State<DetailsPage> {
   static const double _maxImageHeight = 380.0;
 
   double _imageHeight = _minImageHeight;
-  double _imageAlignY = 0;
+  final double _imageAlignY = 0;
+
+  Future<String?>? _firstSeenFuture;
 
   @override
   void initState() {
     super.initState();
-    characterFuture = Repository.getCharacterDetails(widget.characterId);
+    characterFuture =
+        Repository.getCharacterDetails(widget.characterId).then((c) {
+      // buscar o "first seen in"
+      _firstSeenFuture = _fetchFirstSeenName(c);
+      return c;
+    });
   }
 
   void _onImageDragUpdate(double dy) {
@@ -39,6 +47,18 @@ class _DetailsPageState extends State<DetailsPage> {
       _imageHeight =
           (_imageHeight + dy).clamp(_minImageHeight, _maxImageHeight);
     });
+  }
+
+  // buscar o nome do primeiro episódio via URL do próprio character
+  Future<String?> _fetchFirstSeenName(Character c) async {
+    if (c.episode.isEmpty) return null;
+    try {
+      final dio = Dio(BaseOptions(headers: {'Accept': 'application/json'}));
+      final resp = await dio.getUri(Uri.parse(c.episode.first));
+      return resp.data?['name'] as String?;
+    } catch (_) {
+      return null;
+    }
   }
 
   @override
@@ -51,18 +71,25 @@ class _DetailsPageState extends State<DetailsPage> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final data = snapshot.data!;
-            return ListView(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 9.5),
-                  child: CharacterDetailsCard(
-                    character: data,
-                    imageHeight: _imageHeight,
-                    imageAlignmentY: _imageAlignY,
-                    onImageDragUpdate: _onImageDragUpdate,
-                  ),
-                ),
-              ],
+            return FutureBuilder<String?>(
+              future: _firstSeenFuture,
+              builder: (context, epSnap) {
+                final firstSeenName = epSnap.data;
+                return ListView(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 9.5),
+                      child: CharacterDetailsCard(
+                        character: data,
+                        imageHeight: _imageHeight,
+                        imageAlignmentY: _imageAlignY,
+                        onImageDragUpdate: _onImageDragUpdate,
+                        firstSeenIn: firstSeenName,
+                      ),
+                    ),
+                  ],
+                );
+              },
             );
           } else if (snapshot.hasError) {
             return Center(

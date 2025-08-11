@@ -9,6 +9,7 @@ class CharacterDetailsCard extends StatelessWidget {
     required this.imageHeight,
     required this.imageAlignmentY,
     required this.onImageDragUpdate,
+    this.firstSeenIn,
   }) : super(key: key);
 
   final Character character;
@@ -16,6 +17,7 @@ class CharacterDetailsCard extends StatelessWidget {
   final double imageHeight;
   final double imageAlignmentY;
   final ValueChanged<double> onImageDragUpdate;
+  final String? firstSeenIn;
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +40,7 @@ class CharacterDetailsCard extends StatelessWidget {
               onVerticalDragUpdate: (details) =>
                   onImageDragUpdate(details.delta.dy),
               child: ClipRRect(
-                borderRadius:
-                    const BorderRadius.all(Radius.circular(10)),
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
                 child: SizedBox(
                   height: imageHeight,
                   width: double.infinity,
@@ -80,7 +81,7 @@ class CharacterDetailsCard extends StatelessWidget {
                           child: Icon(
                             imageHeight >= 380.0
                                 ? Icons.expand_less
-                                : Icons.expand_more, 
+                                : Icons.expand_more,
                             size: 16,
                             color: Colors.white.withOpacity(0.9),
                           ),
@@ -146,6 +147,26 @@ class CharacterDetailsCard extends StatelessWidget {
                 ),
                 Text(
                   character.location.name,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12.5,
+                    color: Colors.white,
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                const Text(
+                  'First seen in:',
+                  style: TextStyle(
+                    fontSize: 12.5,
+                    color: Colors.white,
+                  ),
+                ),
+                Text(
+                  firstSeenIn ?? '—',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 12.5,
