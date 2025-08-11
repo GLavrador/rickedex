@@ -8,16 +8,32 @@ abstract class Repository {
     BaseOptions(
       baseUrl: 'https://rickandmortyapi.com/api',
       headers: {'Accept': 'application/json'},
+      connectTimeout: 10000, 
+      receiveTimeout: 10000, 
     ),
   );
 
-  // lista paginada de personagens
-  static Future<PaginatedCharacters> getCharacters({int page = 1}) async {
-    final response = await _dio.get(
-      '/character',
-      queryParameters: {'page': page},
-    );
-    return PaginatedCharacters.fromJson(response.data);
+  // lista paginada de personagens e pesquisa
+  static Future<PaginatedCharacters> getCharacters({
+    int page = 1,
+    String? name,
+  }) async {
+    try {
+      final qp = <String, dynamic>{'page': page};
+      if (name != null && name.trim().isNotEmpty) {
+        qp['name'] = name.trim();
+      }
+      final response = await _dio.get('/character', queryParameters: qp);
+      return PaginatedCharacters.fromJson(response.data);
+    } on DioError catch (e) {
+      if (e.response?.statusCode == 404) {
+        return PaginatedCharacters(
+          info: Info(count: 0, pages: 0, next: null, prev: null),
+          results: const [],
+        );
+      }
+      rethrow;
+    }
   }
 
   // detalhes de um personagem

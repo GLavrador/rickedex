@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rick_morty_app/components/app_bar_component.dart';
 import 'package:rick_morty_app/components/character_card.dart';
 import 'package:rick_morty_app/components/pagination_bar.dart';
+import 'package:rick_morty_app/components/search_bar_component.dart';
 import 'package:rick_morty_app/data/repository.dart';
 import 'package:rick_morty_app/models/paginated_characters.dart';
 import 'package:rick_morty_app/pages/details_page.dart';
@@ -17,7 +18,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Future<PaginatedCharacters>? _charactersFuture;
+  final _searchController = TextEditingController();
+
   int _currentPage = 1;
+  String? _searchQuery; // termo atual
 
   @override
   void initState() {
@@ -25,11 +29,33 @@ class _HomePageState extends State<HomePage> {
     _loadPage(1);
   }
 
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   void _loadPage(int page) {
     setState(() {
       _currentPage = page;
-      _charactersFuture = Repository.getCharacters(page: page);
+      _charactersFuture = Repository.getCharacters(
+        page: page,
+        name: _searchQuery,
+      );
     });
+  }
+
+  void _applySearch(String value) {
+    _searchQuery = value.trim().isEmpty ? null : value.trim();
+    _loadPage(1); // sempre volta pra primeira página ao buscar
+  }
+
+  void _clearSearch() {
+    _searchController.clear();
+    if (_searchQuery != null) {
+      _searchQuery = null;
+      _loadPage(1);
+    }
   }
 
   @override
@@ -41,26 +67,50 @@ class _HomePageState extends State<HomePage> {
         future: _charactersFuture,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            final results = snapshot.data!.results;
-            final totalPages = snapshot.data!.info.pages;
+            final data = snapshot.data!;
+            final results = data.results;
+            final apiPages = data.info.pages;
+            final totalPages = apiPages == 0 ? 1 : apiPages; // evita dropdown quebrar
+            final showEmpty = results.isEmpty;
+
+            final itemCount = showEmpty ? 3 : results.length + 2;
+            // 0: header (busca)
+            // 1: (se vazio) empty state
+            // último: footer (paginaçao)
 
             return ListView.builder(
               padding: const EdgeInsets.symmetric(vertical: 7.5),
-              itemCount: results.length + 1, // +1 para o footer de paginação
+              itemCount: itemCount,
               itemBuilder: (context, index) {
-                if (index < results.length) {
-                  final character = results[index];
-                  return CharacterCard(
-                    character: character,
-                    onTap: () {
-                      Navigator.of(context).pushNamed(
-                        DetailsPage.routeId,
-                        arguments: character.id,
-                      );
-                    },
+                // barra de busca
+                if (index == 0) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 7.5, horizontal: 20),
+                    child: SearchBarComponent(
+                      controller: _searchController,
+                      onSubmitted: _applySearch,
+                      onClear: _clearSearch,
+                    ),
                   );
-                } else {
-                  // footer de paginação
+                }
+
+                // se não houver resultados
+                if (showEmpty && index == 1) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 24),
+                    child: Center(
+                      child: Text(
+                        'Nenhum personagem encontrado.',
+                        style: TextStyle(color: AppColors.white),
+                      ),
+                    ),
+                  );
+                }
+
+                // paginação: só mostra se houver 2+ páginas
+                final isLast = index == itemCount - 1;
+                if (isLast) {
+                  if (apiPages <= 1) return const SizedBox.shrink();
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: Center(
@@ -68,14 +118,25 @@ class _HomePageState extends State<HomePage> {
                         currentPage: _currentPage,
                         totalPages: totalPages,
                         onPageSelected: (page) {
-                          if (page != _currentPage) {
-                            _loadPage(page);
-                          }
+                          if (page != _currentPage) _loadPage(page);
                         },
                       ),
                     ),
                   );
                 }
+
+                // quando showEmpty == true, os cards não existem, então só cai aqui quando há resultados
+                final listIndex = showEmpty ? index - 2 : index - 1;
+                final character = results[listIndex];
+                return CharacterCard(
+                  character: character,
+                  onTap: () {
+                    Navigator.of(context).pushNamed(
+                      DetailsPage.routeId,
+                      arguments: character.id,
+                    );
+                  },
+                );
               },
             );
           } else if (snapshot.hasError) {
