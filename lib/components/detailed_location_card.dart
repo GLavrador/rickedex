@@ -11,80 +11,98 @@ class LocationDetailsCard extends StatelessWidget {
   });
 
   final LocationRM location;
-  final List<String>? residentNames; // pode ser nula enquanto carrega
+  final List<String>? residentNames;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(16, 20, 16, 32),
-      decoration: BoxDecoration(
-        color: AppColors.appBarColor,
-        borderRadius: const BorderRadius.all(Radius.circular(12)),
+    return Card(
+      color: AppColors.primaryColorLight,
+      clipBehavior: Clip.antiAlias,
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 20),
+        padding: const EdgeInsets.only(top: 12, left: 16, right: 16, bottom: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // título
+            // título (mesma tipografia do CharacterDetailsCard)
             Text(
               location.name,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: AppColors.white,
-                    fontWeight: FontWeight.w800,
-                  ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w900,
+                fontSize: 18,
+              ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 15),
 
-            _rowAttr(context, 'Type', location.type),
-            const SizedBox(height: 6),
-            _rowAttr(context, 'Dimension', location.dimension),
-            const SizedBox(height: 6),
-            _rowAttr(context, 'Residents', '${location.residentsCount}'),
+            // Type
+            Text('Type:', style: AppTypography.attribute(context)),
+            const SizedBox(height: 4),
+            Text(
+              location.type.isEmpty ? '—' : location.type,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.answer(context),
+            ),
+            const SizedBox(height: 15),
 
-            const SizedBox(height: 16),
+            // Dimension
+            Text('Dimension:', style: AppTypography.attribute(context)),
+            const SizedBox(height: 4),
+            Text(
+              location.dimension.isEmpty ? '—' : location.dimension,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.answer(context),
+            ),
+            const SizedBox(height: 15),
 
+            // Residents (count)
+            Text('Residents:', style: AppTypography.attribute(context)),
+            const SizedBox(height: 4),
+            Text(
+              '${location.residentsCount} resident(s)',
+              style: AppTypography.answer(context),
+            ),
+            const SizedBox(height: 15),
+
+            // Lista de alguns residentes (chips), se fornecida
             if (residentNames != null) ...[
               Text('Some residents:', style: AppTypography.attribute(context)),
               const SizedBox(height: 8),
               if (residentNames!.isEmpty)
-                Text('-', style: AppTypography.answer(context))
+                Text('—', style: AppTypography.answer(context))
               else
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
                   children: residentNames!
-                      .map((n) => Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryColorDark.withValues(alpha: 0.2),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(16)),
-                            ),
-                            child: Text(n, style: AppTypography.answer(context)),
-                          ))
+                      .map(
+                        (n) => Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryColorDark.withValues(alpha: 0.2),
+                            borderRadius: const BorderRadius.all(Radius.circular(16)),
+                          ),
+                          child: Text(n, style: AppTypography.answer(context)),
+                        ),
+                      )
                       .toList(),
                 ),
             ],
+
+            // distância final igual ao card de character
+            const SizedBox(height: 23),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _rowAttr(BuildContext context, String label, String value) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('$label: ', style: AppTypography.attribute(context)),
-        Expanded(
-          child: Text(
-            value.isEmpty ? '-' : value,
-            style: AppTypography.answer(context),
-          ),
-        ),
-      ],
     );
   }
 }
