@@ -1,8 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:rick_morty_app/models/character.dart';
-// import 'package:rick_morty_app/models/episode.dart';
+import 'package:rick_morty_app/models/episode.dart';
 import 'package:rick_morty_app/models/location.dart';
 import 'package:rick_morty_app/models/paginated_characters.dart';
+import 'package:rick_morty_app/models/paginated_episodes.dart' hide Info;
 import 'package:rick_morty_app/models/paginated_locations.dart' hide Info;
 
 abstract class Repository {
@@ -86,5 +87,35 @@ abstract class Repository {
   static Future<LocationRM> getLocationDetails(int id) async {
     final response = await _dio.get('/location/$id');
     return LocationRM.fromJson(response.data);
+  }
+
+   // lista paginada de episodios
+  static Future<PaginatedEpisodes> getEpisodes({
+    int page = 1,
+    String? name,
+    String? episodeCode,
+  }) async {
+    final qp = <String, dynamic>{'page': page};
+    if ((name ?? '').trim().isNotEmpty) qp['name'] = name!.trim();
+    if ((episodeCode ?? '').trim().isNotEmpty) qp['episode'] = episodeCode!.trim();
+
+    try {
+      final res = await _dio.get('/episode', queryParameters: qp);
+      return PaginatedEpisodes.fromJson(res.data);
+    } on DioError catch (e) {
+      if (e.response?.statusCode == 404) {
+        return PaginatedEpisodes.fromJson({
+          'info': {'count': 0, 'pages': 0, 'next': null, 'prev': null},
+          'results': [],
+        });
+      }
+      rethrow;
+    }
+  }
+
+  // detalhes de um episodio
+  static Future<Episode> getEpisodeDetails(int id) async {
+    final res = await _dio.get('/episode/$id');
+    return Episode.fromJson(res.data);
   }
 }
