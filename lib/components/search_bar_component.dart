@@ -5,7 +5,7 @@ class SearchBarComponent extends StatelessWidget {
   const SearchBarComponent({
     super.key,
     required this.controller,
-    this.hintText = 'Buscar personagem...',
+    this.hintText = 'Search character...',
     required this.onSubmitted,
     required this.onClear,
     this.isLoading = false,
