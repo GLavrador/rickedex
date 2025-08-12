@@ -36,7 +36,7 @@ class _FilterCharacterComponentState extends State<FilterCharacterComponent> {
       ),
       builder: (context, controller, child) {
         return IconButton(
-          icon: Icon(Icons.filter_list_rounded, color: AppColors.white, size: 30),
+          icon: Icon(Icons.filter_list_rounded, color: AppColors.white, size: 20),
           onPressed: () {
             if (controller.isOpen) {
               controller.close();
