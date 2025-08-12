@@ -106,23 +106,16 @@ class _HomePageState extends State<HomePage> {
                 if (index == 0) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 7.5, horizontal: 20),
-                    child: Stack(
-                      alignment: Alignment.centerRight,
-                      children: [
-                        Expanded(
-                          child: SearchBarComponent(
-                            controller: _searchController,
-                            onSubmitted: _applySearch,
-                            onClear: _clearSearch,
-                            isLoading: isLoading, 
-                          ),
-                        ),
-                        FilterCharacterComponent(
-                          currentFilters: _filters,
-                          onApplyFilters: _applyFilters,
-                        ),
-                      ],
-                    ),
+                    child: SearchBarComponent(
+                      controller: _searchController,
+                      onSubmitted: _applySearch,
+                      onClear: _clearSearch,
+                      isLoading: isLoading,
+                      trailingFilter: FilterCharacterComponent(
+                        currentFilters: _filters,
+                        onApplyFilters: _applyFilters,
+                      ), 
+                    )
                   );
                 }
 

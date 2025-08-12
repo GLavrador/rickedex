@@ -9,6 +9,7 @@ class SearchBarComponent extends StatelessWidget {
     required this.onSubmitted,
     required this.onClear,
     this.isLoading = false,
+    this.trailingFilter, 
   });
 
   final TextEditingController controller;
@@ -16,6 +17,7 @@ class SearchBarComponent extends StatelessWidget {
   final ValueChanged<String> onSubmitted;
   final VoidCallback onClear;
   final bool isLoading;
+  final Widget? trailingFilter;
 
   @override
   Widget build(BuildContext context) {
@@ -38,13 +40,12 @@ class SearchBarComponent extends StatelessWidget {
             contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             prefixIcon: const Icon(Icons.search, color: Colors.white),
 
-            // spinner + clear quando tem texto
             suffixIcon: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (isLoading)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 4),
+                  const Padding(
+                    padding: EdgeInsets.only(right: 4),
                     child: SizedBox(
                       width: 16,
                       height: 16,
@@ -60,7 +61,18 @@ class SearchBarComponent extends StatelessWidget {
                     icon: const Icon(Icons.close, color: Colors.white),
                     tooltip: 'Limpar',
                   ),
+
+                // Filtro no fim
+                if (trailingFilter != null)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: trailingFilter!,
+                  ),
               ],
+            ),
+
+            suffixIconConstraints: const BoxConstraints(
+              minHeight: 48,
             ),
 
             border: OutlineInputBorder(
