@@ -4,10 +4,10 @@ import 'package:rick_morty_app/theme/app_colors.dart';
 
 class CharacterCard extends StatelessWidget {
   const CharacterCard({
-    Key? key,
+    super.key,
     required this.character,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   final Character character;
   final VoidCallback onTap;

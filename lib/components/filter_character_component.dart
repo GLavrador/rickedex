@@ -6,10 +6,10 @@ class FilterCharacterComponent extends StatefulWidget {
   final Function(Map<String, String?>) onApplyFilters;
 
   const FilterCharacterComponent({
-    Key? key,
+    super.key,
     required this.currentFilters,
     required this.onApplyFilters,
-  }) : super(key: key);
+  });
 
   @override
   State<FilterCharacterComponent> createState() => _FilterCharacterComponentState();

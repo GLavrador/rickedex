@@ -31,7 +31,7 @@ class SearchBarComponent extends StatelessWidget {
           style: TextStyle(color: AppColors.white),
           decoration: InputDecoration(
             hintText: hintText,
-            hintStyle: TextStyle(color: AppColors.white.withOpacity(0.7)),
+            hintStyle: TextStyle(color: AppColors.white.withValues(alpha: 0.7)),
             filled: true,
             fillColor: AppColors.primaryColorLight,
             isDense: true,
@@ -65,11 +65,11 @@ class SearchBarComponent extends StatelessWidget {
 
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: Colors.white.withOpacity(0.35)),
+              borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.35)),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: Colors.white.withOpacity(0.35)),
+              borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.35)),
             ),
             focusedBorder: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(10)),

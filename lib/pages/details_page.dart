@@ -10,9 +10,9 @@ class DetailsPage extends StatefulWidget {
   static const routeId = '/details';
 
   const DetailsPage({
-    Key? key,
+    super.key,
     required this.characterId,
-  }) : super(key: key);
+  });
 
   final int characterId;
 

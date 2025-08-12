@@ -8,7 +8,7 @@ void main() {
 }
 
 class RickMortyApp extends StatelessWidget {
-  const RickMortyApp({Key? key}) : super(key: key);
+  const RickMortyApp({super.key});
 
   @override
   Widget build(BuildContext context) {

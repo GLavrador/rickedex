@@ -3,11 +3,11 @@ import 'package:rick_morty_app/theme/app_colors.dart';
 
 class PaginationBar extends StatelessWidget {
   const PaginationBar({
-    Key? key,
+    super.key,
     required this.currentPage,
     required this.totalPages,
     required this.onPageSelected,
-  }) : super(key: key);
+  });
 
   final int currentPage;
   final int totalPages;
@@ -49,7 +49,7 @@ class PaginationBar extends StatelessWidget {
       padding: EdgeInsets.zero,
       constraints: const BoxConstraints.tightFor(width: 36, height: 36),
       color: Colors.white,
-      disabledColor: Colors.white.withOpacity(0.35),
+      disabledColor: Colors.white.withValues(alpha: 0.35),
       style: IconButton.styleFrom(
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
@@ -63,7 +63,7 @@ class PaginationBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.white.withOpacity(0.35), width: 1),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.35), width: 1),
         color: AppColors.primaryColorLight,
       ),
       child: DropdownButtonHideUnderline(
