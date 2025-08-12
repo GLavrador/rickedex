@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rick_morty_app/pages/episode_details_page.dart';
+import 'package:rick_morty_app/pages/episodes_page.dart';
 import 'package:rick_morty_app/pages/location_details_page.dart';
 import 'package:rick_morty_app/pages/locations_page.dart';
 import 'pages/details_page.dart';
@@ -42,6 +44,15 @@ class RickMortyApp extends StatelessWidget {
               settings: settings,
               builder: (_) => LocationDetailsPage(locationId: id!),
             );
+          case EpisodesPage.routeId:
+            return MaterialPageRoute(
+              settings: settings, 
+              builder: (_) => const EpisodesPage());
+          case EpisodeDetailsPage.routeId:
+            final id = (settings.arguments as Map?)?['id'] as int?;
+            return MaterialPageRoute(
+              settings: settings, 
+              builder: (_) => EpisodeDetailsPage(episodeId: id!));
           default:
             return MaterialPageRoute(
               settings: settings,

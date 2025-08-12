@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rick_morty_app/pages/episodes_page.dart';
 import 'package:rick_morty_app/pages/home_page.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 import 'package:rick_morty_app/theme/app_images.dart';
@@ -81,6 +82,13 @@ class SideBarComponent extends StatelessWidget {
                       dense: true,
                       selected: _isRoute(context, locationsRoute),
                       onTap: () => _goToNamed(context, locationsRoute),
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.movie_outlined),
+                      title: const Text('Episodes'),
+                      dense: true,
+                      selected: _isRoute(context, EpisodesPage.routeId),
+                      onTap: () => _goToNamed(context, EpisodesPage.routeId),
                     ),
                   ],
                 ),
