@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart'; // <-- adicionado
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:rick_morty_app/components/app_bar_component.dart';
 import 'package:rick_morty_app/components/detailed_character_card.dart';
