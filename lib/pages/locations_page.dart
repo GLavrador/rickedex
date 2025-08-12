@@ -63,22 +63,45 @@ class _LocationsPageState extends State<LocationsPage> {
         builder: (context, snapshot) {
           final isLoading = snapshot.connectionState == ConnectionState.waiting;
 
-          if (snapshot.hasData) {
-            final data = snapshot.data!;
-            final results = data.results;
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-            return ListView(
-              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-              children: [
-                SearchBarComponent(
-                  controller: _searchController,
-                  hintText: 'Search location...',
-                  onSubmitted: _onSubmitted,
-                  onClear: _clearSearch,
-                  isLoading: isLoading,
-                ),
-                const SizedBox(height: 12),
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Ocorreu um erro.', style: TextStyle(color: AppColors.white)),
+            );
+          }
 
+          if (!snapshot.hasData) {
+            return const SizedBox.shrink();
+          }
+
+          final data = snapshot.data!;
+          final results = data.results;
+          final showEmpty = results.isEmpty;
+
+          return ListView(
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+            children: [
+              SearchBarComponent(
+                controller: _searchController,
+                hintText: 'Search location...',
+                onSubmitted: _onSubmitted,
+                onClear: _clearSearch,
+                isLoading: isLoading,
+              ),
+              const SizedBox(height: 12),
+
+              if (showEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 24),
+                  child: Center(
+                    child: Text('Nenhuma localização encontrada.',
+                        style: TextStyle(color: AppColors.white)),
+                  ),
+                )
+              else ...[
                 GridView.builder(
                   itemCount: results.length,
                   shrinkWrap: true,
@@ -96,35 +119,24 @@ class _LocationsPageState extends State<LocationsPage> {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            settings: const RouteSettings(
-                                name: LocationDetailsPage.routeId),
-                            builder: (_) =>
-                                LocationDetailsPage(locationId: loc.id),
+                            settings: const RouteSettings(name: LocationDetailsPage.routeId),
+                            builder: (_) => LocationDetailsPage(locationId: loc.id),
                           ),
                         );
                       },
                     );
                   },
                 ),
-
                 const SizedBox(height: 16),
-                PaginationBar(
-                  currentPage: _currentPage,
-                  totalPages: data.info.pages,
-                  onPageSelected: _load,
-                ),
+                if (data.info.pages > 0)
+                  PaginationBar(
+                    currentPage: _currentPage,
+                    totalPages: data.info.pages,
+                    onPageSelected: _load,
+                  ),
               ],
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                'Ocorreu um erro.',
-                style: TextStyle(color: AppColors.white),
-              ),
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
+            ],
+          );
         },
       ),
     );

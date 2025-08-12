@@ -56,28 +56,30 @@ abstract class Repository {
     return Character.fromJson(response.data);
   }
 
-  // // buscar episódio a partir da URL
-  // static Future<Episode> getEpisodeFromUrl(String url) async {
-  //   final response = await _dio.getUri(Uri.parse(url));
-  //   return Episode.fromJson(response.data);
-  // }
-
   // lista paginada de locations, com busca e filtros
   static Future<PaginatedLocations> getLocations({
-    int page = 1,
-    String? name,
-    String? type,
+    int page = 1, 
+    String? name, 
+    String? type, 
     String? dimension,
   }) async {
     final query = <String, dynamic>{'page': page};
-    if (name != null && name.trim().isNotEmpty) query['name'] = name.trim();
-    if (type != null && type.trim().isNotEmpty) query['type'] = type.trim();
-    if (dimension != null && dimension.trim().isNotEmpty) {
-      query['dimension'] = dimension.trim();
-    }
+    if ((name ?? '').trim().isNotEmpty) query['name'] = name!.trim();
+    if ((type ?? '').trim().isNotEmpty) query['type'] = type!.trim();
+    if ((dimension ?? '').trim().isNotEmpty) query['dimension'] = dimension!.trim();
 
-    final response = await _dio.get('/location', queryParameters: query);
-    return PaginatedLocations.fromJson(response.data);
+    try {
+      final res = await _dio.get('/location', queryParameters: query);
+      return PaginatedLocations.fromJson(res.data);
+    }  on DioError catch (e) {                         
+      if (e.response?.statusCode == 404) {
+        return PaginatedLocations.fromJson({
+          'info': {'count': 0, 'pages': 0, 'next': null, 'prev': null},
+          'results': [],
+        });
+      }
+      rethrow;
+    }
   }
 
   // detalhes de uma location
