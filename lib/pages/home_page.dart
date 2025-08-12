@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rick_morty_app/components/app_bar_component.dart';
 import 'package:rick_morty_app/components/character_card.dart';
+import 'package:rick_morty_app/components/filter_character_component.dart';
 import 'package:rick_morty_app/components/pagination_bar.dart';
 import 'package:rick_morty_app/components/search_bar_component.dart';
 import 'package:rick_morty_app/data/repository.dart';
@@ -22,6 +23,11 @@ class _HomePageState extends State<HomePage> {
 
   int _currentPage = 1;
   String? _searchQuery; // termo atual
+  Map<String, String?> _filters = {
+    'gender': null,
+    'status': null,
+    'species': null,
+  };
 
   @override
   void initState() {
@@ -41,6 +47,9 @@ class _HomePageState extends State<HomePage> {
       _charactersFuture = Repository.getCharacters(
         page: page,
         name: _searchQuery,
+        gender: _filters['gender'],
+        status: _filters['status'],
+        species: _filters['species'],
       );
     });
   }
@@ -56,6 +65,13 @@ class _HomePageState extends State<HomePage> {
       _searchQuery = null;
       _loadPage(1);
     }
+  }
+
+  void _applyFilters(Map<String, String?> newFilters) {
+    setState(() {
+      _filters = newFilters;
+    });
+    _loadPage(1); // volta pra página 1 ao aplicar filtros
   }
 
   @override
@@ -76,7 +92,7 @@ class _HomePageState extends State<HomePage> {
             final showEmpty = results.isEmpty;
 
             final itemCount = showEmpty ? 3 : results.length + 2;
-            // 0: header (busca)
+            // 0: header (busca + filtro)
             // 1: (se vazio) empty state
             // último: footer (paginaçao)
 
@@ -84,15 +100,26 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.symmetric(vertical: 7.5),
               itemCount: itemCount,
               itemBuilder: (context, index) {
-                // barra de busca com spinner
+                // barra de busca com filtro e spinner
                 if (index == 0) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 7.5, horizontal: 20),
-                    child: SearchBarComponent(
-                      controller: _searchController,
-                      onSubmitted: _applySearch,
-                      onClear: _clearSearch,
-                      isLoading: isLoading, 
+                    child: Stack(
+                      alignment: Alignment.centerRight,
+                      children: [
+                        Expanded(
+                          child: SearchBarComponent(
+                            controller: _searchController,
+                            onSubmitted: _applySearch,
+                            onClear: _clearSearch,
+                            isLoading: isLoading, 
+                          ),
+                        ),
+                        FilterCharacterComponent(
+                          currentFilters: _filters,
+                          onApplyFilters: _applyFilters,
+                        ),
+                      ],
                     ),
                   );
                 }
