@@ -13,15 +13,27 @@ abstract class Repository {
     ),
   );
 
-  // lista paginada de personagens e pesquisa
+  // lista paginada de personagens, pesquisa e filtro
   static Future<PaginatedCharacters> getCharacters({
     int page = 1,
     String? name,
+    String? status,
+    String? species,
+    String? gender,
   }) async {
     try {
       final qp = <String, dynamic>{'page': page};
       if (name != null && name.trim().isNotEmpty) {
         qp['name'] = name.trim();
+      }
+      if (status != null && status.trim().isNotEmpty) {
+        qp['status'] = status.trim();
+      }
+      if (species != null && species.trim().isNotEmpty) {
+        qp['species'] = species.trim();
+      }
+      if (gender != null && gender.trim().isNotEmpty) {
+        qp['gender'] = gender.trim();
       }
       final response = await _dio.get('/character', queryParameters: qp);
       return PaginatedCharacters.fromJson(response.data);
