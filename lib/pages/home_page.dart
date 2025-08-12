@@ -4,6 +4,7 @@ import 'package:rick_morty_app/components/character_card.dart';
 import 'package:rick_morty_app/components/filter_character_component.dart';
 import 'package:rick_morty_app/components/pagination_bar.dart';
 import 'package:rick_morty_app/components/search_bar_component.dart';
+import 'package:rick_morty_app/components/side_bar_component.dart';
 import 'package:rick_morty_app/data/repository.dart';
 import 'package:rick_morty_app/models/paginated_characters.dart';
 import 'package:rick_morty_app/pages/details_page.dart';
@@ -78,6 +79,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarComponent(context),
+      drawer: const SideBarComponent(),
       backgroundColor: AppColors.backgroundColor,
       body: FutureBuilder<PaginatedCharacters>(
         future: _charactersFuture,
