@@ -36,15 +36,6 @@ class EpisodeCard extends StatelessWidget {
                 style: AppTypography.answer(context),
               )),
             ]),
-            const SizedBox(height: 4),
-            Row(children: [
-              Text('Air date: ', style: AppTypography.attribute(context)),
-              Expanded(child: Text(
-                (episode.airDate).isEmpty ? '-' : episode.airDate,
-                maxLines: 1, overflow: TextOverflow.ellipsis,
-                style: AppTypography.answer(context),
-              )),
-            ]),
           ],
         ),
       ),
