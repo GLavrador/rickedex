@@ -10,19 +10,25 @@ PreferredSizeWidget appBarComponent(BuildContext context, {bool isSecondPage = f
     backgroundColor: AppColors.appBarColor,
     systemOverlayStyle: SystemUiOverlayStyle.dark,
 
-    leading: Align(
-      alignment: Alignment.topCenter,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 6),
-        child: GestureDetector(
-          onTap: () {
-            final currentRoute = ModalRoute.of(context)?.settings.name;
-            if (currentRoute == HomePage.routeId) return;
-            Navigator.pop(context);
-          },
-          child: Icon(
-            isSecondPage ? Icons.arrow_back : Icons.menu,
-            color: Color(0xFFE6E1E5),
+    leading: Builder(
+      builder: (ctx) => Align(
+        alignment: Alignment.topCenter,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 6),
+          child: GestureDetector(
+            onTap: () {
+              if (isSecondPage) {
+                final currentRoute = ModalRoute.of(ctx)?.settings.name;
+                if (currentRoute == HomePage.routeId) return;
+                Navigator.pop(ctx);
+              } else {
+                Scaffold.of(ctx).openDrawer();
+              }
+            },
+            child: Icon(
+              isSecondPage ? Icons.arrow_back : Icons.menu,
+              color: const Color(0xFFE6E1E5),
+            ),
           ),
         ),
       ),
