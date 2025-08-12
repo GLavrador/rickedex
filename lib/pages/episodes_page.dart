@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rick_morty_app/components/app_bar_component.dart';
 import 'package:rick_morty_app/components/episode_card.dart';
+import 'package:rick_morty_app/components/filter_episode_component.dart';
 import 'package:rick_morty_app/components/pagination_bar.dart';
 import 'package:rick_morty_app/components/search_bar_component.dart';
 import 'package:rick_morty_app/components/side_bar_component.dart';
@@ -21,6 +22,7 @@ class _EpisodesPageState extends State<EpisodesPage> {
   Future<PaginatedEpisodes>? _future;
   int _currentPage = 1;
   String? _searchQuery;
+  String? _seasonFilter;
 
   @override
   void initState() {
@@ -29,11 +31,15 @@ class _EpisodesPageState extends State<EpisodesPage> {
   }
 
   void _load(int page) {
-    setState(() {
-      _currentPage = page;
-      _future = Repository.getEpisodes(page: page, name: _searchQuery);
-    });
-  }
+  setState(() {
+    _currentPage = page;
+    _future = Repository.getEpisodes(
+      page: page,
+      name: _searchQuery,
+      episodeCode: _seasonFilter, 
+    );
+  });
+}
 
   void _onSubmitted(String value) {
     _searchQuery = value.trim().isEmpty ? null : value.trim();
@@ -77,6 +83,13 @@ class _EpisodesPageState extends State<EpisodesPage> {
                 onSubmitted: _onSubmitted,
                 onClear: _clearSearch,
                 isLoading: isLoading,
+                trailingFilter: FilterEpisodeComponent(
+                  selectedSeason: _seasonFilter,
+                  onChanged: (value) {
+                    _seasonFilter = value;     
+                    _load(1);                   
+                  },
+                ),
               ),
               const SizedBox(height: 12),
 
