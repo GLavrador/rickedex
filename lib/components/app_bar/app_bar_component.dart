@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rick_morty_app/pages/home_page.dart';
 import 'package:rick_morty_app/theme/app_images.dart';
-import '../theme/app_colors.dart';
+import '../../theme/app_colors.dart';
 
 PreferredSizeWidget appBarComponent(BuildContext context, {bool isSecondPage = false}) {
   return AppBar(

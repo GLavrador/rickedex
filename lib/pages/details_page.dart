@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:rick_morty_app/components/app_bar_component.dart';
-import 'package:rick_morty_app/components/detailed_character_card.dart';
+import 'package:rick_morty_app/components/app_bar/app_bar_component.dart';
+import 'package:rick_morty_app/components/detailed_cards/detailed_character_card.dart';
 import 'package:rick_morty_app/data/repository.dart';
 import 'package:rick_morty_app/models/character.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';

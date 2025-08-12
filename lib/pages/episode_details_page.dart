@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rick_morty_app/components/app_bar_component.dart';
-import 'package:rick_morty_app/components/detailed_episode_card.dart';
+import 'package:rick_morty_app/components/app_bar/app_bar_component.dart';
+import 'package:rick_morty_app/components/detailed_cards/detailed_episode_card.dart';
 import 'package:rick_morty_app/data/repository.dart';
 import 'package:rick_morty_app/models/episode.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';

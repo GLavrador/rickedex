@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:rick_morty_app/components/app_bar_component.dart';
-import 'package:rick_morty_app/components/episode_card.dart';
-import 'package:rick_morty_app/components/filter_episode_component.dart';
-import 'package:rick_morty_app/components/pagination_bar.dart';
-import 'package:rick_morty_app/components/search_bar_component.dart';
-import 'package:rick_morty_app/components/side_bar_component.dart';
+import 'package:rick_morty_app/components/app_bar/app_bar_component.dart';
+import 'package:rick_morty_app/components/cards/episode_card.dart';
+import 'package:rick_morty_app/components/filters/filter_episode_component.dart';
+import 'package:rick_morty_app/components/navigation/pagination_bar.dart';
+import 'package:rick_morty_app/components/navigation/search_bar_component.dart';
+import 'package:rick_morty_app/components/navigation/side_bar_component.dart';
 import 'package:rick_morty_app/models/paginated_episodes.dart';
 import 'package:rick_morty_app/pages/episode_details_page.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';

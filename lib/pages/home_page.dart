@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:rick_morty_app/components/app_bar_component.dart';
-import 'package:rick_morty_app/components/character_card.dart';
-import 'package:rick_morty_app/components/filter_character_component.dart';
-import 'package:rick_morty_app/components/pagination_bar.dart';
-import 'package:rick_morty_app/components/search_bar_component.dart';
-import 'package:rick_morty_app/components/side_bar_component.dart';
+import 'package:rick_morty_app/components/app_bar/app_bar_component.dart';
+import 'package:rick_morty_app/components/cards/character_card.dart';
+import 'package:rick_morty_app/components/filters/filter_character_component.dart';
+import 'package:rick_morty_app/components/navigation/pagination_bar.dart';
+import 'package:rick_morty_app/components/navigation/search_bar_component.dart';
+import 'package:rick_morty_app/components/navigation/side_bar_component.dart';
 import 'package:rick_morty_app/data/repository.dart';
 import 'package:rick_morty_app/models/paginated_characters.dart';
 import 'package:rick_morty_app/pages/details_page.dart';
