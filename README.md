@@ -163,6 +163,8 @@ Um app Flutter que funciona como uma Pokédex do universo de Rick and Morty: é 
 ├── test/                                              # testes (não utilizado no momento)
 ├── .dart_tool/                                        # artefatos internos do Dart/Flutter (gerado)
 ├── build/                                             # saídas de build (gerado)
+├── docs/                                              # documentos utilizados fora da lib
+│   └── screens.dart                                   # imagens para compor o readme
 ├── .flutter-plugins                                   # plugins do Flutter (gerado)
 ├── .flutter-plugins-dependencies                      # dependências dos plugins (gerado)
 ├── .idea/                                             # metadados de IDE (Android Studio)
