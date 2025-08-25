@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rick_morty_app/pages/episodes_page.dart';
+import 'package:rick_morty_app/pages/favorites_page.dart';
 import 'package:rick_morty_app/pages/home_page.dart';
+import 'package:rick_morty_app/pages/locations_page.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 import 'package:rick_morty_app/theme/app_images.dart';
 
@@ -19,8 +21,6 @@ class SideBarComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // se ainda não tiver LocationsPage, usa a string e registra depois no onGenerateRoute
-    const String locationsRoute = '/locations';
 
     return Drawer(
       backgroundColor: AppColors.appBarColor,
@@ -80,8 +80,8 @@ class SideBarComponent extends StatelessWidget {
                       leading: const Icon(Icons.public_outlined),
                       title: const Text('Locations'),
                       dense: true,
-                      selected: _isRoute(context, locationsRoute),
-                      onTap: () => _goToNamed(context, locationsRoute),
+                      selected: _isRoute(context, LocationsPage.routeId),
+                      onTap: () => _goToNamed(context, LocationsPage.routeId),
                     ),
                     ListTile(
                       leading: const Icon(Icons.movie_outlined),
@@ -89,6 +89,14 @@ class SideBarComponent extends StatelessWidget {
                       dense: true,
                       selected: _isRoute(context, EpisodesPage.routeId),
                       onTap: () => _goToNamed(context, EpisodesPage.routeId),
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.favorite_border),
+                      iconColor: AppColors.white,
+                      title: const Text('Favorites'),
+                      dense: true,
+                      selected: _isRoute(context, FavoritesPage.routeId),
+                      onTap: () => _goToNamed(context, FavoritesPage.routeId),
                     ),
                   ],
                 ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rick_morty_app/components/buttons/favorite_button.dart';
 import 'package:rick_morty_app/models/character.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 import 'package:rick_morty_app/theme/app_typography.dart';
@@ -96,99 +97,94 @@ class CharacterDetailsCard extends StatelessWidget {
 
           Padding(
             padding: const EdgeInsets.only(top: 12, left: 16, right: 16, bottom: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Stack(
               children: [
-                Text(
-                  character.name,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w900,
-                    fontSize: 14.5, 
-                  ),
-                ),
-                const SizedBox(height: 38),
-
-                Row(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: _statusColor(character.status),
-                        border: Border.all(color: AppColors.white, width: 1),
+                    Text(
+                      character.name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 14.5,
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    Expanded(
+                    const SizedBox(height: 38),
+
+                    Row(
+                      children: [
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: _statusColor(character.status),
+                            border: Border.all(color: AppColors.white, width: 1),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            '${character.status} - ${character.species.isNotEmpty ? character.species : 'Unknown'} - ${character.gender}',
+                            style: AppTypography.answer(context)
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+
+                    Text('Last known location:', style: AppTypography.attribute(context)),
+                    const SizedBox(height: 4),
+                    Text(character.location.name, style: AppTypography.answer(context)),
+                    const SizedBox(height: 15),
+
+                    Text('First seen in:', style: AppTypography.attribute(context)),
+                    const SizedBox(height: 4),
+                    Text(
+                      firstSeenIn ?? '—',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.answer(context)
+                    ),
+                    const SizedBox(height: 15),
+
+                    Text('Origin:', style: AppTypography.attribute(context)),
+                    const SizedBox(height: 4),
+                    Text(
+                      character.origin.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.answer(context),
+                    ),
+                    const SizedBox(height: 15),
+
+                    Text('Episodes:', style: AppTypography.attribute(context)),
+                    const SizedBox(height: 4),
+
+                    Padding(
+                      padding: const EdgeInsets.only(right: 36), 
                       child: Text(
-                        '${character.status} - ${character.species.isNotEmpty ? character.species : 'Unknown'} - ${character.gender}',
+                        '${character.episode.length} appearances',
                         style: AppTypography.answer(context)
                       ),
                     ),
+                    const SizedBox(height: 23),
                   ],
                 ),
-                const SizedBox(height: 15),
-
-                Text(
-                  'Last known location:',
-                  style: AppTypography.attribute(context)
+                Positioned(
+                  right: 0,
+                  bottom: 23,
+                  child: FavoriteButton(
+                    characterId: character.id,
+                    size: 26,
+                  ),
                 ),
-                const SizedBox(height: 4),
-
-                Text(
-                  character.location.name,
-                  style: AppTypography.answer(context)
-                ),
-                const SizedBox(height: 15),
-
-                Text(
-                  'First seen in:',
-                  style: AppTypography.attribute(context)
-                ),
-                const SizedBox(height: 4),
-
-                Text(
-                  firstSeenIn ?? '—',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTypography.answer(context)
-                ),
-                const SizedBox(height: 15),
-
-                Text(
-                  'Origin:',
-                  style: AppTypography.attribute(context)
-                ),
-                const SizedBox(height: 4),
-
-                Text(
-                  character.origin.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTypography.answer(context)
-                ),
-                const SizedBox(height: 15),
-
-                Text(
-                  'Episodes:',
-                  style: AppTypography.attribute(context)
-                ),
-                const SizedBox(height: 4),
-
-                Text(
-                  '${character.episode.length} appearances',
-                  style: AppTypography.answer(context)
-                ),
-
-                // distância entre última frase e fim do card 43px
-                const SizedBox(height: 23),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
