@@ -118,4 +118,16 @@ abstract class Repository {
     final res = await _dio.get('/episode/$id');
     return Episode.fromJson(res.data);
   }
+
+  static Future<List<Character>> getCharactersByIds(List<int> ids) async {
+    if (ids.isEmpty) return <Character>[];
+    final path = ids.length == 1 ? '/character/${ids.first}' : '/character/[${ids.join(',')}]';
+    final res = await _dio.get(path);
+
+    if (res.data is List) {
+      return (res.data as List).map((e) => Character.fromJson(e)).toList();
+    } else {
+      return [Character.fromJson(res.data)];
+    }
+  }
 }
