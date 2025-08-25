@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rick_morty_app/pages/episode_details_page.dart';
 import 'package:rick_morty_app/pages/episodes_page.dart';
+import 'package:rick_morty_app/pages/favorites_page.dart';
 import 'package:rick_morty_app/pages/location_details_page.dart';
 import 'package:rick_morty_app/pages/locations_page.dart';
 import 'pages/details_page.dart';
 import 'pages/home_page.dart';
+import 'package:rick_morty_app/services/favorites_service.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await FavoritesService.instance.init();
   runApp(const RickMortyApp());
 }
 
@@ -53,6 +57,10 @@ class RickMortyApp extends StatelessWidget {
             return MaterialPageRoute(
               settings: settings, 
               builder: (_) => EpisodeDetailsPage(episodeId: id!));
+          case FavoritesPage.routeId:
+            return MaterialPageRoute(
+              settings: settings, 
+              builder: (_) => const FavoritesPage());              
           default:
             return MaterialPageRoute(
               settings: settings,
