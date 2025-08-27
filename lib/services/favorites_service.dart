@@ -46,4 +46,9 @@ class FavoritesService {
     favorites.value = set;
     await _persist();
   }
+
+  Future<void> clearAll() async {
+  favorites.value = <int>{};
+  await _persist();
+}
 }
