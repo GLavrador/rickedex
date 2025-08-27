@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rick_morty_app/components/app_bar/app_bar_component.dart';
+import 'package:rick_morty_app/components/buttons/clear_favorite_button.dart';
 import 'package:rick_morty_app/components/grids/favorite_character_grid.dart';
 import 'package:rick_morty_app/components/navigation/side_bar_component.dart';
 import 'package:rick_morty_app/services/favorites_service.dart';
@@ -64,7 +65,20 @@ class _FavoritesPageState extends State<FavoritesPage> {
               ),
             );
           }
-          return CharacterGridView(characters: data);
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: const ClearFavoritesButton(),
+                ),
+              ),
+              Expanded(
+                child: CharacterGridView(characters: data),
+              ),
+            ],
+          );
         },
       ),
     );
