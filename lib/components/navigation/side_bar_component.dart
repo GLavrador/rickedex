@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:rick_morty_app/components/organization/section_label.dart';
 import 'package:rick_morty_app/pages/episodes_page.dart';
 import 'package:rick_morty_app/pages/favorites_page.dart';
 import 'package:rick_morty_app/pages/home_page.dart';
@@ -70,6 +71,9 @@ class SideBarComponent extends StatelessWidget {
                 child: ListView(
                   padding: EdgeInsets.zero,
                   children: [
+
+                    const SectionLabel('Pages'),
+                    
                     ListTile(
                       leading: const Icon(Icons.people_alt_outlined),
                       title: const Text('Characters'),
@@ -91,6 +95,9 @@ class SideBarComponent extends StatelessWidget {
                       selected: _isRoute(context, EpisodesPage.routeId),
                       onTap: () => _goToNamed(context, EpisodesPage.routeId),
                     ),
+
+                    const SectionLabel('Utilities'),
+                    
                     ListTile(
                       leading: const Icon(Icons.favorite_border),
                       iconColor: AppColors.white,
