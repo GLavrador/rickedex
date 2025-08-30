@@ -27,7 +27,7 @@ Um app Flutter que funciona como uma Pokédex do universo de Rick and Morty: é 
 
 ---
 
-## Funcionalidades
+## Funcionalidades Principais
 
 ### Personagens
 - **Listagem** (scroll + paginação)
@@ -96,6 +96,19 @@ Um app Flutter que funciona como uma Pokédex do universo de Rick and Morty: é 
   </a>
 </p>
 
+### Favoritos
+- **Página**: presente na sidebar
+- **Cards**: nome, imagem
+- **Ícone**: coração clicável sobre imagem dos cards
+<p>
+    <a href="docs/screens/sidebar_favorites.jpeg">
+    <img src="docs/screens/sidebar_favorites.jpeg" width="260" alt="Sidebar com Favoritos">
+  </a>
+  <a href="docs/screens/favorites_page.jpeg">
+    <img src="docs/screens/favorites_page.jpeg" width="260" alt="Página de Favoritos">
+  </a>
+</p>
+
 > Todas as funcionalidades acima estão implementadas e integradas à UI.
 
 ---
@@ -108,6 +121,7 @@ Um app Flutter que funciona como uma Pokédex do universo de Rick and Morty: é 
 - **Detalhes de Localidades**: card expandido com metadados completos
 - **Episodes**: listagem de episódios + barra de busca + filtro (ícone de funil ao lado da busca)
 - **Detalhes do Episódios**: card expandido com metadados completos
+- **Favoritos**: listagem de personagens favoritos previamente marcados
 
 ---
 ## Componentes & Arquitetura
@@ -135,10 +149,14 @@ Um app Flutter que funciona como uma Pokédex do universo de Rick and Morty: é 
 │   │   ├── filters/
 │   │   │   ├── filter_character_component.dart        # filtro por gênero/status/espécie (UI + callbacks)
 │   │   │   └── filter_episode_component.dart          # filtro por temporada (UI + callbacks)
-│   │   └── navigation/
-│   │       ├── pagination_bar.dart                    # barra de paginação (próxima/anterior/atual)
-│   │       ├── search_bar_component.dart              # busca por nome (parcial/total)
-│   │       └── side_bar_component.dart                # navegação lateral (acesso rápido às seções)
+│   │   ├── grids/
+│   │   │   └── favorite_character_grid.dart           # grid para exibição de personagens favoritos
+│   │   ├── navigation/
+│   │   │   ├── pagination_bar.dart                    # barra de paginação (próxima/anterior/atual)
+│   │   │   ├── search_bar_component.dart              # busca por nome (parcial/total)
+│   │   │   └── side_bar_component.dart                # navegação lateral (acesso rápido às seções)
+│   │   └── organization/
+│   │       └── section_label.dart                     # separador de sessões para sidebar
 │   ├── data/
 │   │   └── repository.dart                            # camada de acesso à API (HTTP, queries, paginação)
 │   ├── models/                                        # modelos de domínio + respostas paginadas
@@ -153,8 +171,11 @@ Um app Flutter que funciona como uma Pokédex do universo de Rick and Morty: é 
 │   │   ├── details_page.dart                          # detalhes do personagem (inclui pull-to-expand da imagem)
 │   │   ├── episodes_page.dart                         # listagem de episódios + paginação + filtro por temporada
 │   │   ├── episode_details_page.dart                  # detalhes do episódio (elenco do episódio)
+│   │   ├── favorites_page.dart                        # personagens favoritos marcados
 │   │   ├── locations_page.dart                        # listagem de localidades + paginação
 │   │   └── location_details_page.dart                 # detalhes da localidade (moradores/residentes)
+│   ├── services/
+│   │   └── favorite_service.dart                      # métodos da função favorites
 │   ├── theme/
 │   │   ├── app_colors.dart                            # paleta de cores centralizada
 │   │   ├── app_images.dart                            # paths/refs de imagens
