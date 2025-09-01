@@ -119,6 +119,7 @@ abstract class Repository {
     return Episode.fromJson(res.data);
   }
 
+  // personagens por uma lista de IDs
   static Future<List<Character>> getCharactersByIds(List<int> ids) async {
     if (ids.isEmpty) return <Character>[];
     final path = ids.length == 1 ? '/character/${ids.first}' : '/character/[${ids.join(',')}]';
