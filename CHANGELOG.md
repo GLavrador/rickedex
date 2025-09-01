@@ -7,6 +7,12 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Unreleased]
 
+### Added
+- Location Details: lista de residentes rolável exibindo todos os residentes, sem expandir demais o card.
+
+### Changed
+- Location Details: carregamento dos residentes passou a usar busca em lote (via `getCharactersByIds`) para reduzir chamadas à API.
+
 ## [v1.0.0] - 2025-08-30
 
 ### Added
