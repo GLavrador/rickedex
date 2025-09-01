@@ -8,10 +8,16 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 ## [Unreleased]
 
 ### Added
-- Location Details: lista de residentes rolável exibindo todos os residentes, sem expandir demais o card.
+- **Location Details**:
+  - Lista de residentes rolável exibindo todos os residentes, sem expandir demais o card.
+  - Chips de residentes clicáveis que abrem a tela do personagem.
 
 ### Changed
-- Location Details: carregamento dos residentes passou a usar busca em lote (via `getCharactersByIds`) para reduzir chamadas à API.
+- **Location Details**:
+  - Carregamento dos residentes passou a usar busca em lote (via `getCharactersByIds`) para reduzir chamadas à API.
+  - Card simplificado para receber residentCharacters e onResidentTap, removendo o uso de residentNames.
+
+- Página de Detalhes de Location: mensagem de erro padronizada para inglês ("An error occurred.").
 
 ## [v1.0.0] - 2025-08-30
 
