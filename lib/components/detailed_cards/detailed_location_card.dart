@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rick_morty_app/models/location.dart';
+import 'package:rick_morty_app/models/character.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 import 'package:rick_morty_app/theme/app_typography.dart';
 
@@ -7,11 +8,13 @@ class LocationDetailsCard extends StatelessWidget {
   const LocationDetailsCard({
     super.key,
     required this.location,
-    this.residentNames,
+    required this.residentCharacters,   
+    required this.onResidentTap,        
   });
 
   final LocationRM location;
-  final List<String>? residentNames;
+  final List<Character> residentCharacters;
+  final ValueChanged<int> onResidentTap; // recebe o id do personagem
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +30,6 @@ class LocationDetailsCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // título (mesma tipografia do CharacterDetailsCard)
             Text(
               location.name,
               maxLines: 2,
@@ -40,7 +42,6 @@ class LocationDetailsCard extends StatelessWidget {
             ),
             const SizedBox(height: 15),
 
-            // Type
             Text('Type:', style: AppTypography.attribute(context)),
             const SizedBox(height: 4),
             Text(
@@ -51,7 +52,6 @@ class LocationDetailsCard extends StatelessWidget {
             ),
             const SizedBox(height: 15),
 
-            // Dimension
             Text('Dimension:', style: AppTypography.attribute(context)),
             const SizedBox(height: 4),
             Text(
@@ -62,7 +62,6 @@ class LocationDetailsCard extends StatelessWidget {
             ),
             const SizedBox(height: 15),
 
-            // Residents (count)
             Text('Residents:', style: AppTypography.attribute(context)),
             const SizedBox(height: 4),
             Text(
@@ -71,34 +70,38 @@ class LocationDetailsCard extends StatelessWidget {
             ),
             const SizedBox(height: 15),
 
-            // Lista de alguns residentes (chips), se fornecida
-            if (residentNames != null) ...[
-              Text('Some residents:', style: AppTypography.attribute(context)),
+            if (residentCharacters.isNotEmpty) ...[
+              Text('Residents (${residentCharacters.length}):', style: AppTypography.attribute(context)),
               const SizedBox(height: 8),
-              if (residentNames!.isEmpty)
-                Text('—', style: AppTypography.answer(context))
-              else
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: residentNames!
-                      .map(
-                        (n) => Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 6,
+
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 170),
+                child: Scrollbar(
+                  thumbVisibility: true,
+                  child: SingleChildScrollView(
+                    primary: false, // importante p/ NÃO ocupar altura toda
+                    child: Wrap(
+                      spacing: 8, runSpacing: 8,
+                      children: residentCharacters.map((c) {
+                        return InkWell(
+                          borderRadius: const BorderRadius.all(Radius.circular(16)),
+                          onTap: () => onResidentTap(c.id),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryColorDark.withValues(alpha: 0.2),
+                              borderRadius: const BorderRadius.all(Radius.circular(16)),
+                            ),
+                            child: Text(c.name, style: AppTypography.answer(context)),
                           ),
-                          decoration: BoxDecoration(
-                            color: AppColors.primaryColorDark.withValues(alpha: 0.2),
-                            borderRadius: const BorderRadius.all(Radius.circular(16)),
-                          ),
-                          child: Text(n, style: AppTypography.answer(context)),
-                        ),
-                      )
-                      .toList(),
+                        );
+                      }).toList(),
+                    ),
+                  ),
                 ),
+              ),
             ],
 
-            // distância final igual ao card de character
             const SizedBox(height: 23),
           ],
         ),
