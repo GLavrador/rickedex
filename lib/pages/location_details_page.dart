@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:rick_morty_app/components/app_bar/app_bar_component.dart';
 import 'package:rick_morty_app/components/detailed_cards/detailed_location_card.dart';
@@ -29,23 +28,22 @@ class _LocationDetailsPageState extends State<LocationDetailsPage> {
   }
 
   Future<List<String>> _loadResidentNames() async {
-    final dio = Dio(BaseOptions(headers: {'Accept': 'application/json'}));
-    try {
-      final loc = await _locationFuture;
-      final urls = loc.residents.take(12).toList(); // limita para performance
-      final futures = urls.map((u) async {
-        try {
-          final resp = await dio.getUri(Uri.parse(u));
-          return (resp.data?['name'] as String?) ?? '';
-        } catch (_) {
-          return '';
-        }
-      });
-      final names = await Future.wait(futures);
-      return names.where((e) => e.isNotEmpty).toList();
-    } catch (_) {
-      return <String>[];
-    }
+    final loc = await _locationFuture; 
+    // extrai os IDs do final de cada URL (ex.: .../character/123)
+    final ids = loc.residents
+        .map((u) {
+          final m = RegExp(r'/(\d+)$').firstMatch(u);
+          return m != null ? int.tryParse(m.group(1)!) : null;
+        })
+        .whereType<int>()
+        .toList();
+
+    if (ids.isEmpty) return <String>[];
+
+    final characters = await Repository.getCharactersByIds(ids);
+    // ordena por nome
+    characters.sort((a, b) => a.name.compareTo(b.name));
+    return characters.map((c) => c.name).toList();
   }
 
   @override
