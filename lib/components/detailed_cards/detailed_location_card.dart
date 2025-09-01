@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rick_morty_app/models/location.dart';
+import 'package:rick_morty_app/models/character.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 import 'package:rick_morty_app/theme/app_typography.dart';
 
@@ -7,11 +8,13 @@ class LocationDetailsCard extends StatelessWidget {
   const LocationDetailsCard({
     super.key,
     required this.location,
-    this.residentNames,
+    required this.residentCharacters,   
+    required this.onResidentTap,        
   });
 
   final LocationRM location;
-  final List<String>? residentNames;
+  final List<Character> residentCharacters;
+  final ValueChanged<int> onResidentTap; // recebe o id do personagem
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +42,6 @@ class LocationDetailsCard extends StatelessWidget {
             ),
             const SizedBox(height: 15),
 
-            // Type
             Text('Type:', style: AppTypography.attribute(context)),
             const SizedBox(height: 4),
             Text(
@@ -50,7 +52,6 @@ class LocationDetailsCard extends StatelessWidget {
             ),
             const SizedBox(height: 15),
 
-            // Dimension
             Text('Dimension:', style: AppTypography.attribute(context)),
             const SizedBox(height: 4),
             Text(
@@ -61,7 +62,6 @@ class LocationDetailsCard extends StatelessWidget {
             ),
             const SizedBox(height: 15),
 
-            // Residents (count)
             Text('Residents:', style: AppTypography.attribute(context)),
             const SizedBox(height: 4),
             Text(
@@ -70,8 +70,8 @@ class LocationDetailsCard extends StatelessWidget {
             ),
             const SizedBox(height: 15),
 
-            if (residentNames != null) ...[
-              Text('Residents:', style: AppTypography.attribute(context)),
+            if (residentCharacters.isNotEmpty) ...[
+              Text('Residents (${residentCharacters.length}):', style: AppTypography.attribute(context)),
               const SizedBox(height: 8),
 
               ConstrainedBox(
@@ -82,21 +82,26 @@ class LocationDetailsCard extends StatelessWidget {
                     primary: false, // importante p/ NÃO ocupar altura toda
                     child: Wrap(
                       spacing: 8, runSpacing: 8,
-                      children: residentNames!.map((n) => Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: AppColors.primaryColorDark.withValues(alpha: 0.2),
+                      children: residentCharacters.map((c) {
+                        return InkWell(
                           borderRadius: const BorderRadius.all(Radius.circular(16)),
-                        ),
-                        child: Text(n, style: AppTypography.answer(context)),
-                      )).toList(),
+                          onTap: () => onResidentTap(c.id),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryColorDark.withValues(alpha: 0.2),
+                              borderRadius: const BorderRadius.all(Radius.circular(16)),
+                            ),
+                            child: Text(c.name, style: AppTypography.answer(context)),
+                          ),
+                        );
+                      }).toList(),
                     ),
                   ),
                 ),
               ),
             ],
 
-            // distância final igual ao card de character
             const SizedBox(height: 23),
           ],
         ),

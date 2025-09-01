@@ -3,13 +3,13 @@ import 'package:rick_morty_app/components/app_bar/app_bar_component.dart';
 import 'package:rick_morty_app/components/detailed_cards/detailed_location_card.dart';
 import 'package:rick_morty_app/data/repository.dart';
 import 'package:rick_morty_app/models/location.dart';
+import 'package:rick_morty_app/models/character.dart';          
+import 'package:rick_morty_app/pages/details_page.dart';        
 import 'package:rick_morty_app/theme/app_colors.dart';
 
 class LocationDetailsPage extends StatefulWidget {
   static const routeId = '/location_details';
-
   const LocationDetailsPage({super.key, required this.locationId});
-
   final int locationId;
 
   @override
@@ -18,18 +18,17 @@ class LocationDetailsPage extends StatefulWidget {
 
 class _LocationDetailsPageState extends State<LocationDetailsPage> {
   late Future<LocationRM> _locationFuture;
-  Future<List<String>>? _residentNamesFuture;
+  Future<List<Character>>? _residentCharsFuture;   // muda de string para character
 
   @override
   void initState() {
     super.initState();
     _locationFuture = Repository.getLocationDetails(widget.locationId);
-    _residentNamesFuture = _loadResidentNames();
+    _residentCharsFuture = _loadResidents();
   }
 
-  Future<List<String>> _loadResidentNames() async {
-    final loc = await _locationFuture; 
-    // extrai os IDs do final de cada URL (ex.: .../character/123)
+  Future<List<Character>> _loadResidents() async {
+    final loc = await _locationFuture;
     final ids = loc.residents
         .map((u) {
           final m = RegExp(r'/(\d+)$').firstMatch(u);
@@ -38,12 +37,12 @@ class _LocationDetailsPageState extends State<LocationDetailsPage> {
         .whereType<int>()
         .toList();
 
-    if (ids.isEmpty) return <String>[];
+    if (ids.isEmpty) return <Character>[];
 
     final characters = await Repository.getCharactersByIds(ids);
     // ordena por nome
     characters.sort((a, b) => a.name.compareTo(b.name));
-    return characters.map((c) => c.name).toList();
+    return characters;
   }
 
   @override
@@ -56,15 +55,23 @@ class _LocationDetailsPageState extends State<LocationDetailsPage> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final loc = snapshot.data!;
-            return FutureBuilder<List<String>>(
-              future: _residentNamesFuture,
+            return FutureBuilder<List<Character>>(
+              future: _residentCharsFuture,
               builder: (context, resSnap) {
-                final names = resSnap.data;
+                final chars = resSnap.data ?? const <Character>[];
                 return ListView(
                   children: [
                     LocationDetailsCard(
                       location: loc,
-                      residentNames: names,
+                      residentCharacters: chars,
+                      onResidentTap: (id) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            settings: const RouteSettings(name: DetailsPage.routeId),
+                            builder: (_) => DetailsPage(characterId: id),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 );
@@ -72,10 +79,7 @@ class _LocationDetailsPageState extends State<LocationDetailsPage> {
             );
           } else if (snapshot.hasError) {
             return Center(
-              child: Text(
-                'Ocorreu um erro.',
-                style: TextStyle(color: AppColors.white),
-              ),
+              child: Text('An error occurred.', style: TextStyle(color: AppColors.white)),
             );
           } else {
             return const Center(child: CircularProgressIndicator());
