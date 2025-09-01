@@ -27,7 +27,6 @@ class LocationDetailsCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // título (mesma tipografia do CharacterDetailsCard)
             Text(
               location.name,
               maxLines: 2,
@@ -71,31 +70,30 @@ class LocationDetailsCard extends StatelessWidget {
             ),
             const SizedBox(height: 15),
 
-            // Lista de alguns residentes (chips), se fornecida
             if (residentNames != null) ...[
-              Text('Some residents:', style: AppTypography.attribute(context)),
+              Text('Residents:', style: AppTypography.attribute(context)),
               const SizedBox(height: 8),
-              if (residentNames!.isEmpty)
-                Text('—', style: AppTypography.answer(context))
-              else
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: residentNames!
-                      .map(
-                        (n) => Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.primaryColorDark.withValues(alpha: 0.2),
-                            borderRadius: const BorderRadius.all(Radius.circular(16)),
-                          ),
-                          child: Text(n, style: AppTypography.answer(context)),
+
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 170),
+                child: Scrollbar(
+                  thumbVisibility: true,
+                  child: SingleChildScrollView(
+                    primary: false, // importante p/ NÃO ocupar altura toda
+                    child: Wrap(
+                      spacing: 8, runSpacing: 8,
+                      children: residentNames!.map((n) => Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryColorDark.withValues(alpha: 0.2),
+                          borderRadius: const BorderRadius.all(Radius.circular(16)),
                         ),
-                      )
-                      .toList(),
+                        child: Text(n, style: AppTypography.answer(context)),
+                      )).toList(),
+                    ),
+                  ),
                 ),
+              ),
             ],
 
             // distância final igual ao card de character
