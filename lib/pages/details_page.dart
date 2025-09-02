@@ -5,6 +5,8 @@ import 'package:rick_morty_app/components/detailed_cards/detailed_character_card
 import 'package:rick_morty_app/data/repository.dart';
 import 'package:rick_morty_app/models/character.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
+import 'package:rick_morty_app/utils/id_from_url.dart';
+import 'package:rick_morty_app/pages/location_details_page.dart';
 
 class DetailsPage extends StatefulWidget {
   static const routeId = '/details';
@@ -75,6 +77,9 @@ class _DetailsPageState extends State<DetailsPage> {
               future: _firstSeenFuture,
               builder: (context, epSnap) {
                 final firstSeenName = epSnap.data;
+                final locId = idFromUrl(data.location.url);
+                final orgId = idFromUrl(data.origin.url);
+
                 return ListView(
                   children: [
                     Padding(
@@ -85,6 +90,24 @@ class _DetailsPageState extends State<DetailsPage> {
                         imageAlignmentY: _imageAlignY,
                         onImageDragUpdate: _onImageDragUpdate,
                         firstSeenIn: firstSeenName,
+                        locationId: locId,
+                        onLocationTap: (id) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              settings: const RouteSettings(name: LocationDetailsPage.routeId),
+                              builder: (_) => LocationDetailsPage(locationId: id),
+                            ),
+                          );
+                        },
+                        originId: orgId,
+                        onOriginTap: (id) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              settings: const RouteSettings(name: LocationDetailsPage.routeId),
+                              builder: (_) => LocationDetailsPage(locationId: id),
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ],
@@ -94,7 +117,7 @@ class _DetailsPageState extends State<DetailsPage> {
           } else if (snapshot.hasError) {
             return Center(
               child: Text(
-                'Ocorreu um erro.',
+                'An error occurred.',
                 style: TextStyle(color: AppColors.white),
               ),
             );
