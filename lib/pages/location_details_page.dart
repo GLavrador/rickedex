@@ -6,6 +6,7 @@ import 'package:rick_morty_app/models/location.dart';
 import 'package:rick_morty_app/models/character.dart';          
 import 'package:rick_morty_app/pages/details_page.dart';        
 import 'package:rick_morty_app/theme/app_colors.dart';
+import 'package:rick_morty_app/utils/id_from_url.dart';
 
 class LocationDetailsPage extends StatefulWidget {
   static const routeId = '/location_details';
@@ -30,17 +31,11 @@ class _LocationDetailsPageState extends State<LocationDetailsPage> {
   Future<List<Character>> _loadResidents() async {
     final loc = await _locationFuture;
     final ids = loc.residents
-        .map((u) {
-          final m = RegExp(r'/(\d+)$').firstMatch(u);
-          return m != null ? int.tryParse(m.group(1)!) : null;
-        })
-        .whereType<int>()
-        .toList();
+        .map(idFromUrl).whereType<int>().toSet().toList();
 
-    if (ids.isEmpty) return <Character>[];
+    if (ids.isEmpty) return const <Character>[];
 
     final characters = await Repository.getCharactersByIds(ids);
-    // ordena por nome
     characters.sort((a, b) => a.name.compareTo(b.name));
     return characters;
   }
