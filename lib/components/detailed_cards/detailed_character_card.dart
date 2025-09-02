@@ -17,6 +17,8 @@ class CharacterDetailsCard extends StatelessWidget {
     this.onLocationTap,
     this.originId,
     this.onOriginTap,
+    this.firstEpisodeId,
+    this.onFirstEpisodeTap,
   });
 
   final Character character;
@@ -30,6 +32,8 @@ class CharacterDetailsCard extends StatelessWidget {
   final ValueChanged<int>? onLocationTap;
   final int? originId;
   final ValueChanged<int>? onOriginTap;
+  final int? firstEpisodeId;
+  final ValueChanged<int>? onFirstEpisodeTap;
 
   @override
   Widget build(BuildContext context) {
@@ -158,22 +162,22 @@ class CharacterDetailsCard extends StatelessWidget {
 
                     Text('First seen in:', style: AppTypography.attribute(context)),
                     const SizedBox(height: 4),
-                    Text(
-                      firstSeenIn ?? '—',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTypography.answer(context)
+                    _linkOrText(
+                      context,
+                      text: firstSeenIn ?? '—',
+                      canTap: firstEpisodeId != null && onFirstEpisodeTap != null,
+                      onTap: () => onFirstEpisodeTap?.call(firstEpisodeId!),
                     ),
                     const SizedBox(height: 15),
 
                     Text('Origin:', style: AppTypography.attribute(context)),
                     const SizedBox(height: 4),
                     _linkOrText(
-                        context,
-                        text: character.origin.name,
-                        canTap: originId != null && onOriginTap != null,
-                        onTap: () => onOriginTap?.call(originId!),
-                      ),
+                      context,
+                      text: character.origin.name,
+                      canTap: originId != null && onOriginTap != null,
+                      onTap: () => onOriginTap?.call(originId!),
+                    ),
                     const SizedBox(height: 15),
 
                     Text('Episodes:', style: AppTypography.attribute(context)),

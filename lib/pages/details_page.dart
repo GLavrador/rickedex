@@ -7,6 +7,7 @@ import 'package:rick_morty_app/models/character.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 import 'package:rick_morty_app/utils/id_from_url.dart';
 import 'package:rick_morty_app/pages/location_details_page.dart';
+import 'package:rick_morty_app/pages/episode_details_page.dart';
 
 class DetailsPage extends StatefulWidget {
   static const routeId = '/details';
@@ -79,6 +80,8 @@ class _DetailsPageState extends State<DetailsPage> {
                 final firstSeenName = epSnap.data;
                 final locId = idFromUrl(data.location.url);
                 final orgId = idFromUrl(data.origin.url);
+                final firstEpisodeUrl = data.episode.isNotEmpty ? data.episode.first : null;
+                final firstEpisodeId = idFromUrl(firstEpisodeUrl);
 
                 return ListView(
                   children: [
@@ -105,6 +108,15 @@ class _DetailsPageState extends State<DetailsPage> {
                             MaterialPageRoute(
                               settings: const RouteSettings(name: LocationDetailsPage.routeId),
                               builder: (_) => LocationDetailsPage(locationId: id),
+                            ),
+                          );
+                        },
+                        firstEpisodeId: firstEpisodeId,
+                        onFirstEpisodeTap: (id) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              settings: const RouteSettings(name: EpisodeDetailsPage.routeId),
+                              builder: (_) => EpisodeDetailsPage(episodeId: id),
                             ),
                           );
                         },
