@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rick_morty_app/models/character.dart';
 import 'package:rick_morty_app/models/episode.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 import 'package:rick_morty_app/theme/app_typography.dart';
@@ -7,9 +8,13 @@ class DetailedEpisodeCard extends StatelessWidget {
   const DetailedEpisodeCard({
     super.key,
     required this.episode,
+    this.characters,  
+    this.onCharacterTap,
   });
 
   final Episode episode;
+  final List<Character>? characters;       
+  final ValueChanged<int>? onCharacterTap;
 
   @override
   Widget build(BuildContext context) {
@@ -56,14 +61,41 @@ class DetailedEpisodeCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: AppTypography.answer(context),
             ),
-            const SizedBox(height: 15),
 
-            Text('Characters:', style: AppTypography.attribute(context)),
-            const SizedBox(height: 4),
-            Text(
-              '${episode.characters.length} appearance(s)',
-              style: AppTypography.answer(context),
-            ),
+            if (characters != null && characters!.isNotEmpty) ...[
+              const SizedBox(height: 15),
+
+              Text('Characters (${episode.characters.length}):', style: AppTypography.attribute(context)),
+              const SizedBox(height: 8),
+
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 170),
+                child: Scrollbar(
+                  thumbVisibility: true,
+                  child: SingleChildScrollView(
+                    primary: false,
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: characters!.map((c) {
+                        return InkWell(
+                          borderRadius: const BorderRadius.all(Radius.circular(16)),
+                          onTap: onCharacterTap == null ? null : () => onCharacterTap!(c.id),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryColorDark.withValues(alpha: 0.2),
+                              borderRadius: const BorderRadius.all(Radius.circular(16)),
+                            ),
+                            child: Text(c.name, style: AppTypography.answer(context)),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ),
+            ],
 
             const SizedBox(height: 23),
           ],

@@ -14,6 +14,9 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - **Character Details**:
   - Links clicáveis para Last known location e Origin que abrem a tela de Location.
   - Link clicável em First seen in que abre a tela de Episode.
+- **Episode Details**:
+  - Exibição de todos os personagens como chips roláveis.
+  - Chips clicáveis que abrem a tela de Character.
 - **Utils**:
   - Helper `id_from_url.dart` para extrair o ID a partir de URLs.
 
