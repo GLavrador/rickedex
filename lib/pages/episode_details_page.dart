@@ -23,7 +23,7 @@ class EpisodeDetailsPage extends StatelessWidget {
           }
           if (snapshot.hasError || !snapshot.hasData) {
             return Center(
-              child: Text('Ocorreu um erro.', style: TextStyle(color: AppColors.white)),
+              child: Text('An error occurred.', style: TextStyle(color: AppColors.white)),
             );
           }
           final ep = snapshot.data!;

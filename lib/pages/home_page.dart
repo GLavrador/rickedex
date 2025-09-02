@@ -125,7 +125,7 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.symmetric(vertical: 24),
                     child: Center(
                       child: Text(
-                        'Nenhum personagem encontrado.',
+                        'No character found.',
                         style: TextStyle(color: AppColors.white),
                       ),
                     ),
@@ -167,7 +167,7 @@ class _HomePageState extends State<HomePage> {
           } else if (snapshot.hasError) {
             return Center(
               child: Text(
-                'Ocorreu um erro.',
+                'An error occurred.',
                 style: TextStyle(color: AppColors.white),
               ),
             );

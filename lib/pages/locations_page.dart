@@ -69,7 +69,7 @@ class _LocationsPageState extends State<LocationsPage> {
 
           if (snapshot.hasError) {
             return Center(
-              child: Text('Ocorreu um erro.', style: TextStyle(color: AppColors.white)),
+              child: Text('An error occurred.', style: TextStyle(color: AppColors.white)),
             );
           }
 
@@ -97,7 +97,7 @@ class _LocationsPageState extends State<LocationsPage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 24),
                   child: Center(
-                    child: Text('Nenhuma localização encontrada.',
+                    child: Text('No location found.',
                         style: TextStyle(color: AppColors.white)),
                   ),
                 )
