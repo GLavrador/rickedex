@@ -12,6 +12,13 @@ class CharacterDetailsCard extends StatelessWidget {
     required this.imageAlignmentY,
     required this.onImageDragUpdate,
     this.firstSeenIn,
+
+    this.locationId,
+    this.onLocationTap,
+    this.originId,
+    this.onOriginTap,
+    this.firstEpisodeId,
+    this.onFirstEpisodeTap,
   });
 
   final Character character;
@@ -20,6 +27,13 @@ class CharacterDetailsCard extends StatelessWidget {
   final double imageAlignmentY;
   final ValueChanged<double> onImageDragUpdate;
   final String? firstSeenIn;
+
+  final int? locationId;
+  final ValueChanged<int>? onLocationTap;
+  final int? originId;
+  final ValueChanged<int>? onOriginTap;
+  final int? firstEpisodeId;
+  final ValueChanged<int>? onFirstEpisodeTap;
 
   @override
   Widget build(BuildContext context) {
@@ -138,26 +152,31 @@ class CharacterDetailsCard extends StatelessWidget {
 
                     Text('Last known location:', style: AppTypography.attribute(context)),
                     const SizedBox(height: 4),
-                    Text(character.location.name, style: AppTypography.answer(context)),
+                    _linkOrText(
+                      context,
+                      text: character.location.name,
+                      canTap: locationId != null && onLocationTap != null,
+                      onTap: () => onLocationTap?.call(locationId!),
+                    ),
                     const SizedBox(height: 15),
 
                     Text('First seen in:', style: AppTypography.attribute(context)),
                     const SizedBox(height: 4),
-                    Text(
-                      firstSeenIn ?? '—',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTypography.answer(context)
+                    _linkOrText(
+                      context,
+                      text: firstSeenIn ?? '—',
+                      canTap: firstEpisodeId != null && onFirstEpisodeTap != null,
+                      onTap: () => onFirstEpisodeTap?.call(firstEpisodeId!),
                     ),
                     const SizedBox(height: 15),
 
                     Text('Origin:', style: AppTypography.attribute(context)),
                     const SizedBox(height: 4),
-                    Text(
-                      character.origin.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTypography.answer(context),
+                    _linkOrText(
+                      context,
+                      text: character.origin.name,
+                      canTap: originId != null && onOriginTap != null,
+                      onTap: () => onOriginTap?.call(originId!),
                     ),
                     const SizedBox(height: 15),
 
@@ -199,5 +218,29 @@ class CharacterDetailsCard extends StatelessWidget {
       default:
         return Colors.grey;
     }
+  }
+
+  Widget _linkOrText(
+    BuildContext context, {
+    required String text,
+    required bool canTap,
+    required VoidCallback onTap,
+  }) {
+    final child = Text(
+      text,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: AppTypography.answer(context),
+    );
+    if (!canTap) return child;
+
+    return InkWell(
+      borderRadius: const BorderRadius.all(Radius.circular(6)),
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: child,
+      ),
+    );
   }
 }

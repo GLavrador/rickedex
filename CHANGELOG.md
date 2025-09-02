@@ -11,13 +11,20 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - **Location Details**:
   - Lista de residentes rolável exibindo todos os residentes, sem expandir demais o card.
   - Chips de residentes clicáveis que abrem a tela do personagem.
+- **Character Details**:
+  - Links clicáveis para Last known location e Origin que abrem a tela de Location.
+  - Link clicável em First seen in que abre a tela de Episode.
+- **Utils**:
+  - Helper `id_from_url.dart` para extrair o ID a partir de URLs.
 
 ### Changed
 - **Location Details**:
-  - Carregamento dos residentes passou a usar busca em lote (via `getCharactersByIds`) para reduzir chamadas à API.
+  - Carregamento dos residentes passou a usar busca em lote (via getCharactersByIds) para reduzir chamadas à API.
   - Card simplificado para receber residentCharacters e onResidentTap, removendo o uso de residentNames.
-
-- Página de Detalhes de Location: mensagem de erro padronizada para inglês ("An error occurred.").
+- **Character Details / DetailsPage (character)**:
+  - CharacterDetailsCard passou a aceitar locationId, originId, firstEpisodeId e callbacks (onLocationTap, onOriginTap, onFirstEpisodeTap) para habilitar a navegação.
+  - DetailsPage agora extrai os IDs das URLs e injeta os callbacks no card.
+- Demais páginas: mensagens padronizadas para inglês ("An error occurred.").
 
 ## [v1.0.0] - 2025-08-30
 

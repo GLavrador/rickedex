@@ -66,7 +66,7 @@ class _EpisodesPageState extends State<EpisodesPage> {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return Center(child: Text('Ocorreu um erro.', style: TextStyle(color: AppColors.white)));
+            return Center(child: Text('An error occurred.', style: TextStyle(color: AppColors.white)));
           }
           if (!snapshot.hasData) return const SizedBox.shrink();
 
@@ -97,7 +97,7 @@ class _EpisodesPageState extends State<EpisodesPage> {
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 24),
                   child: Center(
-                    child: Text('Nenhum episódio encontrado.', style: TextStyle(color: Colors.white)),
+                    child: Text('No episode found.', style: TextStyle(color: Colors.white)),
                   ),
                 )
               else ...[
