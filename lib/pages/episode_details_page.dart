@@ -25,13 +25,19 @@ class _EpisodeDetailsPageState extends State<EpisodeDetailsPage> {
   void initState() {
     super.initState();
     _episodeFuture = Repository.getEpisodeDetails(widget.episodeId);
-    _charsFuture = _episodeFuture.then((ep) async {
-      final ids = ep.characters.map(idFromUrl).whereType<int>().toSet().toList();
-      if (ids.isEmpty) return <Character>[];
-      final chars = await Repository.getCharactersByIds(ids);
-      chars.sort((a, b) => a.name.compareTo(b.name));
-      return chars;
-    });
+    _charsFuture = _loadChars();
+  }
+
+  Future<List<Character>> _loadChars() async {
+    final loc = await _episodeFuture;
+    final ids = loc.characters
+        .map(idFromUrl).whereType<int>().toSet().toList();
+
+    if (ids.isEmpty) return const <Character>[];
+
+    final characters = await Repository.getCharactersByIds(ids);
+    characters.sort((a, b) => a.name.compareTo(b.name));
+    return characters;
   }
 
   @override
@@ -64,7 +70,7 @@ class _EpisodeDetailsPageState extends State<EpisodeDetailsPage> {
                 children: [
                   DetailedEpisodeCard(
                     episode: ep,
-                    characters: chars,
+                    characters: chars ?? const <Character>[],
                     onCharacterTap: (id) {
                       Navigator.of(context).push(
                         MaterialPageRoute(

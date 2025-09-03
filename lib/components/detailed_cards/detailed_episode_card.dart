@@ -8,12 +8,12 @@ class DetailedEpisodeCard extends StatelessWidget {
   const DetailedEpisodeCard({
     super.key,
     required this.episode,
-    this.characters,  
-    this.onCharacterTap,
+    required this.characters,  
+    required this.onCharacterTap,
   });
 
   final Episode episode;
-  final List<Character>? characters;       
+  final List<Character> characters;       
   final ValueChanged<int>? onCharacterTap;
 
   @override
@@ -62,10 +62,10 @@ class DetailedEpisodeCard extends StatelessWidget {
               style: AppTypography.answer(context),
             ),
 
-            if (characters != null && characters!.isNotEmpty) ...[
+            if (characters.isNotEmpty) ...[
               const SizedBox(height: 15),
 
-              Text('Characters (${episode.characters.length}):', style: AppTypography.attribute(context)),
+              Text('Characters (${characters.length}):', style: AppTypography.attribute(context)),
               const SizedBox(height: 8),
 
               ConstrainedBox(
@@ -77,7 +77,7 @@ class DetailedEpisodeCard extends StatelessWidget {
                     child: Wrap(
                       spacing: 8,
                       runSpacing: 8,
-                      children: characters!.map((c) {
+                      children: characters.map((c) {
                         return InkWell(
                           borderRadius: const BorderRadius.all(Radius.circular(16)),
                           onTap: onCharacterTap == null ? null : () => onCharacterTap!(c.id),
