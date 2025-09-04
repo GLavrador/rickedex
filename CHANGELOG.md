@@ -7,6 +7,9 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Unreleased]
 
+### Added
+- AppBar (telas de detalhe): botão Home ao lado do Voltar para retornar diretamente à página inicial.
+
 ## [v1.1.0] - 2025-09-03
 
 ### Added
