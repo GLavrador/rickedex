@@ -122,6 +122,7 @@ Um app Flutter que funciona como uma Pokédex do universo de Rick and Morty: é 
 - **Episodes**: listagem de episódios + barra de busca + filtro (ícone de funil ao lado da busca)
 - **Detalhes do Episódios**: card expandido com metadados completos
 - **Favoritos**: listagem de personagens favoritos previamente marcados
+- **Navegação Cruzada**: clicar em um local, episódio ou personagem dentro de um card leva ao card de detalhes específico referente ao selecionado.
 
 ---
 ## Componentes & Arquitetura
@@ -136,56 +137,25 @@ Um app Flutter que funciona como uma Pokédex do universo de Rick and Morty: é 
 │   └── images/                                        # imagens do app
 ├── lib/                                               # código-fonte principal (Flutter/Dart)
 │   ├── components/                                    # componentes reutilizáveis de UI
-│   │   ├── app_bar/
-│   │   │   └── app_bar_component.dart                 # app bar customizada
-│   │   ├── cards/
-│   │   │   ├── character_card.dart                    # card da listagem de personagens (nome + imagem)
-│   │   │   ├── episode_card.dart                      # card da listagem de episódios (nome, código, data)
-│   │   │   └── location_card.dart                     # card da listagem de localidades (nome, tipo, dimensão)
-│   │   ├── detailed_cards/
-│   │   │   ├── detailed_character_card.dart           # card completo do personagem 
-│   │   │   ├── detailed_episode_card.dart             # card completo do episódio (número de personagens)
-│   │   │   └── detailed_location_card.dart            # card completo da localidade (moradores)
-│   │   ├── filters/
-│   │   │   ├── filter_character_component.dart        # filtro por gênero/status/espécie (UI + callbacks)
-│   │   │   └── filter_episode_component.dart          # filtro por temporada (UI + callbacks)
-│   │   ├── grids/
-│   │   │   └── favorite_character_grid.dart           # grid para exibição de personagens favoritos
-│   │   ├── navigation/
-│   │   │   ├── pagination_bar.dart                    # barra de paginação (próxima/anterior/atual)
-│   │   │   ├── search_bar_component.dart              # busca por nome (parcial/total)
-│   │   │   └── side_bar_component.dart                # navegação lateral (acesso rápido às seções)
-│   │   └── organization/
-│   │       └── section_label.dart                     # separador de sessões para sidebar
-│   ├── data/
-│   │   └── repository.dart                            # camada de acesso à API (HTTP, queries, paginação)
-│   ├── models/                                        # modelos de domínio + respostas paginadas
-│   │   ├── character.dart                             # modelo Character (id, name, status, gender, origin, etc.)
-│   │   ├── episode.dart                               # modelo Episode (id, name, episode, air_date, etc.)
-│   │   ├── location.dart                              # modelo Location (id, name, type, dimension, residents)
-│   │   ├── paginated_characters.dart                  # paginação para /character
-│   │   ├── paginated_episodes.dart                    # paginação para /episode
-│   │   └── paginated_locations.dart                   # paginação para /location
-│   ├── pages/                                         # telas
-│   │   ├── home_page.dart                             # listagem de personagens + busca + filtros + paginação
-│   │   ├── details_page.dart                          # detalhes do personagem (inclui pull-to-expand da imagem)
-│   │   ├── episodes_page.dart                         # listagem de episódios + paginação + filtro por temporada
-│   │   ├── episode_details_page.dart                  # detalhes do episódio (elenco do episódio)
-│   │   ├── favorites_page.dart                        # personagens favoritos marcados
-│   │   ├── locations_page.dart                        # listagem de localidades + paginação
-│   │   └── location_details_page.dart                 # detalhes da localidade (moradores/residentes)
-│   ├── services/
-│   │   └── favorite_service.dart                      # métodos da função favorites
-│   ├── theme/
-│   │   ├── app_colors.dart                            # paleta de cores centralizada
-│   │   ├── app_images.dart                            # paths/refs de imagens
-│   │   └── app_typography.dart                        # estilos de texto (TextStyles)
-│   └── main.dart                                      # bootstrap do app, MaterialApp, rotas e tema
+│   │   ├── app_bar/                                   # barra de navegação superior
+│   │   ├── buttons/                                   # botões customizados
+│   │   ├── cards/                                     # cards simples (ex: personagem, episódio, localidade)
+│   │   ├── detailed_cards/                            # cards detalhados com informações completas
+│   │   ├── filters/                                   # componentes de filtro (ex: gênero, status, temporada)
+│   │   ├── grids/                                     # grades de exibição (ex: favoritos)
+│   │   ├── navigation/                                # elementos de navegação (ex: sidebar, paginação, searchbar)
+│   │   └── organization/                              # componentes organizacionais (ex: label de seção)
+│   ├── data/                                          # camada de acesso a dados (repositories, chamadas HTTP)
+│   ├── models/                                        # modelos de domínio e respostas da API (Character, Episode, etc)
+│   ├── pages/                                         # telas do app (home, detalhes, favoritos, etc)
+│   ├── services/                                      # serviços auxiliares (ex: favoritos)
+│   ├── theme/                                         # tema centralizado (cores, tipografia, imagens)
+│   ├── utils/                                         # utilitários/helpers (ex: id_from_url)
+│   └── main.dart                                      # ponto de entrada, MaterialApp, rotas e tema
 ├── test/                                              # testes (não utilizado no momento)
 ├── .dart_tool/                                        # artefatos internos do Dart/Flutter (gerado)
 ├── build/                                             # saídas de build (gerado)
 ├── docs/                                              # documentos utilizados fora da lib
-│   └── screens.dart                                   # imagens para compor o readme
 ├── .flutter-plugins                                   # plugins do Flutter (gerado)
 ├── .flutter-plugins-dependencies                      # dependências dos plugins (gerado)
 ├── .idea/                                             # metadados de IDE (Android Studio)
