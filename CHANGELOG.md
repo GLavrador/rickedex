@@ -7,6 +7,8 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Unreleased]
 
+## [v1.1.0] - 2025-09-03
+
 ### Added
 - **Location Details**:
   - Lista de residentes rolável exibindo todos os residentes, sem expandir demais o card.
