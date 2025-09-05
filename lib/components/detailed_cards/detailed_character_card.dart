@@ -84,21 +84,33 @@ class CharacterDetailsCard extends StatelessWidget {
                         right: 8,
                         bottom: 8,
                         child: Container(
-                          padding: const EdgeInsets.all(4),
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
                             color: Colors.black.withValues(alpha: 0.35),
-                            shape: BoxShape.circle,
+                            borderRadius: BorderRadius.circular(16),
                             border: Border.all(
                               color: Colors.white.withValues(alpha: 0.6),
                               width: 0.75,
                             ),
                           ),
-                          child: Icon(
-                            imageHeight >= 380.0
-                                ? Icons.expand_less
-                                : Icons.expand_more,
-                            size: 16,
-                            color: Colors.white.withValues(alpha: 0.9),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                imageHeight >= 380.0 ? 'Drag to reduce' : 'Drag to enlarge',
+                                style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.9),
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Icon(
+                                imageHeight >= 380.0 ? Icons.expand_less : Icons.expand_more,
+                                size: 16,
+                                color: Colors.white.withValues(alpha: 0.9),
+                              ),
+                            ],
                           ),
                         ),
                       ),
