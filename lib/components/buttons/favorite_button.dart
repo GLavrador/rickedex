@@ -36,15 +36,10 @@ class FavoriteButton extends StatelessWidget {
           icon: Icon(icon, color: iconColor, size: size),
           tooltip: tooltip,
           onPressed: () async {
-            final wasFav = isFav;
-
             await FavoritesService.instance.toggle(characterId);
-
-            final nowFav = FavoritesService.instance.favorites.value.contains(characterId);
-
-            if (wasFav != nowFav){
-              HapticFeedback.lightImpact();
-            }
+        
+            HapticFeedback.lightImpact();
+            
             onToggled?.call();
           },
         );
