@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:rick_morty_app/services/favorites_service.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 
@@ -35,7 +36,15 @@ class FavoriteButton extends StatelessWidget {
           icon: Icon(icon, color: iconColor, size: size),
           tooltip: tooltip,
           onPressed: () async {
+            final wasFav = isFav;
+
             await FavoritesService.instance.toggle(characterId);
+
+            final nowFav = FavoritesService.instance.favorites.value.contains(characterId);
+
+            if (wasFav != nowFav){
+              HapticFeedback.lightImpact();
+            }
             onToggled?.call();
           },
         );
