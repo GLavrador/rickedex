@@ -7,12 +7,14 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Unreleased]
 
+## [v1.1.1] - 2025-09-07
+
 ### Added
 - AppBar (telas de detalhe): botão Home ao lado do Voltar para retornar diretamente à página inicial.
 
-- Character Details: rótulo “Drag to enlarge/reduce” ao lado do ícone de expandir na imagem, orientando o gesto de arrastar para ampliar a foto.
+- Character Details: rótulo “Drag to enlarge/reduce” ao lado do ícone de expandir na imagem, indicando o gesto de arrastar para ampliar a foto.
 
-- Favoritos: vibração ao adicionar um personagem aos favoritos.
+- Favoritos: vibração ao adicionar ou remover um personagem dos favoritos.
 
 ## [v1.1.0] - 2025-09-03
 
