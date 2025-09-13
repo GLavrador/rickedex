@@ -23,7 +23,7 @@ class _FilterCharacterComponentState extends State<FilterCharacterComponent> {
   static const List<String> statuses = ['Alive', 'Dead', 'Unknown'];
   static const List<String> speciesList = [
     'Alien', 'Animal', 'Cronenberg', 'Disease', 'Human', 'Humanoid', 
-    'Mythological Creature', 'Poopybutthole', 'Robot', 'Unknown', 'Outros',
+    'Mythological Creature', 'Poopybutthole', 'Robot', 'Unknown'
   ];
 
   @override
