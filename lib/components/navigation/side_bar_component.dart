@@ -7,6 +7,7 @@ import 'package:rick_morty_app/pages/home_page.dart';
 import 'package:rick_morty_app/pages/locations_page.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 import 'package:rick_morty_app/theme/app_images.dart';
+import 'package:rick_morty_app/services/favorites_service.dart';
 
 class SideBarComponent extends StatelessWidget {
   const SideBarComponent({super.key});
@@ -103,6 +104,7 @@ class SideBarComponent extends StatelessWidget {
                       iconColor: AppColors.white,
                       title: const Text('Favorites'),
                       dense: true,
+                      trailing: const _FavoritesBadge(),
                       selected: _isRoute(context, FavoritesPage.routeId),
                       onTap: () => _goToNamed(context, FavoritesPage.routeId),
                     ),
@@ -130,6 +132,38 @@ class SideBarComponent extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+// se um dia for transformar em público/reutilizável, mover e colocar key
+class _FavoritesBadge extends StatelessWidget {
+  const _FavoritesBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<Set<int>>(
+      valueListenable: FavoritesService.instance.favorites,
+      builder: (context, favs, _) {
+        final count = favs.length;
+        if (count == 0) return const SizedBox.shrink();
+        final label = count > 99 ? '99+' : '$count';
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+          decoration: BoxDecoration(
+            color: AppColors.primaryColorDark.withValues(alpha: 0.85),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        );
+      },
     );
   }
 }
