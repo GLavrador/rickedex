@@ -181,7 +181,7 @@ Um app Flutter que funciona como uma Pokédex do universo de Rick and Morty: é 
 - **Filtros de personagem**:
   - **Gênero**: Male, Female, Genderless, Unknown
   - **Status**: Alive, Dead, Unknown
-  - **Espécie**: Human, Alien, Humanoid, Robot, Mythological Creature, Cronenberg, Poopybutthole, Disease, Unknown, Outros
+  - **Espécie**: Human, Alien, Humanoid, Robot, Mythological Creature, Cronenberg, Poopybutthole, Disease, Unknown
 - **Filtro por temporada (Episódios)**: por número da temporada
 
 ---

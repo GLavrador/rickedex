@@ -10,6 +10,8 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 ### Added
 - Sidebar: badge com contagem de Favorites, atualizado em tempo real (não mostra quando 0 e mostra “99+” acima de 99).
 
+### Removed
+- Filtro de Characters: opção “Outros” em Species (todas as espécies já estão contempladas).
 
 ## [v1.1.1] - 2025-09-07
 
