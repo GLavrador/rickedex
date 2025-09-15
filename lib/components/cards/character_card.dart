@@ -8,10 +8,14 @@ class CharacterCard extends StatelessWidget {
     super.key,
     required this.character,
     required this.onTap,
+    this.imageHeight = 120,                         
+    this.imageAlignment = const Alignment(0, -0.25) 
   });
 
   final Character character;
   final VoidCallback onTap;
+  final double imageHeight;
+  final Alignment imageAlignment;
 
   @override
   Widget build(BuildContext context) {
@@ -36,18 +40,18 @@ class CharacterCard extends StatelessWidget {
                     child: Image.network(
                       character.image,
                       width: double.infinity,
-                      height: 120,         
-                      fit: BoxFit.cover,          
-                      alignment: const Alignment(0, -0.25), // foca um pouco mais no topo
+                      height: imageHeight,          
+                      fit: BoxFit.cover,
+                      alignment: imageAlignment,    
                       loadingBuilder: (context, child, progress) {
                         if (progress == null) return child;
-                        return const SizedBox(
-                          height: 120,
-                          child: Center(child: CircularProgressIndicator()),
+                        return SizedBox(
+                          height: imageHeight,
+                          child: const Center(child: CircularProgressIndicator()),
                         );
                       },
                       errorBuilder: (_, __, ___) => SizedBox(
-                        height: 120,
+                        height: imageHeight,  
                         child: Center(
                           child: Icon(Icons.broken_image, color: AppColors.white),
                         ),
@@ -55,15 +59,15 @@ class CharacterCard extends StatelessWidget {
                     ),
                   ),
                   Positioned(
-                      top: 8,
-                      right: 8,
-                      child: FavoriteButton(
-                        characterId: character.id,
-                        size: 15,
-                        useCircleBackground: true, 
-                        padding: const EdgeInsets.all(2),
-                      ),
+                    top: 8,
+                    right: 8,
+                    child: FavoriteButton(
+                      characterId: character.id,
+                      size: 15,
+                      useCircleBackground: true,
+                      padding: const EdgeInsets.all(2),
                     ),
+                  ),
                 ],
               ),
             ),
@@ -79,9 +83,9 @@ class CharacterCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AppColors.white,
-                      fontWeight: FontWeight.w900, 
+                      fontWeight: FontWeight.w900,
                       fontSize: 14.5,
-                      height: 1.0,                
+                      height: 1.0,
                       letterSpacing: 0.0,
                     ),
                   ),
