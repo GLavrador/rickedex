@@ -43,17 +43,20 @@ class _RandomPageState extends State<RandomPage> {
       backgroundColor: AppColors.backgroundColor,
       drawer: const SideBarComponent(),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+        padding: const EdgeInsets.fromLTRB(18, 16, 18, 0),
         children: [
-          ElevatedButton.icon(
-            onPressed: _loading ? null : _roll,
-            icon: const Icon(Icons.casino),
-            label: const Text('Randomize'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryColorLight,
-              foregroundColor: AppColors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          SizedBox(
+            height: 48,
+            child: ElevatedButton.icon(
+              onPressed: _loading ? null : _roll,
+              icon: const Icon(Icons.casino),
+              label: const Text('Randomize'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryColorLight,
+                foregroundColor: AppColors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ),
             ),
           ),
           const SizedBox(height: 16),
