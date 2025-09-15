@@ -75,6 +75,8 @@ class _RandomPageState extends State<RandomPage> {
                   ),
                 );
               },
+              imageHeight: 300,                 
+              imageAlignment: Alignment.center, 
             ),
         ],
       ),
