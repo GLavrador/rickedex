@@ -5,6 +5,7 @@ import 'package:rick_morty_app/pages/episodes_page.dart';
 import 'package:rick_morty_app/pages/favorites_page.dart';
 import 'package:rick_morty_app/pages/home_page.dart';
 import 'package:rick_morty_app/pages/locations_page.dart';
+import 'package:rick_morty_app/pages/random_page.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 import 'package:rick_morty_app/theme/app_images.dart';
 import 'package:rick_morty_app/services/favorites_service.dart';
@@ -107,6 +108,13 @@ class SideBarComponent extends StatelessWidget {
                       trailing: const _FavoritesBadge(),
                       selected: _isRoute(context, FavoritesPage.routeId),
                       onTap: () => _goToNamed(context, FavoritesPage.routeId),
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.casino_outlined),
+                      title: const Text('Random'),
+                      dense: true,
+                      selected: _isRoute(context, RandomPage.routeId),
+                      onTap: () => _goToNamed(context, RandomPage.routeId),
                     ),
                   ],
                 ),

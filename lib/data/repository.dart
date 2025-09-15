@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:rick_morty_app/models/character.dart';
 import 'package:rick_morty_app/models/episode.dart';
@@ -15,6 +16,9 @@ abstract class Repository {
       receiveTimeout: 10000, 
     ),
   );
+
+  // cache simples do total (não obrigatório, mas evita pedir o count toda vez)
+  static int? _charactersCountCache;
 
   // lista paginada de personagens, pesquisa e filtro
   static Future<PaginatedCharacters> getCharacters({
@@ -130,5 +134,21 @@ abstract class Repository {
     } else {
       return [Character.fromJson(res.data)];
     }
+  }
+
+  // retorna o total de personagens disponíveis (info.count) com cache simples
+  static Future<int> _getCharactersCount() async {
+    if (_charactersCountCache != null) return _charactersCountCache!;
+    final firstPage = await getCharacters(page: 1); // sem filtros
+    _charactersCountCache = firstPage.info.count;
+    return _charactersCountCache!;
+  }
+
+  // sorteia um id entre 1..count
+  static Future<Character> getRandomCharacter() async {
+    final total = await _getCharactersCount();
+    final id = Random().nextInt(total) + 1;
+    final resp = await _dio.get('/character/$id');
+    return Character.fromJson(resp.data);
   }
 }

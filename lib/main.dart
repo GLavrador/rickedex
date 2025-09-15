@@ -5,6 +5,7 @@ import 'package:rick_morty_app/pages/episodes_page.dart';
 import 'package:rick_morty_app/pages/favorites_page.dart';
 import 'package:rick_morty_app/pages/location_details_page.dart';
 import 'package:rick_morty_app/pages/locations_page.dart';
+import 'package:rick_morty_app/pages/random_page.dart';
 import 'pages/details_page.dart';
 import 'pages/home_page.dart';
 import 'package:rick_morty_app/services/favorites_service.dart';
@@ -60,7 +61,11 @@ class RickMortyApp extends StatelessWidget {
           case FavoritesPage.routeId:
             return MaterialPageRoute(
               settings: settings, 
-              builder: (_) => const FavoritesPage());              
+              builder: (_) => const FavoritesPage());
+          case RandomPage.routeId:
+            return MaterialPageRoute(
+              settings: settings,
+              builder: (_) => const RandomPage());                  
           default:
             return MaterialPageRoute(
               settings: settings,
