@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rick_morty_app/components/app_bar/app_bar_component.dart';
 import 'package:rick_morty_app/components/buttons/clear_favorite_button.dart';
 import 'package:rick_morty_app/components/grids/favorite_character_grid.dart';
+import 'package:rick_morty_app/components/navigation/page_flag.dart';
 import 'package:rick_morty_app/components/navigation/side_bar_component.dart';
 import 'package:rick_morty_app/services/favorites_service.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
@@ -66,9 +67,14 @@ class _FavoritesPageState extends State<FavoritesPage> {
             );
           }
           return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const Padding(
+                padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
+                child: PageFlag('Favorites'),
+              ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: const ClearFavoritesButton(),
