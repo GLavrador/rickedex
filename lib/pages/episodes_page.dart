@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rick_morty_app/components/app_bar/app_bar_component.dart';
 import 'package:rick_morty_app/components/cards/episode_card.dart';
 import 'package:rick_morty_app/components/filters/filter_episode_component.dart';
+import 'package:rick_morty_app/components/navigation/page_flag.dart';
 import 'package:rick_morty_app/components/navigation/pagination_bar.dart';
 import 'package:rick_morty_app/components/navigation/search_bar_component.dart';
 import 'package:rick_morty_app/components/navigation/side_bar_component.dart';
@@ -77,6 +78,8 @@ class _EpisodesPageState extends State<EpisodesPage> {
           return ListView(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
             children: [
+              const PageFlag('Episodes'),
+              const SizedBox(height: 16),
               SearchBarComponent(
                 controller: _searchController,
                 hintText: 'Search episode...',
