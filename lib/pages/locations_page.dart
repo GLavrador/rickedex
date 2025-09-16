@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rick_morty_app/components/app_bar/app_bar_component.dart';
 import 'package:rick_morty_app/components/cards/location_card.dart';
+import 'package:rick_morty_app/components/navigation/page_flag.dart';
 import 'package:rick_morty_app/components/navigation/pagination_bar.dart';
 import 'package:rick_morty_app/components/navigation/search_bar_component.dart';
 import 'package:rick_morty_app/components/navigation/side_bar_component.dart';
@@ -84,6 +85,8 @@ class _LocationsPageState extends State<LocationsPage> {
           return ListView(
             padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
             children: [
+              const PageFlag('Locations'),
+              const SizedBox(height: 16),
               SearchBarComponent(
                 controller: _searchController,
                 hintText: 'Search location...',
