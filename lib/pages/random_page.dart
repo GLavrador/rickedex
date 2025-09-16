@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rick_morty_app/components/app_bar/app_bar_component.dart';
 import 'package:rick_morty_app/components/cards/character_card.dart';
+import 'package:rick_morty_app/components/navigation/page_flag.dart';
 import 'package:rick_morty_app/components/navigation/side_bar_component.dart';
 import 'package:rick_morty_app/data/repository.dart';
 import 'package:rick_morty_app/models/character.dart';
@@ -45,6 +46,8 @@ class _RandomPageState extends State<RandomPage> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(18, 16, 18, 0),
         children: [
+          const PageFlag('Random Character'),
+          const SizedBox(height: 16),
           SizedBox(
             height: 48,
             child: ElevatedButton.icon(

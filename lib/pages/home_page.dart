@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rick_morty_app/components/app_bar/app_bar_component.dart';
 import 'package:rick_morty_app/components/cards/character_card.dart';
 import 'package:rick_morty_app/components/filters/filter_character_component.dart';
+import 'package:rick_morty_app/components/navigation/page_flag.dart';
 import 'package:rick_morty_app/components/navigation/pagination_bar.dart';
 import 'package:rick_morty_app/components/navigation/search_bar_component.dart';
 import 'package:rick_morty_app/components/navigation/side_bar_component.dart';
@@ -106,16 +107,23 @@ class _HomePageState extends State<HomePage> {
                 if (index == 0) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 7.5, horizontal: 20),
-                    child: SearchBarComponent(
-                      controller: _searchController,
-                      onSubmitted: _applySearch,
-                      onClear: _clearSearch,
-                      isLoading: isLoading,
-                      trailingFilter: FilterCharacterComponent(
-                        currentFilters: _filters,
-                        onApplyFilters: _applyFilters,
-                      ), 
-                    )
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const PageFlag('Characters'),
+                        const SizedBox(height: 16),
+                        SearchBarComponent(
+                          controller: _searchController,
+                          onSubmitted: _applySearch,
+                          onClear: _clearSearch,
+                          isLoading: isLoading,
+                          trailingFilter: FilterCharacterComponent(
+                            currentFilters: _filters,
+                            onApplyFilters: _applyFilters,
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 }
 
