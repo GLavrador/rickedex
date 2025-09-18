@@ -109,6 +109,19 @@ Um app Flutter que funciona como uma Pokédex do universo de Rick and Morty: é 
   </a>
 </p>
 
+### Random
+- **Página**: presente na sidebar
+- **Cards**: nome, imagem
+- **Função**: botão clicável para randomizar um dentre todos os personagens presentes na API
+<p>
+    <a href="docs/screens/sidebar.jpeg">
+    <img src="docs/screens/sidebar.jpeg" width="260" alt="Sidebar com Favoritos">
+  </a>
+  <a href="docs/screens/random_char_example.jpeg">
+    <img src="docs/screens/random_char_example.jpeg" width="260" alt="Página de Favoritos">
+  </a>
+</p>
+
 > Todas as funcionalidades acima estão implementadas e integradas à UI.
 
 ---

@@ -7,6 +7,8 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Unreleased]
 
+## [v1.2.0] - 2025-09-17
+
 ### Added
 - Sidebar: badge com contagem de Favorites, atualizado em tempo real (não mostra quando 0 e mostra “99+” acima de 99).
 - **Random Page**: página adicionada com botão para randomizar um personagem e exibir seu card.
