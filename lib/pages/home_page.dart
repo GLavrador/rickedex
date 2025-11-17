@@ -12,7 +12,7 @@ import 'package:rick_morty_app/pages/details_page.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 
 class HomePage extends StatefulWidget {
-  static const routeId = '/';
+  static const routeId = '/characters';
   const HomePage({super.key});
 
   @override

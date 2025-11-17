@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:rick_morty_app/pages/home_page.dart';
+import 'package:rick_morty_app/pages/feed_page.dart';
 import 'package:rick_morty_app/theme/app_images.dart';
 import '../../theme/app_colors.dart';
 
@@ -25,7 +25,7 @@ PreferredSizeWidget appBarComponent(BuildContext context, {bool isSecondPage = f
                     GestureDetector(
                       onTap: () {
                         final currentRoute = ModalRoute.of(ctx)?.settings.name;
-                        if (currentRoute == HomePage.routeId) return;
+                        if (currentRoute == MainFeedPage.routeId) return;
                         Navigator.pop(ctx);
                       },
                       child: const Icon(Icons.arrow_back, color: Color(0xFFE6E1E5)),
@@ -35,7 +35,7 @@ PreferredSizeWidget appBarComponent(BuildContext context, {bool isSecondPage = f
                     GestureDetector(
                       onTap: () {
                         Navigator.of(ctx).pushNamedAndRemoveUntil(
-                          HomePage.routeId,
+                          MainFeedPage.routeId,
                           (route) => false,
                         );
                       },

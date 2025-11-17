@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:rick_morty_app/pages/episode_details_page.dart';
 import 'package:rick_morty_app/pages/episodes_page.dart';
 import 'package:rick_morty_app/pages/favorites_page.dart';
+import 'package:rick_morty_app/pages/feed_page.dart';
 import 'package:rick_morty_app/pages/location_details_page.dart';
 import 'package:rick_morty_app/pages/locations_page.dart';
 import 'package:rick_morty_app/pages/random_page.dart';
@@ -26,22 +27,32 @@ class RickMortyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       onGenerateRoute: (settings) {
         switch (settings.name) {
+
+          case MainFeedPage.routeId:
+            return MaterialPageRoute(
+              settings: settings,
+              builder: (_) => const MainFeedPage(),
+            );
+
           case HomePage.routeId:
             return MaterialPageRoute(
               settings: settings,
               builder: (_) => const HomePage(),
             );
+
           case DetailsPage.routeId:
             final characterId = settings.arguments as int;
             return MaterialPageRoute(
               settings: settings,
               builder: (_) => DetailsPage(characterId: characterId),
             );
+
           case LocationsPage.routeId:
             return MaterialPageRoute(
               settings: settings,
               builder: (_) => const LocationsPage(),
             );
+
           case LocationDetailsPage.routeId:
             final args = settings.arguments as Map<String, dynamic>?;
             final id = args?['id'] as int?;
@@ -49,27 +60,36 @@ class RickMortyApp extends StatelessWidget {
               settings: settings,
               builder: (_) => LocationDetailsPage(locationId: id!),
             );
+
           case EpisodesPage.routeId:
             return MaterialPageRoute(
-              settings: settings, 
-              builder: (_) => const EpisodesPage());
+              settings: settings,
+              builder: (_) => const EpisodesPage(),
+            );
+
           case EpisodeDetailsPage.routeId:
             final id = (settings.arguments as Map?)?['id'] as int?;
             return MaterialPageRoute(
-              settings: settings, 
-              builder: (_) => EpisodeDetailsPage(episodeId: id!));
+              settings: settings,
+              builder: (_) => EpisodeDetailsPage(episodeId: id!),
+            );
+
           case FavoritesPage.routeId:
             return MaterialPageRoute(
-              settings: settings, 
-              builder: (_) => const FavoritesPage());
+              settings: settings,
+              builder: (_) => const FavoritesPage(),
+            );
+
           case RandomPage.routeId:
             return MaterialPageRoute(
               settings: settings,
-              builder: (_) => const RandomPage());                  
+              builder: (_) => const RandomPage(),
+            );
+
           default:
             return MaterialPageRoute(
               settings: settings,
-              builder: (_) => const HomePage(),
+              builder: (_) => const MainFeedPage(),
             );
         }
       },

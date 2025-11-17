@@ -73,6 +73,16 @@ class SideBarComponent extends StatelessWidget {
                 child: ListView(
                   padding: EdgeInsets.zero,
                   children: [
+                    
+                    const SectionLabel('Home'),
+
+                    ListTile(
+                      leading: const Icon(Icons.home_outlined),
+                      title: const Text('Feed'),
+                      dense: true,
+                      selected: _isRoute(context, '/'),
+                      onTap: () => _goToNamed(context, '/'),
+                    ),
 
                     const SectionLabel('Pages'),
                     
