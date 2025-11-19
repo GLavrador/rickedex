@@ -13,7 +13,7 @@ class FeedGoButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: AppColors.primaryColorLight.withValues(alpha: .99),
+          color: AppColors.primaryColorLight.withValues(alpha: .9),
           borderRadius: BorderRadius.circular(50),
         ),
         child: Icon(
