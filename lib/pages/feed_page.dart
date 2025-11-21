@@ -25,6 +25,7 @@ class MainFeedPage extends StatelessWidget {
             Repository.getRandomCharacter(),
             Repository.getRandomCharacter(),
             Repository.getRandomCharacter(),
+            Repository.getRandomCharacter(),
           ]),
           builder: (c, snap) {
             if (snap.connectionState == ConnectionState.waiting) {

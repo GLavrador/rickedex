@@ -15,11 +15,11 @@ class FeedImageStack extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final list = urls.take(4).toList();
-    final idList = ids.take(4).toList();
+    final list = urls.take(5).toList();
+    final idList = ids.take(5).toList();
 
     const double size = 100;
-    const double overlap = 75;
+    const double overlap = 56;
 
     return SizedBox(
       width: size + (list.length - 1) * overlap,
