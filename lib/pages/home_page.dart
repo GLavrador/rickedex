@@ -73,13 +73,13 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _filters = newFilters;
     });
-    _loadPage(1); // volta pra página 1 ao aplicar filtros
+    _loadPage(1);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarComponent(context),
+      appBar: appBarComponent(context, isSecondPage: true),
       drawer: const SideBarComponent(),
       backgroundColor: AppColors.backgroundColor,
       body: FutureBuilder<PaginatedCharacters>(

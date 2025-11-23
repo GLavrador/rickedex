@@ -44,7 +44,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarComponent(context),
+      appBar: appBarComponent(context, isSecondPage: true),
       drawer: const SideBarComponent(),
       backgroundColor: AppColors.backgroundColor,
       body: FutureBuilder<List<Character>>(
