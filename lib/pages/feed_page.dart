@@ -25,7 +25,6 @@ class MainFeedPage extends StatelessWidget {
             Repository.getRandomCharacter(),
             Repository.getRandomCharacter(),
             Repository.getRandomCharacter(),
-            Repository.getRandomCharacter(),
           ]),
           builder: (c, snap) {
             if (snap.connectionState == ConnectionState.waiting) {
@@ -36,8 +35,26 @@ class MainFeedPage extends StatelessWidget {
               );
             }
 
+            if (snap.hasError) {
+              return Padding(
+                padding: const EdgeInsets.only(left: 20), 
+                child: const Text(
+                  'Failed to load',
+                  style: TextStyle(color: Colors.white),
+                ),
+              );
+            }
+
             final data = snap.data ?? <Character>[];
-            if (data.isEmpty) return const SizedBox.shrink();
+            if (data.isEmpty) {
+              return Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: const Text(
+                  'No data',
+                  style: TextStyle(color: Colors.white),
+                ),
+              );
+            }
 
             final urls = data.map((e) => e.image).toList();
             final ids  = data.map((e) => e.id).toList();
