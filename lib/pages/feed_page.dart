@@ -76,15 +76,14 @@ class MainFeedPage extends StatelessWidget {
         routeName: '/episodes',
         previewBuilder: (ctx) => FeedImageStack(
           imagePaths: const [
-          AppImages.s5,
-          AppImages.s4,
-          AppImages.s3,
-          AppImages.s2,
           AppImages.s1,
+          AppImages.s2,
+          AppImages.s3,
+          AppImages.s4,
+          AppImages.s5,
           ],
           ids: const [1, 2, 3, 4, 5],
           onTap: (seasonId) {
-            print('Clicou na Temporada $seasonId');
             Navigator.of(ctx).pushNamed('/episodes', arguments: seasonId);
           },
         ),

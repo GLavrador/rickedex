@@ -25,22 +25,35 @@ class _EpisodesPageState extends State<EpisodesPage> {
   String? _searchQuery;
   String? _seasonFilter;
 
+  bool _isInit = true;
+
   @override
-  void initState() {
-    super.initState();
-    _load(1);
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (_isInit) {
+      final args = ModalRoute.of(context)?.settings.arguments;
+
+      if (args is int) {
+        _seasonFilter = 'S${args.toString().padLeft(2, '0')}';
+      }
+
+      _load(1);
+      
+      _isInit = false;
+    }
   }
 
   void _load(int page) {
-  setState(() {
-    _currentPage = page;
-    _future = Repository.getEpisodes(
-      page: page,
-      name: _searchQuery,
-      episodeCode: _seasonFilter, 
-    );
-  });
-}
+    setState(() {
+      _currentPage = page;
+      _future = Repository.getEpisodes(
+        page: page,
+        name: _searchQuery,
+        episodeCode: _seasonFilter,
+      );
+    });
+  }
 
   void _onSubmitted(String value) {
     _searchQuery = value.trim().isEmpty ? null : value.trim();
@@ -89,8 +102,8 @@ class _EpisodesPageState extends State<EpisodesPage> {
                 trailingFilter: FilterEpisodeComponent(
                   selectedSeason: _seasonFilter,
                   onChanged: (value) {
-                    _seasonFilter = value;     
-                    _load(1);                   
+                    _seasonFilter = value;
+                    _load(1);
                   },
                 ),
               ),
