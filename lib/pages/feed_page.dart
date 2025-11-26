@@ -9,6 +9,7 @@ import 'package:rick_morty_app/data/repository.dart';
 import 'package:rick_morty_app/models/character.dart';
 import 'package:rick_morty_app/pages/details_page.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
+import 'package:rick_morty_app/theme/app_images.dart';
 
 class MainFeedPage extends StatelessWidget {
   const MainFeedPage({super.key});
@@ -56,7 +57,7 @@ class MainFeedPage extends StatelessWidget {
             final ids  = data.map((e) => e.id).toList();
 
             return FeedImageStack(
-              urls: urls,
+              imagePaths: urls,
               ids: ids,
               onTap: (id) {
                 Navigator.pushNamed(
@@ -73,8 +74,18 @@ class MainFeedPage extends StatelessWidget {
       _SectionConfig(
         title: 'Episodes',
         routeName: '/episodes',
-        previewBuilder: (ctx) => const FeedTextStack(
-          items: ['S01', 'S02', 'S03', 'S04'],
+        previewBuilder: (ctx) => FeedImageStack(
+          imagePaths: const [
+          AppImages.s1,
+          AppImages.s2,
+          AppImages.s3,
+          AppImages.s4,
+          ],
+          ids: const [1, 2, 3, 4],
+          onTap: (seasonId) {
+            print('Clicou na Temporada $seasonId');
+            Navigator.of(ctx).pushNamed('/episodes', arguments: seasonId);
+          },
         ),
       ),
 
