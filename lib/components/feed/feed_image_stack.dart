@@ -7,16 +7,18 @@ class FeedImageStack extends StatelessWidget {
     required this.imagePaths,
     required this.ids,
     required this.onTap,
+    this.maxItems = 5, 
   });
 
   final List<String> imagePaths;
   final List<int> ids;
   final void Function(int id) onTap;
+  final int maxItems; 
 
   @override
   Widget build(BuildContext context) {
-    final list = imagePaths.take(4).toList();
-    final idList = ids.take(4).toList();
+    final list = imagePaths.take(maxItems).toList();
+    final idList = ids.take(maxItems).toList();
 
     const double size = 100;
     const double overlap = 70;
@@ -50,7 +52,7 @@ class FeedImageStack extends StatelessWidget {
       width: 100,
       height: 100,
       decoration: BoxDecoration(
-        color: AppColors.primaryColorDark, 
+        color: AppColors.primaryColorDark,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
           color: highlight ? AppColors.primaryColorLight : Colors.white,
@@ -67,6 +69,9 @@ class FeedImageStack extends StatelessWidget {
         image: DecorationImage(
           fit: BoxFit.cover,
           image: imageProvider,
+          onError: (exception, stackTrace) {
+             debugPrint('Failed to load image ($path): $exception');
+          },
         ),
       ),
     );

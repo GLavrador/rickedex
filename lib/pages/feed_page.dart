@@ -22,7 +22,7 @@ class MainFeedPage extends StatelessWidget {
         title: 'Characters',
         routeName: '/characters',
         previewBuilder: (ctx) => FutureBuilder<List<Character>>(
-          future: Repository.getRandomCharacters(4),
+          future: Repository.getRandomCharacters(5),
           builder: (c, snap) {
             if (snap.connectionState == ConnectionState.waiting) {
               return const SizedBox(
@@ -76,12 +76,13 @@ class MainFeedPage extends StatelessWidget {
         routeName: '/episodes',
         previewBuilder: (ctx) => FeedImageStack(
           imagePaths: const [
-          AppImages.s1,
-          AppImages.s2,
-          AppImages.s3,
+          AppImages.s5,
           AppImages.s4,
+          AppImages.s3,
+          AppImages.s2,
+          AppImages.s1,
           ],
-          ids: const [1, 2, 3, 4],
+          ids: const [1, 2, 3, 4, 5],
           onTap: (seasonId) {
             print('Clicou na Temporada $seasonId');
             Navigator.of(ctx).pushNamed('/episodes', arguments: seasonId);
