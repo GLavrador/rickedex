@@ -55,7 +55,7 @@ class _EpisodesPageState extends State<EpisodesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarComponent(context, isSecondPage: true),
+      appBar: appBarComponent(context, isMenuAndHome: true),
       drawer: const SideBarComponent(),
       backgroundColor: AppColors.backgroundColor,
       body: FutureBuilder<PaginatedEpisodes>(

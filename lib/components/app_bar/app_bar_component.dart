@@ -2,52 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rick_morty_app/pages/feed_page.dart';
 import 'package:rick_morty_app/theme/app_images.dart';
-import '../../theme/app_colors.dart';
+import 'package:rick_morty_app/theme/app_colors.dart'; 
 
-PreferredSizeWidget appBarComponent(BuildContext context, {bool isSecondPage = false}) {
+PreferredSizeWidget appBarComponent(
+  BuildContext context, {
+  bool isSecondPage = false,
+  bool isMenuAndHome = false, 
+}) {
   return AppBar(
     toolbarHeight: kToolbarHeight * 2.2,
     backgroundColor: AppColors.appBarColor,
     systemOverlayStyle: SystemUiOverlayStyle.dark,
-
-    // espaço extra só nas páginas de detalhe (voltar + home)
-    leadingWidth: isSecondPage ? 96 : null,
+    leadingWidth: (isSecondPage || isMenuAndHome) ? 96 : null,
 
     leading: Builder(
       builder: (ctx) => Align(
         alignment: Alignment.topCenter,
         child: Padding(
           padding: const EdgeInsets.only(top: 6),
-          child: isSecondPage
-              ? Row(
-                  children: [
-                    const SizedBox(width: 14),
-                    GestureDetector(
-                      onTap: () {
-                        final currentRoute = ModalRoute.of(ctx)?.settings.name;
-                        if (currentRoute == MainFeedPage.routeId) return;
-                        Navigator.pop(ctx);
-                      },
-                      child: const Icon(Icons.arrow_back, color: Color(0xFFE6E1E5)),
-                    ),
-
-                    const SizedBox(width: 10),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(ctx).pushNamedAndRemoveUntil(
-                          MainFeedPage.routeId,
-                          (route) => false,
-                        );
-                      },
-                      child: const Icon(Icons.home_outlined, color: Color(0xFFE6E1E5)),
-                    ),
-                  ],
-                )
-
-              : GestureDetector(
-                  onTap: () => Scaffold.of(ctx).openDrawer(),
-                  child: const Icon(Icons.menu, color: Color(0xFFE6E1E5)),
-                ),
+          child: _buildLeadingContent(ctx, isSecondPage, isMenuAndHome),
         ),
       ),
     ),
@@ -57,7 +30,8 @@ PreferredSizeWidget appBarComponent(BuildContext context, {bool isSecondPage = f
         alignment: Alignment.topCenter,
         child: Padding(
           padding: const EdgeInsets.only(top: 6, right: 16),
-          child: const Icon(Icons.account_circle, color: Color(0xFFCAC4D0), size: 26),
+          child: const Icon(Icons.account_circle,
+              color: Color(0xFFCAC4D0), size: 26),
         ),
       ),
     ],
@@ -82,5 +56,62 @@ PreferredSizeWidget appBarComponent(BuildContext context, {bool isSecondPage = f
         ],
       ),
     ),
+  );
+}
+
+Widget _buildLeadingContent(
+    BuildContext ctx, bool isSecondPage, bool isMenuAndHome) {
+  
+  if (isSecondPage) {
+    return Row(
+      children: [
+        const SizedBox(width: 14),
+        GestureDetector(
+          onTap: () {
+            final currentRoute = ModalRoute.of(ctx)?.settings.name;
+            if (currentRoute == MainFeedPage.routeId) return;
+            Navigator.pop(ctx);
+          },
+          child: const Icon(Icons.arrow_back, color: Color(0xFFE6E1E5)),
+        ),
+        const SizedBox(width: 10),
+        GestureDetector(
+          onTap: () {
+            Navigator.of(ctx).pushNamedAndRemoveUntil(
+              MainFeedPage.routeId,
+              (route) => false,
+            );
+          },
+          child: const Icon(Icons.home_outlined, color: Color(0xFFE6E1E5)),
+        ),
+      ],
+    );
+  }
+
+  if (isMenuAndHome) {
+    return Row(
+      children: [
+        const SizedBox(width: 14),
+        GestureDetector(
+          onTap: () => Scaffold.of(ctx).openDrawer(),
+          child: const Icon(Icons.menu, color: Color(0xFFE6E1E5)),
+        ),
+        const SizedBox(width: 10),
+        GestureDetector(
+          onTap: () {
+            Navigator.of(ctx).pushNamedAndRemoveUntil(
+              MainFeedPage.routeId,
+              (route) => false,
+            );
+          },
+          child: const Icon(Icons.home_outlined, color: Color(0xFFE6E1E5)),
+        ),
+      ],
+    );
+  }
+
+  return GestureDetector(
+    onTap: () => Scaffold.of(ctx).openDrawer(),
+    child: const Icon(Icons.menu, color: Color(0xFFE6E1E5)),
   );
 }
