@@ -39,7 +39,7 @@ class MainFeedPage extends StatelessWidget {
               return Padding(
                 padding: const EdgeInsets.only(left: 20), 
                 child: const Text(
-                  'Failed to load',
+                  'No connection',
                   style: TextStyle(color: Colors.white),
                 ),
               );
