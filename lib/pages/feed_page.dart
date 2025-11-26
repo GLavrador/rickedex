@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rick_morty_app/components/feed/feed_skeleton_stack.dart';
 import 'package:rick_morty_app/components/navigation/side_bar_component.dart';
 import 'package:rick_morty_app/components/app_bar/app_bar_component.dart';
 import 'package:rick_morty_app/components/feed/feed_section.dart';
@@ -26,7 +27,7 @@ class MainFeedPage extends StatelessWidget {
               return const SizedBox(
                 width: 110,
                 height: 100,
-                child: Center(child: CircularProgressIndicator()),
+                child: Center(child: FeedSkeletonStack()),
               );
             }
 
