@@ -7,13 +7,13 @@ class FeedImageStack extends StatelessWidget {
     required this.imagePaths,
     required this.ids,
     required this.onTap,
-    this.maxItems = 5, 
+    this.maxItems = 5,
   });
 
   final List<String> imagePaths;
   final List<int> ids;
   final void Function(int id) onTap;
-  final int maxItems; 
+  final int maxItems;
 
   @override
   Widget build(BuildContext context) {
@@ -23,22 +23,47 @@ class FeedImageStack extends StatelessWidget {
     const double size = 100;
     const double overlap = 70;
 
-    return SizedBox(
-      width: size + (list.length - 1) * overlap,
-      height: size,
-      child: Stack(
-        children: List.generate(list.length, (i) {
-          final highlight = i == list.length - 1;
-          final shouldMaskPrevious = i != 0;
+    final contentWidth = size + (list.length - 1) * overlap;
 
-          return Positioned(
-            left: i * overlap,
-            child: GestureDetector(
-              onTap: () => onTap(idList[i]),
-              child: _buildCard(list[i], highlight, shouldMaskPrevious),
-            ),
-          );
-        }),
+    return ShaderMask(
+      shaderCallback: (Rect bounds) {
+        return const LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [
+            Colors.transparent, 
+            Colors.white,       
+            Colors.white,      
+            Colors.transparent, 
+          ],
+          stops: [0.0, 0.05, 0.95, 1.0], 
+        ).createShader(bounds);
+      },
+      blendMode: BlendMode.dstIn,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        clipBehavior: Clip.antiAlias,
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: SizedBox(
+          width: contentWidth,
+          height: size,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: List.generate(list.length, (i) {
+              final highlight = i == list.length - 1;
+              final shouldMaskPrevious = i != 0;
+
+              return Positioned(
+                left: i * overlap,
+                child: GestureDetector(
+                  onTap: () => onTap(idList[i]),
+                  child: _buildCard(list[i], highlight, shouldMaskPrevious),
+                ),
+              );
+            }),
+          ),
+        ),
       ),
     );
   }
