@@ -20,12 +20,7 @@ class MainFeedPage extends StatelessWidget {
         title: 'Characters',
         routeName: '/characters',
         previewBuilder: (ctx) => FutureBuilder<List<Character>>(
-          future: Future.wait([
-            Repository.getRandomCharacter(),
-            Repository.getRandomCharacter(),
-            Repository.getRandomCharacter(),
-            Repository.getRandomCharacter(),
-          ]),
+          future: Repository.getRandomCharacters(4),
           builder: (c, snap) {
             if (snap.connectionState == ConnectionState.waiting) {
               return const SizedBox(
@@ -37,7 +32,7 @@ class MainFeedPage extends StatelessWidget {
 
             if (snap.hasError) {
               return Padding(
-                padding: const EdgeInsets.only(left: 20), 
+                padding: const EdgeInsets.only(left: 20),
                 child: const Text(
                   'No connection',
                   style: TextStyle(color: Colors.white),
