@@ -27,12 +27,13 @@ class FeedImageStack extends StatelessWidget {
       child: Stack(
         children: List.generate(list.length, (i) {
           final highlight = i == list.length - 1;
+          final shouldMaskPrevious = i != 0;
 
           return Positioned(
             left: i * overlap,
             child: GestureDetector(
               onTap: () => onTap(idList[i]),
-              child: _buildCard(list[i], highlight),
+              child: _buildCard(list[i], highlight, shouldMaskPrevious),
             ),
           );
         }),
@@ -40,16 +41,25 @@ class FeedImageStack extends StatelessWidget {
     );
   }
 
-  Widget _buildCard(String url, bool highlight) {
+  Widget _buildCard(String url, bool highlight, bool shouldMaskPrevious) {
     return Container(
       width: 100,
       height: 100,
       decoration: BoxDecoration(
+        color: AppColors.primaryColorDark, 
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
           color: highlight ? AppColors.primaryColorLight : Colors.white,
           width: highlight ? 3 : 1.5,
         ),
+        boxShadow: [
+          if (shouldMaskPrevious)
+            BoxShadow(
+              color: AppColors.backgroundColor,
+              spreadRadius: 1.0,
+              blurRadius: 0,
+            ),
+        ],
         image: DecorationImage(
           fit: BoxFit.cover,
           image: NetworkImage(url),
