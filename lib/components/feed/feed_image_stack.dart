@@ -4,18 +4,18 @@ import 'package:rick_morty_app/theme/app_colors.dart';
 class FeedImageStack extends StatelessWidget {
   const FeedImageStack({
     super.key,
-    required this.urls,
+    required this.imagePaths,
     required this.ids,
     required this.onTap,
   });
 
-  final List<String> urls;
+  final List<String> imagePaths;
   final List<int> ids;
   final void Function(int id) onTap;
 
   @override
   Widget build(BuildContext context) {
-    final list = urls.take(4).toList();
+    final list = imagePaths.take(4).toList();
     final idList = ids.take(4).toList();
 
     const double size = 100;
@@ -41,7 +41,11 @@ class FeedImageStack extends StatelessWidget {
     );
   }
 
-  Widget _buildCard(String url, bool highlight, bool shouldMaskPrevious) {
+  Widget _buildCard(String path, bool highlight, bool shouldMaskPrevious) {
+    final imageProvider = path.startsWith('http')
+        ? NetworkImage(path)
+        : AssetImage(path) as ImageProvider;
+
     return Container(
       width: 100,
       height: 100,
@@ -62,7 +66,7 @@ class FeedImageStack extends StatelessWidget {
         ],
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: NetworkImage(url),
+          image: imageProvider,
         ),
       ),
     );
