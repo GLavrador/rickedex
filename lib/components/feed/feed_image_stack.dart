@@ -15,11 +15,11 @@ class FeedImageStack extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final list = urls.take(5).toList();
-    final idList = ids.take(5).toList();
+    final list = urls.take(4).toList();
+    final idList = ids.take(4).toList();
 
     const double size = 100;
-    const double overlap = 56;
+    const double overlap = 70;
 
     return SizedBox(
       width: size + (list.length - 1) * overlap,
@@ -47,8 +47,8 @@ class FeedImageStack extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: highlight ? AppColors.primaryColorLight : Colors.transparent,
-          width: 2,
+          color: highlight ? AppColors.primaryColorLight : Colors.white,
+          width: highlight ? 3 : 1.5,
         ),
         image: DecorationImage(
           fit: BoxFit.cover,
