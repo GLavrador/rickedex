@@ -27,8 +27,6 @@ class _FilterLocationComponentState extends State<FilterLocationComponent> {
     'Dimension C-137',
     'unknown',
     'Fantasy Dimension',
-    'Dimension 5-126',
-    'Cronenberg Dimension',
   ];
 
   @override
