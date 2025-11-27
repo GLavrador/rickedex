@@ -40,7 +40,7 @@ class _RandomPageState extends State<RandomPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarComponent(context, isSecondPage: true),
+      appBar: appBarComponent(context, isMenuAndHome: true),
       backgroundColor: AppColors.backgroundColor,
       drawer: const SideBarComponent(),
       body: ListView(
