@@ -4,12 +4,13 @@ import 'package:rick_morty_app/components/navigation/side_bar_component.dart';
 import 'package:rick_morty_app/components/app_bar/app_bar_component.dart';
 import 'package:rick_morty_app/components/feed/feed_section.dart';
 import 'package:rick_morty_app/components/feed/feed_image_stack.dart';
-import 'package:rick_morty_app/components/feed/feed_text_stack.dart';
+import 'package:rick_morty_app/components/feed/feed_text_stack.dart'; 
 import 'package:rick_morty_app/data/repository.dart';
 import 'package:rick_morty_app/models/character.dart';
 import 'package:rick_morty_app/pages/character_details_page.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 import 'package:rick_morty_app/theme/app_images.dart';
+import 'package:rick_morty_app/services/favorites_service.dart';
 
 class MainFeedPage extends StatelessWidget {
   const MainFeedPage({super.key});
@@ -17,13 +18,13 @@ class MainFeedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     
-     final locationDimensions = [
-        'unknown',
-        'Fantasy Dimension',
-        'Replacement Dimension',
-        'Dimension C-137',
-      ];
+    
+    final locationDimensions = [
+      'unknown',
+      'Fantasy Dimension',
+      'Replacement Dimension',
+      'Dimension C-137',
+    ];
 
     final sections = <_SectionConfig>[
       _SectionConfig(
@@ -41,23 +42,17 @@ class MainFeedPage extends StatelessWidget {
             }
 
             if (snap.hasError) {
-              return Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: const Text(
-                  'No connection',
-                  style: TextStyle(color: Colors.white),
-                ),
+              return const Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: Text('No connection', style: TextStyle(color: Colors.white)),
               );
             }
 
             final data = snap.data ?? <Character>[];
             if (data.isEmpty) {
-              return Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: const Text(
-                  'No data',
-                  style: TextStyle(color: Colors.white),
-                ),
+              return const Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: Text('No data', style: TextStyle(color: Colors.white)),
               );
             }
 
@@ -84,11 +79,11 @@ class MainFeedPage extends StatelessWidget {
         routeName: '/episodes',
         previewBuilder: (ctx) => FeedImageStack(
           imagePaths: const [
-          AppImages.s1,
-          AppImages.s2,
-          AppImages.s3,
-          AppImages.s4,
-          AppImages.s5,
+            AppImages.s1,
+            AppImages.s2,
+            AppImages.s3,
+            AppImages.s4,
+            AppImages.s5,
           ],
           ids: const [1, 2, 3, 4, 5],
           onTap: (seasonId) {
@@ -108,14 +103,11 @@ class MainFeedPage extends StatelessWidget {
             AppImages.l4,
           ],
 
-          ids: const [0, 1, 2, 3], 
+          ids: const [0, 1, 2, 3],
           onTap: (index) {
             final dimensionName = locationDimensions[index];
-            
-            Navigator.of(ctx).pushNamed(
-              '/locations', 
-              arguments: dimensionName
-            );
+
+            Navigator.of(ctx).pushNamed('/locations', arguments: dimensionName);
           },
         ),
       ),
@@ -123,9 +115,56 @@ class MainFeedPage extends StatelessWidget {
       _SectionConfig(
         title: 'Favorites',
         routeName: '/favorites',
-        previewBuilder: (ctx) => const FeedTextStack(
-          items: ['Saved', 'Ricks', 'Mortys', 'Other'],
-        ),
+        previewBuilder: (ctx) {
+          return ValueListenableBuilder<Set<int>>(
+            valueListenable: FavoritesService.instance.favorites,
+            builder: (context, favoritesSet, child) {
+              
+              if (favoritesSet.isEmpty) {
+                return const FeedTextStack(
+                  items: ['Mark', 'Your', 'Best', 'Chars'],
+                );
+              }
+
+              List<int> idsToFetch = favoritesSet.toList();
+              if (idsToFetch.length > 5) {
+                idsToFetch.shuffle(); 
+                idsToFetch = idsToFetch.take(5).toList(); 
+              } else {
+                idsToFetch.sort(); 
+              }
+
+              return FutureBuilder<List<Character>>(
+                future: Repository.getCharactersByIds(idsToFetch),
+                builder: (context, snap) {
+                  if (snap.connectionState == ConnectionState.waiting) {
+                    return const FeedSkeletonStack();
+                  }
+                  
+                  if (snap.hasError || !snap.hasData || snap.data!.isEmpty) {
+                    return const FeedTextStack(items: ['Error', 'Loading', 'Favs']);
+                  }
+
+                  final chars = snap.data!;
+                  final urls = chars.map((e) => e.image).toList();
+                  final ids = chars.map((e) => e.id).toList();
+
+                  return FeedImageStack(
+                    imagePaths: urls,
+                    ids: ids,
+                    onTap: (id) {
+                      Navigator.pushNamed(
+                        ctx,
+                        CharacterDetailsPage.routeId,
+                        arguments: id,
+                      );
+                    },
+                  );
+                },
+              );
+            },
+          );
+        },
       ),
 
       _SectionConfig(
