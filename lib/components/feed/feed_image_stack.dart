@@ -7,11 +7,13 @@ class FeedImageStack extends StatelessWidget {
     required this.imagePaths,
     required this.ids,
     required this.onTap,
+    this.labels,
     this.maxItems = 5,
   });
 
   final List<String> imagePaths;
   final List<int> ids;
+  final List<String>? labels;
   final void Function(int id) onTap;
   final int maxItems;
 
@@ -19,6 +21,7 @@ class FeedImageStack extends StatelessWidget {
   Widget build(BuildContext context) {
     final list = imagePaths.take(maxItems).toList();
     final idList = ids.take(maxItems).toList();
+    final labelList = labels?.take(maxItems).toList();
 
     const double size = 100;
     const double overlap = 70;
@@ -31,12 +34,12 @@ class FeedImageStack extends StatelessWidget {
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
           colors: [
-            Colors.transparent, 
-            Colors.white,       
-            Colors.white,      
-            Colors.transparent, 
+            Colors.transparent,
+            Colors.white,
+            Colors.white,
+            Colors.transparent,
           ],
-          stops: [0.0, 0.05, 0.95, 1.0], 
+          stops: [0.0, 0.05, 0.95, 1.0],
         ).createShader(bounds);
       },
       blendMode: BlendMode.dstIn,
@@ -53,12 +56,15 @@ class FeedImageStack extends StatelessWidget {
             children: List.generate(list.length, (i) {
               final highlight = i == list.length - 1;
               final shouldMaskPrevious = i != 0;
+              final label = (labelList != null && i < labelList.length) 
+                  ? labelList[i] 
+                  : null;
 
               return Positioned(
                 left: i * overlap,
                 child: GestureDetector(
                   onTap: () => onTap(idList[i]),
-                  child: _buildCard(list[i], highlight, shouldMaskPrevious),
+                  child: _buildCard(list[i], highlight, shouldMaskPrevious, label),
                 ),
               );
             }),
@@ -68,10 +74,13 @@ class FeedImageStack extends StatelessWidget {
     );
   }
 
-  Widget _buildCard(String path, bool highlight, bool shouldMaskPrevious) {
+  Widget _buildCard(String path, bool highlight, bool shouldMaskPrevious, String? label) {
     final imageProvider = path.startsWith('http')
         ? NetworkImage(path)
         : AssetImage(path) as ImageProvider;
+
+    final borderColor = highlight ? AppColors.primaryColorLight : Colors.white;
+    final textColor = highlight ? Colors.white : AppColors.primaryColorDark;
 
     return Container(
       width: 100,
@@ -80,7 +89,7 @@ class FeedImageStack extends StatelessWidget {
         color: AppColors.primaryColorDark,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: highlight ? AppColors.primaryColorLight : Colors.white,
+          color: borderColor,
           width: highlight ? 3 : 1.5,
         ),
         boxShadow: [
@@ -99,6 +108,30 @@ class FeedImageStack extends StatelessWidget {
           },
         ),
       ),
+
+      child: label != null 
+          ? Align(
+              alignment: Alignment.bottomLeft,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: borderColor,
+                  borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(8),
+                    bottomLeft: Radius.circular(10), 
+                  ),
+                ),
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    color: textColor,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            )
+          : null,
     );
   }
 }

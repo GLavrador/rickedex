@@ -42,6 +42,7 @@ class MainFeedPage extends StatelessWidget {
             AppImages.s5,
           ],
           ids: const [1, 2, 3, 4, 5],
+          labels: const ['S1', 'S2', 'S3', 'S4', 'S5'],
           onTap: (seasonId) {
             Navigator.of(ctx).pushNamed('/episodes', arguments: seasonId);
           },
@@ -60,6 +61,12 @@ class MainFeedPage extends StatelessWidget {
           ],
 
           ids: const [0, 1, 2, 3],
+          labels: const[
+            'Unknown',
+            'Fantasy',
+            'Replacement',
+            'C-137',
+          ],
           onTap: (index) {
             final dimensionName = locationDimensions[index];
 
