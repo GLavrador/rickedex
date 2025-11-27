@@ -3,21 +3,18 @@ import 'package:rick_morty_app/components/feed/feed_image_stack.dart';
 import 'package:rick_morty_app/components/feed/feed_skeleton_stack.dart';
 import 'package:rick_morty_app/models/character.dart';
 import 'package:rick_morty_app/pages/character_details_page.dart';
+import 'package:rick_morty_app/services/feed_service.dart';
 
 class CharactersPreview extends StatelessWidget {
-  const CharactersPreview({
-    super.key,
-    required this.characterFuture,
-  });
-
-  final Future<List<Character>> characterFuture;
+  const CharactersPreview({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Character>>(
-      future: characterFuture,
-      builder: (c, snap) {
-        if (snap.connectionState == ConnectionState.waiting) {
+    return ValueListenableBuilder<List<Character>?>(
+      valueListenable: FeedService.instance.characters,
+      builder: (context, data, child) {
+        
+        if (data == null) {
           return const SizedBox(
             width: 110,
             height: 100,
@@ -25,14 +22,6 @@ class CharactersPreview extends StatelessWidget {
           );
         }
 
-        if (snap.hasError) {
-          return const Padding(
-            padding: EdgeInsets.only(left: 20),
-            child: Text('No connection', style: TextStyle(color: Colors.white)),
-          );
-        }
-
-        final data = snap.data ?? <Character>[];
         if (data.isEmpty) {
           return const Padding(
             padding: EdgeInsets.only(left: 20),
@@ -48,7 +37,7 @@ class CharactersPreview extends StatelessWidget {
           ids: ids,
           onTap: (id) {
             Navigator.pushNamed(
-              c,
+              context,
               CharacterDetailsPage.routeId,
               arguments: id,
             );

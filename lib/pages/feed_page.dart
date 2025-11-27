@@ -6,8 +6,7 @@ import 'package:rick_morty_app/components/feed/feed_image_stack.dart';
 import 'package:rick_morty_app/components/feed/characters_preview.dart';
 import 'package:rick_morty_app/components/feed/favorites_preview.dart';
 import 'package:rick_morty_app/components/feed/random_character_preview.dart';
-import 'package:rick_morty_app/data/repository.dart'; 
-import 'package:rick_morty_app/models/character.dart'; 
+import 'package:rick_morty_app/services/feed_service.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 import 'package:rick_morty_app/theme/app_images.dart';
 
@@ -21,34 +20,21 @@ class MainFeedPage extends StatefulWidget {
 
 class _MainFeedPageState extends State<MainFeedPage> {
 
-  static Future<List<Character>>? _cachedCharactersFuture;
-
   @override
   void initState() {
     super.initState();
- 
-    if (_cachedCharactersFuture == null) {
-      _loadCharacters();
-    }
-  }
-
-  void _loadCharacters() {
-    _cachedCharactersFuture = Repository.getRandomCharacters(5);
+    FeedService.instance.loadCharacters();
   }
 
   Future<void> _onRefresh() async {
     await Future.delayed(const Duration(milliseconds: 1000));
     
-    if (mounted) {
-      setState(() {
-        _loadCharacters();
-      });
-    }
+    await FeedService.instance.loadCharacters(force: true);
   }
 
   @override
   Widget build(BuildContext context) {
-
+    
     final locationDimensions = [
       'unknown',
       'Fantasy Dimension',
@@ -56,13 +42,18 @@ class _MainFeedPageState extends State<MainFeedPage> {
       'Dimension C-137',
     ];
 
+    final locationLabels = [
+      'Unknown',
+      'Fantasy',
+      'Replacement',
+      'C-137',
+    ];
+
     final sections = <_SectionConfig>[
       _SectionConfig(
         title: 'Characters',
         routeName: '/characters',
-        previewBuilder: (ctx) => CharactersPreview(
-          characterFuture: _cachedCharactersFuture!,
-        ),
+        previewBuilder: (ctx) => const CharactersPreview(),
       ),
 
       _SectionConfig(
@@ -94,9 +85,9 @@ class _MainFeedPageState extends State<MainFeedPage> {
             AppImages.l3,
             AppImages.l4,
           ],
-
+        
           ids: const [0, 1, 2, 3],
-          labels: ['Unknown','Fantasy','Replacement','C-137',],
+          labels: locationLabels,
           onTap: (index) {
             final dimensionName = locationDimensions[index];
 
