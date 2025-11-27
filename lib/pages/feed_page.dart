@@ -17,6 +17,14 @@ class MainFeedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     
+     final locationDimensions = [
+        'unknown',
+        'Fantasy Dimension',
+        'Replacement Dimension',
+        'Dimension C-137',
+      ];
+
     final sections = <_SectionConfig>[
       _SectionConfig(
         title: 'Characters',
@@ -92,8 +100,23 @@ class MainFeedPage extends StatelessWidget {
       _SectionConfig(
         title: 'Locations',
         routeName: '/locations',
-        previewBuilder: (ctx) => const FeedTextStack(
-          items: ['Earth', 'Citadel', 'Gazorp', 'Gromflom'],
+        previewBuilder: (ctx) => FeedImageStack(
+          imagePaths: const [
+            AppImages.l1,
+            AppImages.l2,
+            AppImages.l3,
+            AppImages.l4,
+          ],
+
+          ids: const [0, 1, 2, 3], 
+          onTap: (index) {
+            final dimensionName = locationDimensions[index];
+            
+            Navigator.of(ctx).pushNamed(
+              '/locations', 
+              arguments: dimensionName
+            );
+          },
         ),
       ),
 
