@@ -4,7 +4,7 @@ import 'package:rick_morty_app/components/detailed_cards/detailed_episode_card.d
 import 'package:rick_morty_app/data/repository.dart';
 import 'package:rick_morty_app/models/episode.dart';
 import 'package:rick_morty_app/models/character.dart';
-import 'package:rick_morty_app/pages/details_page.dart';
+import 'package:rick_morty_app/pages/character_details_page.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 import 'package:rick_morty_app/utils/id_from_url.dart';
 
@@ -74,8 +74,8 @@ class _EpisodeDetailsPageState extends State<EpisodeDetailsPage> {
                     onCharacterTap: (id) {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          settings: const RouteSettings(name: DetailsPage.routeId),
-                          builder: (_) => DetailsPage(characterId: id),
+                          settings: const RouteSettings(name: CharacterDetailsPage.routeId),
+                          builder: (_) => CharacterDetailsPage(characterId: id),
                         ),
                       );
                     },

@@ -7,7 +7,7 @@ import 'package:rick_morty_app/components/feed/feed_image_stack.dart';
 import 'package:rick_morty_app/components/feed/feed_text_stack.dart';
 import 'package:rick_morty_app/data/repository.dart';
 import 'package:rick_morty_app/models/character.dart';
-import 'package:rick_morty_app/pages/details_page.dart';
+import 'package:rick_morty_app/pages/character_details_page.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 import 'package:rick_morty_app/theme/app_images.dart';
 
@@ -70,7 +70,7 @@ class MainFeedPage extends StatelessWidget {
               onTap: (id) {
                 Navigator.pushNamed(
                   ctx,
-                  DetailsPage.routeId,
+                  CharacterDetailsPage.routeId,
                   arguments: id,
                 );
               },

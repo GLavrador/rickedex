@@ -9,10 +9,10 @@ import 'package:rick_morty_app/utils/id_from_url.dart';
 import 'package:rick_morty_app/pages/location_details_page.dart';
 import 'package:rick_morty_app/pages/episode_details_page.dart';
 
-class DetailsPage extends StatefulWidget {
+class CharacterDetailsPage extends StatefulWidget {
   static const routeId = '/details';
 
-  const DetailsPage({
+  const CharacterDetailsPage({
     super.key,
     required this.characterId,
   });
@@ -20,10 +20,10 @@ class DetailsPage extends StatefulWidget {
   final int characterId;
 
   @override
-  State<DetailsPage> createState() => _DetailsPageState();
+  State<CharacterDetailsPage> createState() => _CharacterDetailsPageState();
 }
 
-class _DetailsPageState extends State<DetailsPage> {
+class _CharacterDetailsPageState extends State<CharacterDetailsPage> {
   Future<Character>? characterFuture;
 
   static const double _minImageHeight = 160.0;

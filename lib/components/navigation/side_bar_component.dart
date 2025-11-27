@@ -3,7 +3,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:rick_morty_app/components/organization/section_label.dart';
 import 'package:rick_morty_app/pages/episodes_page.dart';
 import 'package:rick_morty_app/pages/favorites_page.dart';
-import 'package:rick_morty_app/pages/home_page.dart';
+import 'package:rick_morty_app/pages/characters_page.dart';
 import 'package:rick_morty_app/pages/locations_page.dart';
 import 'package:rick_morty_app/pages/random_page.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
@@ -90,8 +90,8 @@ class SideBarComponent extends StatelessWidget {
                       leading: const Icon(Icons.people_alt_outlined),
                       title: const Text('Characters'),
                       dense: true,
-                      selected: _isRoute(context, HomePage.routeId),
-                      onTap: () => _goToNamed(context, HomePage.routeId),
+                      selected: _isRoute(context, CharactersPage.routeId),
+                      onTap: () => _goToNamed(context, CharactersPage.routeId),
                     ),
                     ListTile(
                       leading: const Icon(Icons.public_outlined),

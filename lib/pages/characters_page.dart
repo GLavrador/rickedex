@@ -8,23 +8,23 @@ import 'package:rick_morty_app/components/navigation/search_bar_component.dart';
 import 'package:rick_morty_app/components/navigation/side_bar_component.dart';
 import 'package:rick_morty_app/data/repository.dart';
 import 'package:rick_morty_app/models/paginated_characters.dart';
-import 'package:rick_morty_app/pages/details_page.dart';
+import 'package:rick_morty_app/pages/character_details_page.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 
-class HomePage extends StatefulWidget {
+class CharactersPage extends StatefulWidget {
   static const routeId = '/characters';
-  const HomePage({super.key});
+  const CharactersPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<CharactersPage> createState() => _CharactersPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _CharactersPageState extends State<CharactersPage> {
   Future<PaginatedCharacters>? _charactersFuture;
   final _searchController = TextEditingController();
 
   int _currentPage = 1;
-  String? _searchQuery; // termo atual
+  String? _searchQuery; 
   Map<String, String?> _filters = {
     'gender': null,
     'status': null,
@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.symmetric(vertical: 7.5),
               itemCount: itemCount,
               itemBuilder: (context, index) {
-                // barra de busca com filtro e spinner
+
                 if (index == 0) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 7.5, horizontal: 20),
@@ -127,7 +127,6 @@ class _HomePageState extends State<HomePage> {
                   );
                 }
 
-                // se não houver resultados
                 if (showEmpty && index == 1) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 24),
@@ -140,7 +139,6 @@ class _HomePageState extends State<HomePage> {
                   );
                 }
 
-                // paginação: só mostra se houver 2+ páginas
                 final isLast = index == itemCount - 1;
                 if (isLast) {
                   if (apiPages <= 1) return const SizedBox.shrink();
@@ -158,7 +156,6 @@ class _HomePageState extends State<HomePage> {
                   );
                 }
 
-                // quando showEmpty == true, os cards não existem, então só cai aqui quando há resultados
                 final listIndex = showEmpty ? index - 2 : index - 1;
                 final character = results[listIndex];
                 return CharacterCard(
@@ -180,7 +177,6 @@ class _HomePageState extends State<HomePage> {
               ),
             );
           } else {
-            // carregamento inicial
             return const Center(child: CircularProgressIndicator());
           }
         },

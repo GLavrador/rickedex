@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/character.dart';
-import '../../pages/details_page.dart';
+import '../../pages/character_details_page.dart';
 import '../cards/character_card.dart';
 
 class CharacterGridView extends StatelessWidget {
@@ -33,8 +33,8 @@ class CharacterGridView extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    settings: const RouteSettings(name: DetailsPage.routeId),
-                    builder: (_) => DetailsPage(characterId: character.id),
+                    settings: const RouteSettings(name: CharacterDetailsPage.routeId),
+                    builder: (_) => CharacterDetailsPage(characterId: character.id),
                   ),
                 );
               },

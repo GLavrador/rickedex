@@ -5,7 +5,7 @@ import 'package:rick_morty_app/components/navigation/page_flag.dart';
 import 'package:rick_morty_app/components/navigation/side_bar_component.dart';
 import 'package:rick_morty_app/data/repository.dart';
 import 'package:rick_morty_app/models/character.dart';
-import 'package:rick_morty_app/pages/details_page.dart';
+import 'package:rick_morty_app/pages/character_details_page.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 
 class RandomPage extends StatefulWidget {
@@ -76,8 +76,8 @@ class _RandomPageState extends State<RandomPage> {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    settings: const RouteSettings(name: DetailsPage.routeId),
-                    builder: (_) => DetailsPage(characterId: _character!.id),
+                    settings: const RouteSettings(name: CharacterDetailsPage.routeId),
+                    builder: (_) => CharacterDetailsPage(characterId: _character!.id),
                   ),
                 );
               },

@@ -4,7 +4,7 @@ import 'package:rick_morty_app/components/detailed_cards/detailed_location_card.
 import 'package:rick_morty_app/data/repository.dart';
 import 'package:rick_morty_app/models/location.dart';
 import 'package:rick_morty_app/models/character.dart';          
-import 'package:rick_morty_app/pages/details_page.dart';        
+import 'package:rick_morty_app/pages/character_details_page.dart';        
 import 'package:rick_morty_app/theme/app_colors.dart';
 import 'package:rick_morty_app/utils/id_from_url.dart';
 
@@ -62,8 +62,8 @@ class _LocationDetailsPageState extends State<LocationDetailsPage> {
                       onResidentTap: (id) {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            settings: const RouteSettings(name: DetailsPage.routeId),
-                            builder: (_) => DetailsPage(characterId: id),
+                            settings: const RouteSettings(name: CharacterDetailsPage.routeId),
+                            builder: (_) => CharacterDetailsPage(characterId: id),
                           ),
                         );
                       },
