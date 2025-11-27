@@ -151,4 +151,19 @@ abstract class Repository {
     final resp = await _dio.get('/character/$id');
     return Character.fromJson(resp.data);
   }
+
+  // sorteia múltiplos personagens únicos
+  static Future<List<Character>> getRandomCharacters(int amount) async {
+    final total = await _getCharactersCount();
+    final ids = <int>{};
+
+    while (ids.length < amount) {
+      ids.add(Random().nextInt(total) + 1);
+    }
+    final resp = await _dio.get('/character/${ids.join(',')}');
+
+    return (resp.data as List)
+        .map((e) => Character.fromJson(e))
+        .toList();
+  }
 }

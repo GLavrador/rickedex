@@ -7,6 +7,12 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Unreleased]
 
+### Added
+- **Main Feed Page**: nova página inicial do app, com seções de Characters, Episodes, Locations, Favorites e Random.  
+  Possui pré-visualizações em formato de pilhas (image stack e text stack) e layout remodulado.
+
+- **Location Page**: agora possui filtragem por dimensão.
+
 ## [v1.2.0] - 2025-09-17
 
 ### Added
