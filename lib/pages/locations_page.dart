@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rick_morty_app/components/app_bar/app_bar_component.dart';
 import 'package:rick_morty_app/components/cards/location_card.dart';
+import 'package:rick_morty_app/components/filters/filter_location_component.dart';
 import 'package:rick_morty_app/components/navigation/page_flag.dart';
 import 'package:rick_morty_app/components/navigation/pagination_bar.dart';
 import 'package:rick_morty_app/components/navigation/search_bar_component.dart';
@@ -23,11 +24,21 @@ class _LocationsPageState extends State<LocationsPage> {
   Future<PaginatedLocations>? _future;
   int _currentPage = 1;
   String? _searchQuery;
+  String? _dimensionFilter;
+
+  bool _isInit = true;
 
   @override
-  void initState() {
-    super.initState();
-    _load(1);
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_isInit) {
+      final args = ModalRoute.of(context)?.settings.arguments;
+      if (args is String) {
+        _dimensionFilter = args;
+      }
+      _load(1);
+      _isInit = false;
+    }
   }
 
   void _load(int page) {
@@ -36,6 +47,7 @@ class _LocationsPageState extends State<LocationsPage> {
       _future = Repository.getLocations(
         page: page,
         name: _searchQuery,
+        dimension: _dimensionFilter, 
       );
     });
   }
@@ -93,6 +105,13 @@ class _LocationsPageState extends State<LocationsPage> {
                 onSubmitted: _onSubmitted,
                 onClear: _clearSearch,
                 isLoading: isLoading,
+                trailingFilter: FilterLocationComponent(
+                  selectedDimension: _dimensionFilter,
+                  onChanged: (val) {
+                    _dimensionFilter = val;
+                    _load(1);
+                  },
+                ),
               ),
               const SizedBox(height: 12),
 
