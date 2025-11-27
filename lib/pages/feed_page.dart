@@ -6,6 +6,8 @@ import 'package:rick_morty_app/components/feed/feed_image_stack.dart';
 import 'package:rick_morty_app/components/feed/characters_preview.dart';
 import 'package:rick_morty_app/components/feed/favorites_preview.dart';
 import 'package:rick_morty_app/components/feed/random_character_preview.dart';
+import 'package:rick_morty_app/data/repository.dart'; 
+import 'package:rick_morty_app/models/character.dart'; 
 import 'package:rick_morty_app/theme/app_colors.dart';
 import 'package:rick_morty_app/theme/app_images.dart';
 
@@ -18,12 +20,29 @@ class MainFeedPage extends StatefulWidget {
 }
 
 class _MainFeedPageState extends State<MainFeedPage> {
-  
+
+  static Future<List<Character>>? _cachedCharactersFuture;
+
+  @override
+  void initState() {
+    super.initState();
+ 
+    if (_cachedCharactersFuture == null) {
+      _loadCharacters();
+    }
+  }
+
+  void _loadCharacters() {
+    _cachedCharactersFuture = Repository.getRandomCharacters(5);
+  }
+
   Future<void> _onRefresh() async {
     await Future.delayed(const Duration(milliseconds: 1000));
     
     if (mounted) {
-      setState(() {});
+      setState(() {
+        _loadCharacters();
+      });
     }
   }
 
@@ -41,7 +60,9 @@ class _MainFeedPageState extends State<MainFeedPage> {
       _SectionConfig(
         title: 'Characters',
         routeName: '/characters',
-        previewBuilder: (ctx) => const CharactersPreview(),
+        previewBuilder: (ctx) => CharactersPreview(
+          characterFuture: _cachedCharactersFuture!,
+        ),
       ),
 
       _SectionConfig(
