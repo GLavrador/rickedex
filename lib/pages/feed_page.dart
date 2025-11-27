@@ -9,13 +9,27 @@ import 'package:rick_morty_app/components/feed/random_character_preview.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 import 'package:rick_morty_app/theme/app_images.dart';
 
-class MainFeedPage extends StatelessWidget {
+class MainFeedPage extends StatefulWidget {
   const MainFeedPage({super.key});
   static const routeId = '/';
 
   @override
-  Widget build(BuildContext context) {
+  State<MainFeedPage> createState() => _MainFeedPageState();
+}
+
+class _MainFeedPageState extends State<MainFeedPage> {
+  
+  Future<void> _onRefresh() async {
+    await Future.delayed(const Duration(milliseconds: 1000));
     
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
     final locationDimensions = [
       'unknown',
       'Fantasy Dimension',
@@ -61,12 +75,7 @@ class MainFeedPage extends StatelessWidget {
           ],
 
           ids: const [0, 1, 2, 3],
-          labels: const[
-            'Unknown',
-            'Fantasy',
-            'Replacement',
-            'C-137',
-          ],
+          labels: ['Unknown','Fantasy','Replacement','C-137',],
           onTap: (index) {
             final dimensionName = locationDimensions[index];
 
@@ -96,25 +105,31 @@ class MainFeedPage extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.only(top: 6, bottom: 24),
-                itemCount: sections.length * 2 - 1,
-                separatorBuilder: (_, __) => const SizedBox(height: 8),
-                itemBuilder: (context, i) {
-                  if (i.isOdd) {
-                    return const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
+              child: RefreshIndicator(
+                onRefresh: _onRefresh,
+                color: AppColors.white,
+                backgroundColor: AppColors.primaryColorDark,
+                child: ListView.separated(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.only(top: 6, bottom: 24),
+                  itemCount: sections.length * 2 - 1,
+                  separatorBuilder: (_, __) => const SizedBox(height: 8),
+                  itemBuilder: (context, i) {
+                    if (i.isOdd) {
+                      return const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
                       child: Divider(thickness: 1, color: Color(0xFF8A8AE6), height: 18, endIndent: 0),
+                      );
+                    }
+                    final idx = i ~/ 2;
+                    final s = sections[idx];
+                    return FeedSection(
+                      title: s.title,
+                      preview: s.previewBuilder(context),
+                      onTap: () => Navigator.of(context).pushNamed(s.routeName),
                     );
-                  }
-                  final idx = i ~/ 2;
-                  final s = sections[idx];
-                  return FeedSection(
-                    title: s.title,
-                    preview: s.previewBuilder(context),
-                    onTap: () => Navigator.of(context).pushNamed(s.routeName),
-                  );
-                },
+                  },
+                ),
               ),
             ),
           ],
