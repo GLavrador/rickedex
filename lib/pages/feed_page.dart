@@ -23,13 +23,12 @@ class _MainFeedPageState extends State<MainFeedPage> {
   @override
   void initState() {
     super.initState();
-    FeedService.instance.loadCharacters();
+    FeedService.instance.loadAll();
   }
 
   Future<void> _onRefresh() async {
     await Future.delayed(const Duration(milliseconds: 1000));
-    
-    await FeedService.instance.loadCharacters(force: true);
+    await FeedService.instance.loadAll(force: true);
   }
 
   @override
@@ -85,7 +84,7 @@ class _MainFeedPageState extends State<MainFeedPage> {
             AppImages.l3,
             AppImages.l4,
           ],
-        
+
           ids: const [0, 1, 2, 3],
           labels: locationLabels,
           onTap: (index) {

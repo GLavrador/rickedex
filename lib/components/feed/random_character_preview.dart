@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:rick_morty_app/data/repository.dart';
 import 'package:rick_morty_app/models/character.dart';
+import 'package:rick_morty_app/services/feed_service.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 
 class RandomCharacterPreview extends StatelessWidget {
@@ -15,10 +15,11 @@ class RandomCharacterPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.centerLeft,
-      child: FutureBuilder<List<Character>>(
-        future: Repository.getRandomCharacters(10),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+      child: ValueListenableBuilder<List<Character>?>(
+        valueListenable: FeedService.instance.randomCharacters,
+        builder: (context, data, child) {
+          
+          if (data == null) {
             return _baseContainer(
               child: const Center(
                 child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
@@ -26,11 +27,9 @@ class RandomCharacterPreview extends StatelessWidget {
             );
           }
 
-          final characters = snapshot.data ?? [];
-
-          if (snapshot.hasError || characters.isEmpty) {
-            return GestureDetector(
-              onTap: () => Navigator.of(context).pushNamed('/random'),
+          if (data.isEmpty) {
+            return _clickableWrapper(
+              context,
               child: _baseContainer(
                 child: const Center(child: Icon(Icons.shuffle, color: Colors.white, size: 30)),
               ),
@@ -41,11 +40,11 @@ class RandomCharacterPreview extends StatelessWidget {
             stream: _timerStream(),
             builder: (context, timerSnapshot) {
               final tick = timerSnapshot.data ?? 0;
-              final index = tick % characters.length;
-              final char = characters[index];
+              final index = tick % data.length;
+              final char = data[index];
 
-              return GestureDetector(
-                onTap: () => Navigator.of(context).pushNamed('/random'),
+              return _clickableWrapper(
+                context,
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 800),
                   transitionBuilder: (Widget child, Animation<double> animation) {
@@ -61,6 +60,27 @@ class RandomCharacterPreview extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  Widget _clickableWrapper(BuildContext context, {required Widget child}) {
+    final borderRadius = BorderRadius.circular(14);
+    
+    return Stack(
+      children: [
+        child,
+        Positioned.fill(
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: borderRadius,
+              onTap: () => Navigator.of(context).pushNamed('/random'),
+              highlightColor: Colors.white.withValues(alpha: 0.1),
+              splashColor: Colors.white.withValues(alpha: 0.2),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
