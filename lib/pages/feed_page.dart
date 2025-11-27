@@ -3,9 +3,9 @@ import 'package:rick_morty_app/components/navigation/side_bar_component.dart';
 import 'package:rick_morty_app/components/app_bar/app_bar_component.dart';
 import 'package:rick_morty_app/components/feed/feed_section.dart';
 import 'package:rick_morty_app/components/feed/feed_image_stack.dart';
-import 'package:rick_morty_app/components/feed/feed_text_stack.dart';
 import 'package:rick_morty_app/components/feed/characters_preview.dart';
 import 'package:rick_morty_app/components/feed/favorites_preview.dart';
+import 'package:rick_morty_app/components/feed/random_character_preview.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 import 'package:rick_morty_app/theme/app_images.dart';
 
@@ -77,9 +77,7 @@ class MainFeedPage extends StatelessWidget {
       _SectionConfig(
         title: 'Random',
         routeName: '/random',
-        previewBuilder: (ctx) => const FeedTextStack(
-          items: ['Try', 'Shuffle', 'Lucky', 'Surprise'],
-        ),
+        previewBuilder: (ctx) => const RandomCharacterPreview(),
       ),
     ];
 
