@@ -162,7 +162,7 @@ class _CharactersPageState extends State<CharactersPage> {
                   character: character,
                   onTap: () {
                     Navigator.of(context).pushNamed(
-                      DetailsPage.routeId,
+                      CharacterDetailsPage.routeId,
                       arguments: character.id,
                     );
                   },
