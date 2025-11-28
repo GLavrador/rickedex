@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rick_morty_app/components/app_bar/app_bar_component.dart';
-import 'package:rick_morty_app/components/dialogs/app_confirmation.dialog.dart';
+import 'package:rick_morty_app/components/dialogs/app_confirmation_dialog.dart';
 import 'package:rick_morty_app/components/navigation/side_bar_component.dart';
 import 'package:rick_morty_app/components/quiz/quiz_difficulty_button.dart';
 import 'package:rick_morty_app/components/quiz/quiz_game_content.dart';
@@ -44,7 +44,7 @@ class _QuizPageState extends State<QuizPage> {
         confirmText: "Restart",
         cancelText: "Cancel",
         icon: Icons.refresh_rounded,
-        mainColor: AppColors.primaryColorLight, 
+        mainColor: AppColors.primaryColorLight,
       );
       if (!confirm) return;
     }
@@ -52,7 +52,9 @@ class _QuizPageState extends State<QuizPage> {
     _controller.changeDifficulty(newDiff);
   }
 
-  Future<bool> _confirmExit() async {
+  Future<bool> _checkNavigationAllowed() async {
+    if (_controller.currentScore == 0) return true; 
+
     return await AppConfirmationDialog.show(
       context,
       title: "Leaving this dimension?",
@@ -73,9 +75,7 @@ class _QuizPageState extends State<QuizPage> {
           canPop: _controller.currentScore == 0,
           onPopInvokedWithResult: (didPop, result) async {
             if (didPop) return;
-            
-            final shouldPop = await _confirmExit();
-            
+            final shouldPop = await _checkNavigationAllowed();
             if (shouldPop && context.mounted) {
               Navigator.of(context).pop();
             }
@@ -85,6 +85,7 @@ class _QuizPageState extends State<QuizPage> {
             appBar: appBarComponent(
               context,
               isMenuAndHome: true,
+              onHomeTap: _checkNavigationAllowed,
               actions: [
                 QuizDifficultyButton(
                   currentDifficulty: _controller.difficulty,
@@ -92,7 +93,9 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ],
             ),
-            drawer: const SideBarComponent(),
+            drawer: SideBarComponent(
+              onNavigationCheck: _checkNavigationAllowed,
+            ),
             body: SafeArea(
               child: Column(
                 children: [

@@ -8,7 +8,8 @@ PreferredSizeWidget appBarComponent(
   BuildContext context, {
   bool isSecondPage = false,
   bool isMenuAndHome = false,
-  List<Widget>? actions, 
+  List<Widget>? actions,
+  Future<bool> Function()? onHomeTap, 
 }) {
   return AppBar(
     toolbarHeight: kToolbarHeight * 2.2,
@@ -21,7 +22,7 @@ PreferredSizeWidget appBarComponent(
         alignment: Alignment.topCenter,
         child: Padding(
           padding: const EdgeInsets.only(top: 12),
-          child: _buildLeadingContent(ctx, isSecondPage, isMenuAndHome),
+          child: _buildLeadingContent(ctx, isSecondPage, isMenuAndHome, onHomeTap),
         ),
       ),
     ),
@@ -61,8 +62,23 @@ PreferredSizeWidget appBarComponent(
 }
 
 Widget _buildLeadingContent(
-    BuildContext ctx, bool isSecondPage, bool isMenuAndHome) {
+    BuildContext ctx, 
+    bool isSecondPage, 
+    bool isMenuAndHome, 
+    Future<bool> Function()? onHomeTap) {
   
+  void handleHomeTap() async {
+    if (onHomeTap != null) {
+      final allow = await onHomeTap();
+      if (!allow) return; 
+    }
+    
+    Navigator.of(ctx).pushNamedAndRemoveUntil(
+      MainFeedPage.routeId,
+      (route) => false,
+    );
+  }
+
   if (isSecondPage) {
     return Row(
       children: [
@@ -77,12 +93,7 @@ Widget _buildLeadingContent(
         ),
         const SizedBox(width: 10),
         GestureDetector(
-          onTap: () {
-            Navigator.of(ctx).pushNamedAndRemoveUntil(
-              MainFeedPage.routeId,
-              (route) => false,
-            );
-          },
+          onTap: handleHomeTap, 
           child: const Icon(Icons.home_outlined, color: Color(0xFFE6E1E5)),
         ),
       ],
@@ -99,12 +110,7 @@ Widget _buildLeadingContent(
         ),
         const SizedBox(width: 10),
         GestureDetector(
-          onTap: () {
-            Navigator.of(ctx).pushNamedAndRemoveUntil(
-              MainFeedPage.routeId,
-              (route) => false,
-            );
-          },
+          onTap: handleHomeTap, 
           child: const Icon(Icons.home_outlined, color: Color(0xFFE6E1E5)),
         ),
       ],

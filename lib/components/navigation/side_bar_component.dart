@@ -12,12 +12,24 @@ import 'package:rick_morty_app/theme/app_images.dart';
 import 'package:rick_morty_app/services/favorites_service.dart';
 
 class SideBarComponent extends StatelessWidget {
-  const SideBarComponent({super.key});
+  final Future<bool> Function()? onNavigationCheck;
+
+  const SideBarComponent({
+    super.key,
+    this.onNavigationCheck, 
+  });
 
   bool _isRoute(BuildContext context, String route) =>
       ModalRoute.of(context)?.settings.name == route;
 
-  void _goToNamed(BuildContext context, String routeName) {
+  void _goToNamed(BuildContext context, String routeName) async {
+    if (onNavigationCheck != null) {
+      final allow = await onNavigationCheck!();
+      if (!allow) return; 
+    }
+
+    if (!context.mounted) return;
+    
     Navigator.of(context).pop(); 
     if (!_isRoute(context, routeName)) {
       Navigator.of(context).pushReplacementNamed(routeName);
@@ -58,13 +70,13 @@ class SideBarComponent extends StatelessWidget {
                     const SizedBox(width: 12),
                     Text(
                       'Rick & Morty',
-                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppColors.white,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14.5,
-                        height: 1.0,                 
-                        letterSpacing: 14.5 * 0.165, 
-                      ),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: AppColors.white,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14.5,
+                            height: 1.0,
+                            letterSpacing: 14.5 * 0.165,
+                          ),
                     ),
                   ],
                 ),
@@ -89,7 +101,7 @@ class SideBarComponent extends StatelessWidget {
                       selected: _isRoute(context, QuizPage.routeId),
                       onTap: () => _goToNamed(context, QuizPage.routeId),
                     ),
-                    
+
                     const SectionLabel('Pages'),
                     
                     ListTile(
