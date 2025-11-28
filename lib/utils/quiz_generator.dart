@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:dio/dio.dart'; 
 import 'package:rick_morty_app/data/repository.dart';
 import 'package:rick_morty_app/models/character.dart';
 import 'package:rick_morty_app/models/quiz_types.dart';
@@ -16,13 +15,13 @@ class QuizGenerator {
     int type = 0;
 
     if (difficulty == QuizDifficulty.easy) {
-      
+
       type = Random().nextBool() ? 0 : 2;
     } else if (difficulty == QuizDifficulty.medium) {
-      
+
       type = Random().nextInt(4);
     } else {
-      
+
       type = Random().nextInt(6);
     }
     
@@ -43,7 +42,7 @@ class QuizGenerator {
           options: List.from(kStatusList),
         );
         
-      case 2: 
+      case 2:
         final correct = subject.species;
         final distractors = kSpeciesList
             .where((s) => s != correct)
@@ -59,7 +58,7 @@ class QuizGenerator {
           options: options,
         );
         
-      case 3: 
+      case 3:
         final correct = subject.origin.name;
         final otherOrigins = chars
             .where((c) => c.id != subject.id)
@@ -83,7 +82,7 @@ class QuizGenerator {
           options: options,
         );
 
-      case 4: 
+      case 4:
         final correctEpName = await _fetchFirstSeenName(subject);
         
         if (correctEpName == null) {
@@ -91,14 +90,15 @@ class QuizGenerator {
         }
 
         final otherChars = chars.where((c) => c.id != subject.id).take(3).toList();
-        final Set<String> distractorEpNames = {};
+        
+        final distractorNames = await Future.wait(
+          otherChars.map((c) => _fetchFirstSeenName(c))
+        );
 
-        for (var c in otherChars) {
-          final name = await _fetchFirstSeenName(c);
-          if (name != null && name != correctEpName) {
-            distractorEpNames.add(name);
-          }
-        }
+        final Set<String> distractorEpNames = distractorNames
+            .where((name) => name != null && name != correctEpName)
+            .cast<String>()
+            .toSet();
 
         if (distractorEpNames.length < 3) {
           final fallbacks = ['Pilot', 'Lawnmower Dog', 'Anatomy Park', 'M. Night Shaym-Aliens!']
@@ -154,12 +154,6 @@ class QuizGenerator {
 
   static Future<String?> _fetchFirstSeenName(Character c) async {
     if (c.episode.isEmpty) return null;
-    try {
-      final dio = Dio(BaseOptions(headers: {'Accept': 'application/json'}));
-      final resp = await dio.getUri(Uri.parse(c.episode.first));
-      return resp.data?['name'] as String?;
-    } catch (_) {
-      return null;
-    }
+    return Repository.getNameFromUrl(c.episode.first);
   }
 }
