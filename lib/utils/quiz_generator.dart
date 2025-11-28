@@ -6,9 +6,12 @@ import 'package:rick_morty_app/models/quiz_types.dart';
 class QuizGenerator {
   static Future<QuizRound> generateRound(QuizDifficulty difficulty) async {
 
-    final chars = await Repository.getRandomCharacters(4);
+    int totalOptions = 4; 
+    if (difficulty == QuizDifficulty.medium) totalOptions = 6;
+    if (difficulty == QuizDifficulty.hard) totalOptions = 8;
 
-    if (chars.length < 4) throw Exception("Not enough chars");
+    final chars = await Repository.getRandomCharacters(totalOptions);
+    if (chars.length < totalOptions) throw Exception("Not enough chars");
 
     final subject = chars[Random().nextInt(chars.length)];
 
@@ -26,7 +29,7 @@ class QuizGenerator {
     }
     
     switch (type) {
-      case 0:
+      case 0: 
         return QuizRound(
           subject: subject,
           question: "Who is this character?",
@@ -34,7 +37,7 @@ class QuizGenerator {
           options: chars.map((c) => c.name).toList()..shuffle(),
         );
         
-      case 1:
+      case 1: 
         return QuizRound(
           subject: subject,
           question: "Is ${subject.name}...",
@@ -42,14 +45,14 @@ class QuizGenerator {
           options: List.from(kStatusList),
         );
         
-      case 2:
+      case 2: 
         final correct = subject.species;
         final distractors = kSpeciesList
             .where((s) => s != correct)
             .toList()
             ..shuffle();
         
-        final options = [correct, ...distractors.take(3)]..shuffle();
+        final options = [correct, ...distractors.take(totalOptions - 1)]..shuffle();
         
         return QuizRound(
           subject: subject,
@@ -58,7 +61,7 @@ class QuizGenerator {
           options: options,
         );
         
-      case 3:
+      case 3: 
         final correct = subject.origin.name;
         final otherOrigins = chars
             .where((c) => c.id != subject.id)
@@ -68,7 +71,7 @@ class QuizGenerator {
             .toList();
         
         if (otherOrigins.length < 3) {
-          final fallbacks = ['Post-Apocalyptic Earth', 'Nuptia 4', 'Purge Planet', 'Bird World','Gromflom Prime', 'Earth (C-137)']
+                    final fallbacks = ['Post-Apocalyptic Earth', 'Nuptia 4', 'Purge Planet', 'Bird World','Gromflom Prime', 'Earth (C-137)']
               .where((f) => f != correct);
           otherOrigins.addAll(fallbacks);
         }
@@ -115,7 +118,7 @@ class QuizGenerator {
           options: epOptions,
         );
 
-      case 5: 
+      case 5:
         return _generateAppearancesRound(subject);
         
       default:

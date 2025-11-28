@@ -6,8 +6,8 @@ class QuizGameContent extends StatelessWidget {
   const QuizGameContent({
     super.key,
     required this.subject,
-    required this.questionText, 
-    required this.options, 
+    required this.questionText,
+    required this.options,
     required this.answered,
     required this.selectedOption,
     required this.onOptionSelected,
@@ -71,19 +71,56 @@ class QuizGameContent extends StatelessWidget {
               
               const SizedBox(height: 40),
 
-              ...options.map((opt) {
-                return QuizOptionButton(
-                  text: opt,
-                  showAnswer: answered,
-                  isCorrect: opt == correctAnswerText,
-                  isSelected: opt == selectedOption,
-                  onTap: () => onOptionSelected(opt),
-                );
-              }),
+              if (options.length > 4) 
+                _buildGridLayout()
+              else 
+                ...options.map((opt) => _buildOptionBtn(opt)),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildGridLayout() {
+    final List<Widget> gridRows = [];
+
+    for (int i = 0; i < options.length; i += 2) {
+      final leftOption = options[i];
+      final rightOption = (i + 1 < options.length) ? options[i + 1] : null;
+
+      gridRows.add(
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: _buildOptionBtn(leftOption),
+              ),
+              if (rightOption != null) ...[
+                const SizedBox(width: 12), 
+                Expanded(
+                  child: _buildOptionBtn(rightOption),
+                ),
+              ],
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Column(
+      children: gridRows,
+    );
+  }
+
+  Widget _buildOptionBtn(String text) {
+    return QuizOptionButton(
+      text: text,
+      showAnswer: answered,
+      isCorrect: text == correctAnswerText,
+      isSelected: text == selectedOption,
+      onTap: () => onOptionSelected(text),
     );
   }
 }
