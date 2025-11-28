@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rick_morty_app/models/quiz_types.dart';
 import 'package:rick_morty_app/services/quiz_service.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 
@@ -6,12 +7,16 @@ class QuizScoreBoard extends StatelessWidget {
   const QuizScoreBoard({
     super.key,
     required this.currentScore,
+    required this.difficulty,
   });
 
   final int currentScore;
+  final QuizDifficulty difficulty;
 
   @override
   Widget build(BuildContext context) {
+    final labelDiff = difficulty == QuizDifficulty.easy ? '(Easy)' : '(Medium)';
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
       decoration: BoxDecoration(
@@ -30,10 +35,10 @@ class QuizScoreBoard extends StatelessWidget {
           ),
           
           ValueListenableBuilder<int>(
-            valueListenable: QuizService.instance.highScore,
+            valueListenable: QuizService.instance.getNotifierFor(difficulty),
             builder: (context, best, _) {
               return _buildScoreColumn(
-                label: 'BEST',
+                label: 'BEST $labelDiff',
                 value: '$best',
                 color: Colors.white.withValues(alpha: 0.9),
                 isRightAligned: true,

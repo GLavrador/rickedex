@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:rick_morty_app/models/character.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 
 class QuizOptionButton extends StatelessWidget {
   const QuizOptionButton({
     super.key,
-    required this.character,
+    required this.text,
     required this.showAnswer,
     required this.isCorrect,
     required this.isSelected,
     required this.onTap,
   });
 
-  final Character character;
-  final bool showAnswer; 
-  final bool isCorrect; 
+  final String text;
+  final bool showAnswer;
+  final bool isCorrect;
   final bool isSelected;
   final VoidCallback onTap;
 
@@ -35,9 +34,9 @@ class QuizOptionButton extends StatelessWidget {
         bgColor = Colors.red.withValues(alpha: 0.2);
         borderColor = Colors.redAccent;
         textColor = Colors.redAccent;
-        
-      } else {
 
+      } else {
+        
         bgColor = AppColors.primaryColorDark.withValues(alpha: 0.5);
         textColor = Colors.white.withValues(alpha: 0.3);
       }
@@ -62,7 +61,7 @@ class QuizOptionButton extends StatelessWidget {
             ),
           ),
           child: Text(
-            character.name,
+            text,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: textColor,

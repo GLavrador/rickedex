@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rick_morty_app/pages/feed_page.dart';
 import 'package:rick_morty_app/theme/app_images.dart';
-import 'package:rick_morty_app/theme/app_colors.dart'; 
+import 'package:rick_morty_app/theme/app_colors.dart';
 
 PreferredSizeWidget appBarComponent(
   BuildContext context, {
   bool isSecondPage = false,
-  bool isMenuAndHome = false, 
+  bool isMenuAndHome = false,
+  List<Widget>? actions, 
 }) {
   return AppBar(
     toolbarHeight: kToolbarHeight * 2.2,
@@ -25,7 +26,7 @@ PreferredSizeWidget appBarComponent(
       ),
     ),
 
-    actions: [
+    actions: actions ?? [
       Align(
         alignment: Alignment.topCenter,
         child: Padding(

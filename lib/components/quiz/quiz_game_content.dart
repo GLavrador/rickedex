@@ -5,20 +5,24 @@ import 'package:rick_morty_app/models/character.dart';
 class QuizGameContent extends StatelessWidget {
   const QuizGameContent({
     super.key,
-    required this.correctCharacter,
-    required this.options,
+    required this.subject,
+    required this.questionText, 
+    required this.options, 
     required this.answered,
-    required this.selectedId,
+    required this.selectedOption,
     required this.onOptionSelected,
     required this.isCorrectAnswer,
+    required this.correctAnswerText,
   });
 
-  final Character correctCharacter;
-  final List<Character> options;
+  final Character subject;
+  final String questionText;
+  final List<String> options;
   final bool answered;
-  final int? selectedId;
-  final ValueChanged<int> onOptionSelected;
+  final String? selectedOption;
+  final ValueChanged<String> onOptionSelected;
   final bool isCorrectAnswer;
+  final String correctAnswerText;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +34,8 @@ class QuizGameContent extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "Who is this character?",
+                questionText,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white.withValues(alpha: 0.9),
                   fontSize: 18,
@@ -58,20 +63,21 @@ class QuizGameContent extends StatelessWidget {
                     ),
                   ],
                   image: DecorationImage(
-                    image: NetworkImage(correctCharacter.image),
+                    image: NetworkImage(subject.image),
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
               
               const SizedBox(height: 40),
-              ...options.map((char) {
+
+              ...options.map((opt) {
                 return QuizOptionButton(
-                  character: char,
+                  text: opt,
                   showAnswer: answered,
-                  isCorrect: char.id == correctCharacter.id,
-                  isSelected: char.id == selectedId,
-                  onTap: () => onOptionSelected(char.id),
+                  isCorrect: opt == correctAnswerText,
+                  isSelected: opt == selectedOption,
+                  onTap: () => onOptionSelected(opt),
                 );
               }),
             ],

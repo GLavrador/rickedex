@@ -1,14 +1,14 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:rick_morty_app/components/app_bar/app_bar_component.dart';
 import 'package:rick_morty_app/components/navigation/side_bar_component.dart';
+import 'package:rick_morty_app/components/quiz/quiz_difficulty_button.dart'; 
 import 'package:rick_morty_app/components/quiz/quiz_game_content.dart';
 import 'package:rick_morty_app/components/quiz/quiz_score_board.dart';
-import 'package:rick_morty_app/data/repository.dart';
-import 'package:rick_morty_app/models/character.dart';
+import 'package:rick_morty_app/models/quiz_types.dart';
 import 'package:rick_morty_app/services/quiz_service.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
+import 'package:rick_morty_app/utils/quiz_generator.dart'; 
 
 class QuizPage extends StatefulWidget {
   static const routeId = '/quiz';
@@ -19,13 +19,13 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
+  QuizDifficulty _difficulty = QuizDifficulty.easy;
   bool _isLoading = true;
-  List<Character> _options = [];
-  Character? _correctCharacter;
+  QuizRound? _currentRound;
   int _currentScore = 0;
   
   bool _answered = false;
-  int? _selectedId;
+  String? _selectedOption;
   bool _isRoundSuccess = false;
 
   @override
@@ -40,18 +40,15 @@ class _QuizPageState extends State<QuizPage> {
     setState(() {
       _isLoading = true;
       _answered = false;
-      _selectedId = null;
+      _selectedOption = null;
     });
 
     try {
-      final chars = await Repository.getRandomCharacters(4);
-      if (chars.length < 4) throw Exception("Not enough chars");
+      final round = await QuizGenerator.generateRound(_difficulty);
 
       if (!mounted) return;
-
       setState(() {
-        _options = chars;
-        _correctCharacter = chars[Random().nextInt(chars.length)];
+        _currentRound = round;
         _isLoading = false;
       });
     } catch (e) {
@@ -59,20 +56,20 @@ class _QuizPageState extends State<QuizPage> {
     }
   }
 
-  void _handleAnswer(int charId) {
+  void _handleAnswer(String answer) {
     if (_answered) return; 
 
-    final isCorrect = charId == _correctCharacter!.id;
+    final isCorrect = answer == _currentRound!.correctAnswer;
 
     setState(() {
       _answered = true;
-      _selectedId = charId;
+      _selectedOption = answer;
       _isRoundSuccess = isCorrect;
     });
 
     if (isCorrect) {
       _currentScore++;
-      QuizService.instance.updateHighScore(_currentScore);
+      QuizService.instance.updateHighScore(_currentScore, _difficulty);
       Timer(const Duration(milliseconds: 1500), _startNewRound);
     } else {
       Timer(const Duration(milliseconds: 2500), () {
@@ -84,25 +81,48 @@ class _QuizPageState extends State<QuizPage> {
     }
   }
 
+  void _changeDifficulty(QuizDifficulty newDiff) {
+    if (_difficulty == newDiff) return;
+    setState(() {
+      _difficulty = newDiff;
+      _currentScore = 0;
+      _startNewRound();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      appBar: appBarComponent(context, isMenuAndHome: true),
+      appBar: appBarComponent(
+        context,
+        isMenuAndHome: true,
+        actions: [
+          QuizDifficultyButton(
+            currentDifficulty: _difficulty,
+            onDifficultyChanged: _changeDifficulty,
+          ),
+        ],
+      ),
       drawer: const SideBarComponent(),
       body: SafeArea(
         child: Column(
           children: [
-            QuizScoreBoard(currentScore: _currentScore),
+            QuizScoreBoard(
+              currentScore: _currentScore,
+              difficulty: _difficulty,
+            ),
 
             Expanded(
-              child: _isLoading
+              child: _isLoading || _currentRound == null
                   ? const Center(child: CircularProgressIndicator(color: Colors.white))
                   : QuizGameContent(
-                      correctCharacter: _correctCharacter!,
-                      options: _options,
+                      subject: _currentRound!.subject,
+                      questionText: _currentRound!.question,
+                      options: _currentRound!.options,
+                      correctAnswerText: _currentRound!.correctAnswer,
                       answered: _answered,
-                      selectedId: _selectedId,
+                      selectedOption: _selectedOption,
                       isCorrectAnswer: _isRoundSuccess,
                       onOptionSelected: _handleAnswer,
                     ),
