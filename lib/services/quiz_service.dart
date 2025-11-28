@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:rick_morty_app/models/app_user.dart';
 import 'package:rick_morty_app/models/quiz_types.dart';
 import 'package:rick_morty_app/services/leaderboard_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,6 +23,37 @@ class QuizService {
     highScoreHard.value = prefs.getInt(_keyHard) ?? 0;
   }
 
+  Future<void> syncWithCloud(AppUser cloudUser) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    int localEasy = prefs.getInt(_keyEasy) ?? 0;
+    if (cloudUser.highScoreEasy > localEasy) {
+      localEasy = cloudUser.highScoreEasy;
+      await prefs.setInt(_keyEasy, localEasy);
+      highScoreEasy.value = localEasy;
+    } else if (localEasy > cloudUser.highScoreEasy) {
+      LeaderboardService.instance.updateCloudScore(localEasy, QuizDifficulty.easy);
+    }
+
+    int localMedium = prefs.getInt(_keyMedium) ?? 0;
+    if (cloudUser.highScoreMedium > localMedium) {
+      localMedium = cloudUser.highScoreMedium;
+      await prefs.setInt(_keyMedium, localMedium);
+      highScoreMedium.value = localMedium;
+    } else if (localMedium > cloudUser.highScoreMedium) {
+      LeaderboardService.instance.updateCloudScore(localMedium, QuizDifficulty.medium);
+    }
+
+    int localHard = prefs.getInt(_keyHard) ?? 0;
+    if (cloudUser.highScoreHard > localHard) {
+      localHard = cloudUser.highScoreHard;
+      await prefs.setInt(_keyHard, localHard);
+      highScoreHard.value = localHard;
+    } else if (localHard > cloudUser.highScoreHard) {
+      LeaderboardService.instance.updateCloudScore(localHard, QuizDifficulty.hard);
+    }
+  }
+
   Future<void> updateHighScore(int currentScore, QuizDifficulty difficulty) async {
     final prefs = await SharedPreferences.getInstance();
     
@@ -29,20 +61,21 @@ class QuizService {
       if (currentScore > highScoreEasy.value) {
         highScoreEasy.value = currentScore;
         await prefs.setInt(_keyEasy, currentScore);
+        LeaderboardService.instance.updateCloudScore(currentScore, difficulty);
       }
     } else if (difficulty == QuizDifficulty.medium) {
       if (currentScore > highScoreMedium.value) {
         highScoreMedium.value = currentScore;
         await prefs.setInt(_keyMedium, currentScore);
+        LeaderboardService.instance.updateCloudScore(currentScore, difficulty);
       }
     } else {
       if (currentScore > highScoreHard.value) {
         highScoreHard.value = currentScore;
         await prefs.setInt(_keyHard, currentScore);
+        LeaderboardService.instance.updateCloudScore(currentScore, difficulty);
       }
     }
-
-    LeaderboardService.instance.updateCloudScore(currentScore, difficulty);
   }
 
   ValueNotifier<int> getNotifierFor(QuizDifficulty difficulty) {

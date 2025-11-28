@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rick_morty_app/models/app_user.dart';
+import 'package:rick_morty_app/services/quiz_service.dart';
 
 class AuthService {
   AuthService._();
@@ -26,7 +27,10 @@ class AuthService {
     try {
       final doc = await _db.collection('users').doc(uid).get();
       if (doc.exists) {
-        currentUser.value = AppUser.fromMap(doc.data()!);
+        final user = AppUser.fromMap(doc.data()!);
+        currentUser.value = user;
+        
+        await QuizService.instance.syncWithCloud(user);
       }
     } catch (e) {
       debugPrint("Auth Error: $e");
@@ -58,18 +62,24 @@ class AuthService {
 
     if (credential.user == null) throw Exception("Registration failed.");
 
+    final qService = QuizService.instance;
+    
     final newUser = AppUser(
       id: credential.user!.uid,
       email: email,
       nickname: nickname,
-      highScoreEasy: 0,
-      highScoreMedium: 0,
-      highScoreHard: 0,
+      highScoreEasy: qService.highScoreEasy.value,
+      highScoreMedium: qService.highScoreMedium.value,
+      highScoreHard: qService.highScoreHard.value,
     );
 
     await _db.collection('users').doc(newUser.id).set(newUser.toMap());
     
     currentUser.value = newUser;
+  }
+
+  Future<void> resetPassword(String email) async {
+    await _auth.sendPasswordResetEmail(email: email);
   }
 
   Future<void> signOut() async {
