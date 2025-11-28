@@ -1,14 +1,11 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rick_morty_app/components/app_bar/app_bar_component.dart';
 import 'package:rick_morty_app/components/navigation/side_bar_component.dart';
-import 'package:rick_morty_app/components/quiz/quiz_difficulty_button.dart'; 
+import 'package:rick_morty_app/components/quiz/quiz_difficulty_button.dart';
 import 'package:rick_morty_app/components/quiz/quiz_game_content.dart';
 import 'package:rick_morty_app/components/quiz/quiz_score_board.dart';
-import 'package:rick_morty_app/models/quiz_types.dart';
-import 'package:rick_morty_app/services/quiz_service.dart';
-import 'package:rick_morty_app/theme/app_colors.dart';
-import 'package:rick_morty_app/utils/quiz_generator.dart'; 
+import 'package:rick_morty_app/controllers/quiz_controller.dart';
+import 'package:rick_morty_app/theme/app_colors.dart'; 
 
 class QuizPage extends StatefulWidget {
   static const routeId = '/quiz';
@@ -19,117 +16,93 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
-  QuizDifficulty _difficulty = QuizDifficulty.easy;
-  bool _isLoading = true;
-  QuizRound? _currentRound;
-  int _currentScore = 0;
-  
-  bool _answered = false;
-  String? _selectedOption;
-  bool _isRoundSuccess = false;
+
+  late final QuizGameController _controller;
 
   @override
   void initState() {
     super.initState();
-    _startNewRound();
+    _controller = QuizGameController();
   }
 
-  Future<void> _startNewRound() async {
-    if (!mounted) return;
-    
-    setState(() {
-      _isLoading = true;
-      _answered = false;
-      _selectedOption = null;
-    });
-
-    try {
-      final round = await QuizGenerator.generateRound(_difficulty);
-
-      if (!mounted) return;
-      setState(() {
-        _currentRound = round;
-        _isLoading = false;
-      });
-    } catch (e) {
-      if (mounted) Future.delayed(const Duration(seconds: 1), _startNewRound);
-    }
-  }
-
-  void _handleAnswer(String answer) {
-    if (_answered) return; 
-
-    final isCorrect = answer == _currentRound!.correctAnswer;
-
-    setState(() {
-      _answered = true;
-      _selectedOption = answer;
-      _isRoundSuccess = isCorrect;
-    });
-
-    if (isCorrect) {
-      _currentScore++;
-      QuizService.instance.updateHighScore(_currentScore, _difficulty);
-      Timer(const Duration(milliseconds: 1500), _startNewRound);
-    } else {
-      Timer(const Duration(milliseconds: 2500), () {
-        if (mounted) {
-          setState(() => _currentScore = 0);
-          _startNewRound();
-        }
-      });
-    }
-  }
-
-  void _changeDifficulty(QuizDifficulty newDiff) {
-    if (_difficulty == newDiff) return;
-    setState(() {
-      _difficulty = newDiff;
-      _currentScore = 0;
-      _startNewRound();
-    });
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      appBar: appBarComponent(
-        context,
-        isMenuAndHome: true,
-        actions: [
-          QuizDifficultyButton(
-            currentDifficulty: _difficulty,
-            onDifficultyChanged: _changeDifficulty,
+    return ListenableBuilder(
+      listenable: _controller,
+      builder: (context, _) {
+        return Scaffold(
+          backgroundColor: AppColors.backgroundColor,
+          appBar: appBarComponent(
+            context,
+            isMenuAndHome: true,
+            actions: [
+              QuizDifficultyButton(
+                currentDifficulty: _controller.difficulty,
+                onDifficultyChanged: _controller.changeDifficulty,
+              ),
+            ],
           ),
-        ],
-      ),
-      drawer: const SideBarComponent(),
-      body: SafeArea(
-        child: Column(
-          children: [
-            QuizScoreBoard(
-              currentScore: _currentScore,
-              difficulty: _difficulty,
+          drawer: const SideBarComponent(),
+          body: SafeArea(
+            child: Column(
+              children: [
+                QuizScoreBoard(
+                  currentScore: _controller.currentScore,
+                  difficulty: _controller.difficulty,
+                ),
+                Expanded(
+                  child: _buildBodyContent(),
+                ),
+              ],
             ),
-
-            Expanded(
-              child: _isLoading || _currentRound == null
-                  ? const Center(child: CircularProgressIndicator(color: Colors.white))
-                  : QuizGameContent(
-                      subject: _currentRound!.subject,
-                      questionText: _currentRound!.question,
-                      options: _currentRound!.options,
-                      correctAnswerText: _currentRound!.correctAnswer,
-                      answered: _answered,
-                      selectedOption: _selectedOption,
-                      isCorrectAnswer: _isRoundSuccess,
-                      onOptionSelected: _handleAnswer,
-                    ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
+  }
+
+  Widget _buildBodyContent() {
+    switch (_controller.state) {
+      case QuizGameState.loading:
+        return const Center(child: CircularProgressIndicator(color: Colors.white));
+      
+      case QuizGameState.error:
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("Failed to load data", style: TextStyle(color: Colors.white)),
+              TextButton(
+                onPressed: _controller.retry,
+                child: const Text("Retry"),
+              )
+            ],
+          ),
+        );
+
+      case QuizGameState.playing:
+      case QuizGameState.showingResult:
+        if (_controller.currentRound == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return QuizGameContent(
+          subject: _controller.currentRound!.subject,
+          questionText: _controller.currentRound!.question,
+          options: _controller.currentRound!.options,
+          correctAnswerText: _controller.currentRound!.correctAnswer,
+          answered: _controller.answered,
+          selectedOption: _controller.selectedOption,
+          isCorrectAnswer: _controller.isRoundSuccess,
+          
+          onOptionSelected: _controller.handleAnswer,
+        );
+    }
   }
 }
