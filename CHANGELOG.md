@@ -13,6 +13,8 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 - **Location Page**: agora possui filtragem por dimensão.
 
+- **Quiz Page**: página de Quiz interativo sobre personagens.
+
 ## [v1.2.0] - 2025-09-17
 
 ### Added
