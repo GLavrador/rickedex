@@ -74,6 +74,7 @@ class QuizGameController extends ChangeNotifier {
     difficulty = newDiff;
     currentScore = 0;
     _roundBuffer.clear(); 
+    _transitionTimer?.cancel(); 
     _init(); 
   }
 
