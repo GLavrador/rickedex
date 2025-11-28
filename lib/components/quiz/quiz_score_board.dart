@@ -15,7 +15,18 @@ class QuizScoreBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final labelDiff = difficulty == QuizDifficulty.easy ? '(Easy)' : '(Medium)';
+    String labelDiff;
+    switch (difficulty) {
+      case QuizDifficulty.easy:
+        labelDiff = '(Easy)';
+        break;
+      case QuizDifficulty.medium:
+        labelDiff = '(Medium)';
+        break;
+      case QuizDifficulty.hard:
+        labelDiff = '(Hard)';
+        break;
+    }
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),

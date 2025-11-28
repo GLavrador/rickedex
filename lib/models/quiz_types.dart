@@ -1,11 +1,11 @@
 import 'package:rick_morty_app/models/character.dart';
 
-enum QuizDifficulty { easy, medium }
+enum QuizDifficulty { easy, medium, hard }
 
 class QuizRound {
   final Character subject; 
   final String question;   
-  final List<String> options;
+  final List<String> options; 
   final String correctAnswer; 
 
   QuizRound({

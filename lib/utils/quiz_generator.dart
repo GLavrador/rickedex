@@ -1,5 +1,7 @@
 import 'dart:math';
+import 'package:dio/dio.dart'; 
 import 'package:rick_morty_app/data/repository.dart';
+import 'package:rick_morty_app/models/character.dart';
 import 'package:rick_morty_app/models/quiz_types.dart';
 
 class QuizGenerator {
@@ -11,19 +13,21 @@ class QuizGenerator {
 
     final subject = chars[Random().nextInt(chars.length)];
 
-    if (difficulty == QuizDifficulty.easy) {
-      return QuizRound(
-        subject: subject,
-        question: "Who is this character?",
-        correctAnswer: subject.name,
-        options: chars.map((c) => c.name).toList()..shuffle(),
-      );
-    }
+    int type = 0;
 
-    final type = Random().nextInt(4);
+    if (difficulty == QuizDifficulty.easy) {
+      
+      type = Random().nextBool() ? 0 : 2;
+    } else if (difficulty == QuizDifficulty.medium) {
+      
+      type = Random().nextInt(4);
+    } else {
+      
+      type = Random().nextInt(6);
+    }
     
     switch (type) {
-      case 0: 
+      case 0:
         return QuizRound(
           subject: subject,
           question: "Who is this character?",
@@ -65,8 +69,7 @@ class QuizGenerator {
             .toList();
         
         if (otherOrigins.length < 3) {
-          final fallbacks = ['Post-Apocalyptic Earth', 'Nuptia 4', 'Purge Planet', 'Bird World',
-            'Gromflom Prime', 'Earth (C-137)']
+          final fallbacks = ['Post-Apocalyptic Earth', 'Nuptia 4', 'Purge Planet', 'Bird World','Gromflom Prime', 'Earth (C-137)']
               .where((f) => f != correct);
           otherOrigins.addAll(fallbacks);
         }
@@ -79,6 +82,41 @@ class QuizGenerator {
           correctAnswer: correct,
           options: options,
         );
+
+      case 4: 
+        final correctEpName = await _fetchFirstSeenName(subject);
+        
+        if (correctEpName == null) {
+          return _generateAppearancesRound(subject);
+        }
+
+        final otherChars = chars.where((c) => c.id != subject.id).take(3).toList();
+        final Set<String> distractorEpNames = {};
+
+        for (var c in otherChars) {
+          final name = await _fetchFirstSeenName(c);
+          if (name != null && name != correctEpName) {
+            distractorEpNames.add(name);
+          }
+        }
+
+        if (distractorEpNames.length < 3) {
+          final fallbacks = ['Pilot', 'Lawnmower Dog', 'Anatomy Park', 'M. Night Shaym-Aliens!']
+              .where((f) => f != correctEpName);
+          distractorEpNames.addAll(fallbacks.take(3 - distractorEpNames.length));
+        }
+
+        final epOptions = [correctEpName, ...distractorEpNames.take(3)]..shuffle();
+
+        return QuizRound(
+          subject: subject,
+          question: "First episode appearance?",
+          correctAnswer: correctEpName,
+          options: epOptions,
+        );
+
+      case 5: 
+        return _generateAppearancesRound(subject);
         
       default:
         return QuizRound(
@@ -87,6 +125,41 @@ class QuizGenerator {
           correctAnswer: subject.name,
           options: chars.map((c) => c.name).toList(),
         );
+    }
+  }
+
+  static QuizRound _generateAppearancesRound(Character subject) {
+    final count = subject.episode.length;
+    final correctAnswer = '$count';
+    final Set<String> optionsSet = {correctAnswer};
+    final random = Random();
+    
+    while (optionsSet.length < 4) {
+      final variation = random.nextInt(11) - 5; 
+      if (variation == 0) continue;
+      
+      final fakeCount = count + variation;
+      if (fakeCount > 0) {
+        optionsSet.add('$fakeCount');
+      }
+    }
+
+    return QuizRound(
+      subject: subject,
+      question: "How many episodes appearances?",
+      correctAnswer: correctAnswer,
+      options: optionsSet.toList()..shuffle(),
+    );
+  }
+
+  static Future<String?> _fetchFirstSeenName(Character c) async {
+    if (c.episode.isEmpty) return null;
+    try {
+      final dio = Dio(BaseOptions(headers: {'Accept': 'application/json'}));
+      final resp = await dio.getUri(Uri.parse(c.episode.first));
+      return resp.data?['name'] as String?;
+    } catch (_) {
+      return null;
     }
   }
 }

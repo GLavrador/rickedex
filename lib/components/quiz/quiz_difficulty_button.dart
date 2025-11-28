@@ -26,11 +26,15 @@ class QuizDifficultyButton extends StatelessWidget {
           itemBuilder: (context) => [
             const PopupMenuItem(
               value: QuizDifficulty.easy,
-              child: Text('Easy (Names only)'),
+              child: Text('Easy (Names and species only)'),
             ),
             const PopupMenuItem(
               value: QuizDifficulty.medium,
               child: Text('Medium (Mixed questions)'),
+            ),
+            const PopupMenuItem(
+              value: QuizDifficulty.hard,
+              child: Text('Hard (Expert details)'),
             ),
           ],
         ),
