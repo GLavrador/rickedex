@@ -12,9 +12,15 @@ import 'pages/character_details_page.dart';
 import 'pages/characters_page.dart';
 import 'package:rick_morty_app/services/favorites_service.dart';
 import 'package:rick_morty_app/services/quiz_service.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:rick_morty_app/firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform);
+
   await FavoritesService.instance.init();
   await QuizService.instance.init();
   runApp(const RickMortyApp());
