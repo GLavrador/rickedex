@@ -5,6 +5,7 @@ import 'package:rick_morty_app/pages/episodes_page.dart';
 import 'package:rick_morty_app/pages/favorites_page.dart';
 import 'package:rick_morty_app/pages/characters_page.dart';
 import 'package:rick_morty_app/pages/locations_page.dart';
+import 'package:rick_morty_app/pages/quiz_page.dart';
 import 'package:rick_morty_app/pages/random_page.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 import 'package:rick_morty_app/theme/app_images.dart';
@@ -17,7 +18,7 @@ class SideBarComponent extends StatelessWidget {
       ModalRoute.of(context)?.settings.name == route;
 
   void _goToNamed(BuildContext context, String routeName) {
-    Navigator.of(context).pop(); // fecha o Drawer
+    Navigator.of(context).pop(); 
     if (!_isRoute(context, routeName)) {
       Navigator.of(context).pushReplacementNamed(routeName);
     }
@@ -73,17 +74,22 @@ class SideBarComponent extends StatelessWidget {
                 child: ListView(
                   padding: EdgeInsets.zero,
                   children: [
-                    
-                    const SectionLabel('Home'),
 
                     ListTile(
                       leading: const Icon(Icons.home_outlined),
-                      title: const Text('Feed'),
+                      title: const Text('Home'),
                       dense: true,
                       selected: _isRoute(context, '/'),
                       onTap: () => _goToNamed(context, '/'),
                     ),
-
+                    ListTile(
+                      leading: const Icon(Icons.gamepad_outlined),
+                      title: const Text('Quiz'),
+                      dense: true,
+                      selected: _isRoute(context, QuizPage.routeId),
+                      onTap: () => _goToNamed(context, QuizPage.routeId),
+                    ),
+                    
                     const SectionLabel('Pages'),
                     
                     ListTile(
@@ -154,7 +160,6 @@ class SideBarComponent extends StatelessWidget {
   }
 }
 
-// se um dia for transformar em público/reutilizável, mover e colocar key
 class _FavoritesBadge extends StatelessWidget {
   const _FavoritesBadge();
 

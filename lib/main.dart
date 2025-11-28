@@ -6,14 +6,17 @@ import 'package:rick_morty_app/pages/favorites_page.dart';
 import 'package:rick_morty_app/pages/feed_page.dart';
 import 'package:rick_morty_app/pages/location_details_page.dart';
 import 'package:rick_morty_app/pages/locations_page.dart';
+import 'package:rick_morty_app/pages/quiz_page.dart';
 import 'package:rick_morty_app/pages/random_page.dart';
 import 'pages/character_details_page.dart';
 import 'pages/characters_page.dart';
 import 'package:rick_morty_app/services/favorites_service.dart';
+import 'package:rick_morty_app/services/quiz_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FavoritesService.instance.init();
+  await QuizService.instance.init();
   runApp(const RickMortyApp());
 }
 
@@ -84,6 +87,12 @@ class RickMortyApp extends StatelessWidget {
             return MaterialPageRoute(
               settings: settings,
               builder: (_) => const RandomPage(),
+            );
+
+          case QuizPage.routeId:
+            return MaterialPageRoute(
+              settings: settings,
+              builder: (_) => const QuizPage(),
             );
 
           default:
