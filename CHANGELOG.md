@@ -13,6 +13,8 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 - **Location Page**: agora possui filtragem por dimensão.
 
+- **Quiz Page**: nova página de Quiz interativo com diferentes tipos de pergunta e níveis de dificuldade.
+
 ## [v1.2.0] - 2025-09-17
 
 ### Added

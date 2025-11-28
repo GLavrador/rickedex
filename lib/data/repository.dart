@@ -166,4 +166,13 @@ abstract class Repository {
         .map((e) => Character.fromJson(e))
         .toList();
   }
+  // busca o campo 'name' de qualquer URL da API (location ou episode)
+  static Future<String?> getNameFromUrl(String url) async {
+    try {
+      final response = await _dio.getUri(Uri.parse(url));
+      return response.data['name'] as String?;
+    } catch (_) {
+      return null;
+    }
+  }
 }

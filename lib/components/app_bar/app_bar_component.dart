@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rick_morty_app/pages/feed_page.dart';
 import 'package:rick_morty_app/theme/app_images.dart';
-import 'package:rick_morty_app/theme/app_colors.dart'; 
+import 'package:rick_morty_app/theme/app_colors.dart';
 
 PreferredSizeWidget appBarComponent(
   BuildContext context, {
   bool isSecondPage = false,
-  bool isMenuAndHome = false, 
+  bool isMenuAndHome = false,
+  List<Widget>? actions,
+  Future<bool> Function()? onHomeTap, 
 }) {
   return AppBar(
     toolbarHeight: kToolbarHeight * 2.2,
@@ -19,17 +21,17 @@ PreferredSizeWidget appBarComponent(
       builder: (ctx) => Align(
         alignment: Alignment.topCenter,
         child: Padding(
-          padding: const EdgeInsets.only(top: 6),
-          child: _buildLeadingContent(ctx, isSecondPage, isMenuAndHome),
+          padding: const EdgeInsets.only(top: 12),
+          child: _buildLeadingContent(ctx, isSecondPage, isMenuAndHome, onHomeTap),
         ),
       ),
     ),
 
-    actions: [
+    actions: actions ?? [
       Align(
         alignment: Alignment.topCenter,
         child: Padding(
-          padding: const EdgeInsets.only(top: 6, right: 16),
+          padding: const EdgeInsets.only(top: 12, right: 16),
           child: const Icon(Icons.account_circle,
               color: Color(0xFFCAC4D0), size: 26),
         ),
@@ -60,8 +62,23 @@ PreferredSizeWidget appBarComponent(
 }
 
 Widget _buildLeadingContent(
-    BuildContext ctx, bool isSecondPage, bool isMenuAndHome) {
+    BuildContext ctx, 
+    bool isSecondPage, 
+    bool isMenuAndHome, 
+    Future<bool> Function()? onHomeTap) {
   
+  void handleHomeTap() async {
+    if (onHomeTap != null) {
+      final allow = await onHomeTap();
+      if (!allow) return; 
+    }
+    
+    Navigator.of(ctx).pushNamedAndRemoveUntil(
+      MainFeedPage.routeId,
+      (route) => false,
+    );
+  }
+
   if (isSecondPage) {
     return Row(
       children: [
@@ -76,12 +93,7 @@ Widget _buildLeadingContent(
         ),
         const SizedBox(width: 10),
         GestureDetector(
-          onTap: () {
-            Navigator.of(ctx).pushNamedAndRemoveUntil(
-              MainFeedPage.routeId,
-              (route) => false,
-            );
-          },
+          onTap: handleHomeTap, 
           child: const Icon(Icons.home_outlined, color: Color(0xFFE6E1E5)),
         ),
       ],
@@ -98,12 +110,7 @@ Widget _buildLeadingContent(
         ),
         const SizedBox(width: 10),
         GestureDetector(
-          onTap: () {
-            Navigator.of(ctx).pushNamedAndRemoveUntil(
-              MainFeedPage.routeId,
-              (route) => false,
-            );
-          },
+          onTap: handleHomeTap, 
           child: const Icon(Icons.home_outlined, color: Color(0xFFE6E1E5)),
         ),
       ],
