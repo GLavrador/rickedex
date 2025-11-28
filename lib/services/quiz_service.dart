@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:rick_morty_app/models/quiz_types.dart';
+import 'package:rick_morty_app/services/leaderboard_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class QuizService {
@@ -40,6 +41,8 @@ class QuizService {
         await prefs.setInt(_keyHard, currentScore);
       }
     }
+
+    LeaderboardService.instance.updateCloudScore(currentScore, difficulty);
   }
 
   ValueNotifier<int> getNotifierFor(QuizDifficulty difficulty) {

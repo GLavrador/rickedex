@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:rick_morty_app/pages/auth_page.dart'; 
 import 'package:rick_morty_app/pages/feed_page.dart';
+import 'package:rick_morty_app/pages/profile_page.dart'; 
+import 'package:rick_morty_app/services/auth_service.dart';
 import 'package:rick_morty_app/theme/app_images.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 
@@ -9,7 +12,7 @@ PreferredSizeWidget appBarComponent(
   bool isSecondPage = false,
   bool isMenuAndHome = false,
   List<Widget>? actions,
-  Future<bool> Function()? onHomeTap, 
+  Future<bool> Function()? onHomeTap,
 }) {
   return AppBar(
     toolbarHeight: kToolbarHeight * 2.2,
@@ -32,8 +35,25 @@ PreferredSizeWidget appBarComponent(
         alignment: Alignment.topCenter,
         child: Padding(
           padding: const EdgeInsets.only(top: 12, right: 16),
-          child: const Icon(Icons.account_circle,
-              color: Color(0xFFCAC4D0), size: 26),
+          child: ValueListenableBuilder(
+            valueListenable: AuthService.instance.currentUser,
+            builder: (context, user, _) {
+              return GestureDetector(
+                onTap: () {
+                  if (user == null) {
+                    Navigator.of(context).pushNamed(AuthPage.routeId);
+                  } else {
+                    Navigator.of(context).pushNamed(ProfilePage.routeId);
+                  }
+                },
+                child: Icon(
+                  Icons.account_circle,
+                  color: user != null ? Colors.greenAccent : const Color(0xFFCAC4D0),
+                  size: 26,
+                ),
+              );
+            },
+          ),
         ),
       ),
     ],
