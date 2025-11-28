@@ -20,7 +20,7 @@ PreferredSizeWidget appBarComponent(
       builder: (ctx) => Align(
         alignment: Alignment.topCenter,
         child: Padding(
-          padding: const EdgeInsets.only(top: 6),
+          padding: const EdgeInsets.only(top: 12),
           child: _buildLeadingContent(ctx, isSecondPage, isMenuAndHome),
         ),
       ),
@@ -30,7 +30,7 @@ PreferredSizeWidget appBarComponent(
       Align(
         alignment: Alignment.topCenter,
         child: Padding(
-          padding: const EdgeInsets.only(top: 6, right: 16),
+          padding: const EdgeInsets.only(top: 12, right: 16),
           child: const Icon(Icons.account_circle,
               color: Color(0xFFCAC4D0), size: 26),
         ),
