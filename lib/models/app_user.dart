@@ -5,6 +5,7 @@ class AppUser {
   final int highScoreEasy;
   final int highScoreMedium;
   final int highScoreHard;
+  final bool isVerified; 
 
   AppUser({
     required this.id,
@@ -13,6 +14,7 @@ class AppUser {
     this.highScoreEasy = 0,
     this.highScoreMedium = 0,
     this.highScoreHard = 0,
+    this.isVerified = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -23,6 +25,7 @@ class AppUser {
       'highScoreEasy': highScoreEasy,
       'highScoreMedium': highScoreMedium,
       'highScoreHard': highScoreHard,
+      'isVerified': isVerified, 
     };
   }
 
@@ -34,6 +37,7 @@ class AppUser {
       highScoreEasy: (map['highScoreEasy'] ?? 0) as int,
       highScoreMedium: (map['highScoreMedium'] ?? 0) as int,
       highScoreHard: (map['highScoreHard'] ?? 0) as int,
+      isVerified: map['isVerified'] ?? false, 
     );
   }
 }
