@@ -15,6 +15,10 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 - **Quiz Page**: nova página de Quiz interativo com diferentes tipos de pergunta e níveis de dificuldade.
 
+- **Authentication System**: adição de cadastro e login. Contém verificação de e-mail e recuperação de senha.
+
+- **Profile Page**: nova tela de perfil com exibição dos recordes globais (High Scores).
+
 ## [v1.2.0] - 2025-09-17
 
 ### Added
