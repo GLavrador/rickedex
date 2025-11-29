@@ -4,6 +4,7 @@ import 'package:rick_morty_app/components/organization/section_label.dart';
 import 'package:rick_morty_app/pages/episodes_page.dart';
 import 'package:rick_morty_app/pages/favorites_page.dart';
 import 'package:rick_morty_app/pages/characters_page.dart';
+import 'package:rick_morty_app/pages/leaderboard_page.dart';
 import 'package:rick_morty_app/pages/locations_page.dart';
 import 'package:rick_morty_app/pages/quiz_page.dart';
 import 'package:rick_morty_app/pages/random_page.dart';
@@ -143,6 +144,13 @@ class SideBarComponent extends StatelessWidget {
                       dense: true,
                       selected: _isRoute(context, RandomPage.routeId),
                       onTap: () => _goToNamed(context, RandomPage.routeId),
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.emoji_events_outlined),
+                      title: const Text('Leaderboard'),
+                      dense: true,
+                      selected: _isRoute(context, LeaderboardPage.routeId),
+                      onTap: () => _goToNamed(context, LeaderboardPage.routeId),
                     ),
                   ],
                 ),

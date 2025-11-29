@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:rick_morty_app/pages/auth_page.dart'; 
+import 'package:rick_morty_app/pages/auth_page.dart';
 import 'package:rick_morty_app/pages/episode_details_page.dart';
 import 'package:rick_morty_app/pages/episodes_page.dart';
 import 'package:rick_morty_app/pages/favorites_page.dart';
 import 'package:rick_morty_app/pages/feed_page.dart';
+import 'package:rick_morty_app/pages/leaderboard_page.dart'; 
 import 'package:rick_morty_app/pages/location_details_page.dart';
 import 'package:rick_morty_app/pages/locations_page.dart';
-import 'package:rick_morty_app/pages/profile_page.dart'; 
+import 'package:rick_morty_app/pages/profile_page.dart';
 import 'package:rick_morty_app/pages/quiz_page.dart';
 import 'package:rick_morty_app/pages/random_page.dart';
 import 'pages/character_details_page.dart';
 import 'pages/characters_page.dart';
-import 'package:rick_morty_app/services/auth_service.dart'; 
+import 'package:rick_morty_app/services/auth_service.dart';
 import 'package:rick_morty_app/services/favorites_service.dart';
 import 'package:rick_morty_app/services/quiz_service.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -24,7 +25,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform);
 
-  await AuthService.instance.init(); 
+  await AuthService.instance.init();
   await FavoritesService.instance.init();
   await QuizService.instance.init();
   
@@ -116,6 +117,12 @@ class RickMortyApp extends StatelessWidget {
             return MaterialPageRoute(
               settings: settings,
               builder: (_) => const QuizPage(),
+            );
+
+          case LeaderboardPage.routeId:
+            return MaterialPageRoute(
+              settings: settings,
+              builder: (_) => const LeaderboardPage(),
             );
 
           default:
