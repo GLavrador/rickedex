@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:rick_morty_app/models/app_user.dart';
 import 'package:rick_morty_app/models/quiz_types.dart';
-import 'package:rick_morty_app/services/auth_service.dart'; 
+import 'package:rick_morty_app/services/auth_service.dart';
 import 'package:rick_morty_app/services/leaderboard_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -29,7 +29,7 @@ class QuizService {
   void _onUserChanged() {
     final user = AuthService.instance.currentUser.value;
     if (user != null) {
-      syncWithCloud(user);
+      overwriteLocalWithCloud(user);
     } else {
       resetLocalScores();
     }
@@ -46,21 +46,17 @@ class QuizService {
     highScoreHard.value = 0;
   }
 
-  Future<void> syncWithCloud(AppUser cloudUser) async {
+  Future<void> overwriteLocalWithCloud(AppUser cloudUser) async {
     final prefs = await SharedPreferences.getInstance();
 
-    Future<void> syncScore(String key, int localVal, int cloudVal, ValueNotifier<int> notifier, QuizDifficulty diff) async {
-      if (cloudVal > localVal) {
-        await prefs.setInt(key, cloudVal);
-        notifier.value = cloudVal;
-      } else if (localVal > cloudVal) {
-        LeaderboardService.instance.updateCloudScore(localVal, diff);
-      }
-    }
+    await prefs.setInt(_keyEasy, cloudUser.highScoreEasy);
+    highScoreEasy.value = cloudUser.highScoreEasy;
 
-    await syncScore(_keyEasy, highScoreEasy.value, cloudUser.highScoreEasy, highScoreEasy, QuizDifficulty.easy);
-    await syncScore(_keyMedium, highScoreMedium.value, cloudUser.highScoreMedium, highScoreMedium, QuizDifficulty.medium);
-    await syncScore(_keyHard, highScoreHard.value, cloudUser.highScoreHard, highScoreHard, QuizDifficulty.hard);
+    await prefs.setInt(_keyMedium, cloudUser.highScoreMedium);
+    highScoreMedium.value = cloudUser.highScoreMedium;
+
+    await prefs.setInt(_keyHard, cloudUser.highScoreHard);
+    highScoreHard.value = cloudUser.highScoreHard;
   }
 
   Future<void> updateHighScore(int currentScore, QuizDifficulty difficulty) async {
