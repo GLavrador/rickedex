@@ -19,7 +19,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 - **Profile Page**: nova tela de perfil com exibição dos recordes globais (High Scores).
 
-- **Leaderboard Page**: nova tela de ranking global onde é possível visualizar os Top 20 jogadores por nível de dificuldade.
+- **Leaderboard Page**: nova tela de ranking global onde é possível visualizar os Top 20 jogadores por nível de dificuldade - apenas para usuários verificados.
 
 ## [v1.2.0] - 2025-09-17
 
