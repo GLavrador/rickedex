@@ -25,16 +25,16 @@ class LeaderboardFilterButton extends StatelessWidget {
           onSelected: onSelected,
           itemBuilder: (context) => [
             const PopupMenuItem(
-              value: QuizDifficulty.hard,
-              child: Text('Hard'),
+              value: QuizDifficulty.easy,
+              child: Text('Easy'),
             ),
             const PopupMenuItem(
               value: QuizDifficulty.medium,
               child: Text('Medium'),
             ),
             const PopupMenuItem(
-              value: QuizDifficulty.easy,
-              child: Text('Easy'),
+              value: QuizDifficulty.hard,
+              child: Text('Hard'),
             ),
           ],
         ),
