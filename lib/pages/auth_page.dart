@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rick_morty_app/components/app_bar/app_bar_component.dart';
 import 'package:rick_morty_app/components/auth/auth_form_content.dart'; 
 import 'package:rick_morty_app/components/dialogs/app_confirmation_dialog.dart';
+import 'package:rick_morty_app/components/navigation/side_bar_component.dart';
 import 'package:rick_morty_app/services/auth_service.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 
@@ -65,7 +66,8 @@ class _AuthPageState extends State<AuthPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      appBar: appBarComponent(context), 
+      appBar: appBarComponent(context, isMenuAndHome: true),
+      drawer: const SideBarComponent(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: AuthFormContent(
