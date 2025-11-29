@@ -38,23 +38,25 @@ class LeaderboardList extends StatelessWidget {
           }
 
           if (snapshot.hasError) {
-            return _buildMessage("Failed to load ranking");
+            return _buildMessage(context, "Failed to load ranking");
           }
 
-          final players = snapshot.data ?? [];
+          final allPlayers = snapshot.data ?? [];
 
-          if (players.isEmpty) {
-            return _buildMessage("No records yet.");
+          final activePlayers = allPlayers
+              .where((u) => _getScoreForDifficulty(u) > 0)
+              .toList();
+
+          if (activePlayers.isEmpty) {
+            return _buildMessage(context, "No records yet.");
           }
 
           return ListView.builder(
             padding: const EdgeInsets.all(16),
-            itemCount: players.length,
+            itemCount: activePlayers.length,
             itemBuilder: (context, index) {
-              final user = players[index];
+              final user = activePlayers[index];
               final score = _getScoreForDifficulty(user);
-              
-              if (score == 0) return const SizedBox.shrink();
 
               return LeaderboardUserCard(
                 user: user,
@@ -68,9 +70,23 @@ class LeaderboardList extends StatelessWidget {
     );
   }
 
-  Widget _buildMessage(String msg) {
-    return Center(
-      child: Text(msg, style: const TextStyle(color: Colors.white)),
+  Widget _buildMessage(BuildContext context, String msg) {
+    return ListView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      children: [
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.7,
+          child: Center(
+            child: Text(
+              msg,
+              style: TextStyle(
+                color: Colors.white.withValues(alpha: 0.7),
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
