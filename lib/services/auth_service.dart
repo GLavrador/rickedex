@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rick_morty_app/models/app_user.dart';
+import 'package:rick_morty_app/services/quiz_service.dart';
 
 class AuthService {
   AuthService._();
@@ -27,11 +28,13 @@ class AuthService {
   Future<void> _fetchUserDetails(String uid) async {
     try {
       final doc = await _db.collection('users').doc(uid).get();
+      
       if (doc.exists) {
         final user = AppUser.fromMap(doc.data()!);
         currentUser.value = user;
         
         await _auth.currentUser?.reload();
+        await QuizService.instance.overwriteLocalWithCloud(user);
       }
     } catch (e) {
       debugPrint("Auth Error: $e");
@@ -72,6 +75,7 @@ class AuthService {
       highScoreEasy: 0,
       highScoreMedium: 0,
       highScoreHard: 0,
+      isVerified: false,
     );
 
     await _db.collection('users').doc(newUser.id).set(newUser.toMap());
@@ -88,9 +92,14 @@ class AuthService {
 
   Future<void> reloadUser() async {
     await _auth.currentUser?.reload();
+    final verified = _auth.currentUser?.emailVerified ?? false;
     
     final user = currentUser.value;
     if (user != null) {
+      if (user.isVerified != verified) {
+        await _db.collection('users').doc(user.id).update({'isVerified': verified});
+      }
+
       currentUser.value = AppUser(
         id: user.id,
         email: user.email,
@@ -98,6 +107,7 @@ class AuthService {
         highScoreEasy: user.highScoreEasy,
         highScoreMedium: user.highScoreMedium,
         highScoreHard: user.highScoreHard,
+        isVerified: verified,
       );
     }
   }
@@ -108,5 +118,6 @@ class AuthService {
 
   Future<void> signOut() async {
     await _auth.signOut();
+    await QuizService.instance.resetLocalScores();
   }
 }
