@@ -62,15 +62,13 @@ class AuthService {
 
     if (credential.user == null) throw Exception("Registration failed.");
 
-    final qService = QuizService.instance;
-    
     final newUser = AppUser(
       id: credential.user!.uid,
       email: email,
       nickname: nickname,
-      highScoreEasy: qService.highScoreEasy.value,
-      highScoreMedium: qService.highScoreMedium.value,
-      highScoreHard: qService.highScoreHard.value,
+      highScoreEasy: 0,
+      highScoreMedium: 0,
+      highScoreHard: 0,
     );
 
     await _db.collection('users').doc(newUser.id).set(newUser.toMap());
@@ -84,5 +82,6 @@ class AuthService {
 
   Future<void> signOut() async {
     await _auth.signOut();
+    await QuizService.instance.resetLocalScores();
   }
 }

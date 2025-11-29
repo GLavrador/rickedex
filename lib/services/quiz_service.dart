@@ -23,35 +23,32 @@ class QuizService {
     highScoreHard.value = prefs.getInt(_keyHard) ?? 0;
   }
 
+  Future<void> resetLocalScores() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_keyEasy);
+    await prefs.remove(_keyMedium);
+    await prefs.remove(_keyHard);
+    
+    highScoreEasy.value = 0;
+    highScoreMedium.value = 0;
+    highScoreHard.value = 0;
+  }
+
   Future<void> syncWithCloud(AppUser cloudUser) async {
     final prefs = await SharedPreferences.getInstance();
 
-    int localEasy = prefs.getInt(_keyEasy) ?? 0;
-    if (cloudUser.highScoreEasy > localEasy) {
-      localEasy = cloudUser.highScoreEasy;
-      await prefs.setInt(_keyEasy, localEasy);
-      highScoreEasy.value = localEasy;
-    } else if (localEasy > cloudUser.highScoreEasy) {
-      LeaderboardService.instance.updateCloudScore(localEasy, QuizDifficulty.easy);
+    Future<void> syncScore(String key, int localVal, int cloudVal, ValueNotifier<int> notifier, QuizDifficulty diff) async {
+      if (cloudVal > localVal) {
+        await prefs.setInt(key, cloudVal);
+        notifier.value = cloudVal;
+      } else if (localVal > cloudVal) {
+        LeaderboardService.instance.updateCloudScore(localVal, diff);
+      }
     }
 
-    int localMedium = prefs.getInt(_keyMedium) ?? 0;
-    if (cloudUser.highScoreMedium > localMedium) {
-      localMedium = cloudUser.highScoreMedium;
-      await prefs.setInt(_keyMedium, localMedium);
-      highScoreMedium.value = localMedium;
-    } else if (localMedium > cloudUser.highScoreMedium) {
-      LeaderboardService.instance.updateCloudScore(localMedium, QuizDifficulty.medium);
-    }
-
-    int localHard = prefs.getInt(_keyHard) ?? 0;
-    if (cloudUser.highScoreHard > localHard) {
-      localHard = cloudUser.highScoreHard;
-      await prefs.setInt(_keyHard, localHard);
-      highScoreHard.value = localHard;
-    } else if (localHard > cloudUser.highScoreHard) {
-      LeaderboardService.instance.updateCloudScore(localHard, QuizDifficulty.hard);
-    }
+    await syncScore(_keyEasy, highScoreEasy.value, cloudUser.highScoreEasy, highScoreEasy, QuizDifficulty.easy);
+    await syncScore(_keyMedium, highScoreMedium.value, cloudUser.highScoreMedium, highScoreMedium, QuizDifficulty.medium);
+    await syncScore(_keyHard, highScoreHard.value, cloudUser.highScoreHard, highScoreHard, QuizDifficulty.hard);
   }
 
   Future<void> updateHighScore(int currentScore, QuizDifficulty difficulty) async {
