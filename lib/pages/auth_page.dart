@@ -1,10 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rick_morty_app/components/app_bar/app_bar_component.dart';
 import 'package:rick_morty_app/components/auth/auth_form_content.dart';
 import 'package:rick_morty_app/components/dialogs/app_confirmation_dialog.dart';
 import 'package:rick_morty_app/services/auth_service.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
+import 'package:rick_morty_app/utils/auth_error_helper.dart'; 
 
 class AuthPage extends StatefulWidget {
   static const routeId = '/auth';
@@ -16,28 +16,6 @@ class AuthPage extends StatefulWidget {
 
 class _AuthPageState extends State<AuthPage> {
   bool _isLoading = false;
-
-  String _getFriendlyErrorMessage(Object e) {
-    if (e is FirebaseAuthException) {
-      switch (e.code) {
-        case 'invalid-credential':
-        case 'user-not-found':
-        case 'wrong-password':
-          return 'Invalid email or password.';
-        case 'email-already-in-use':
-          return 'This email is already registered.';
-        case 'weak-password':
-          return 'Password is too weak.';
-        case 'invalid-email':
-          return 'Please enter a valid email address.';
-        case 'too-many-requests':
-          return 'Too many attempts. Try again later.';
-        default:
-          return e.message ?? 'An unknown authentication error occurred.';
-      }
-    }
-    return e.toString().replaceAll("Exception: ", "");
-  }
 
   Future<void> _handleAuth({
     required bool isLogin,
@@ -72,7 +50,50 @@ class _AuthPageState extends State<AuthPage> {
         AppConfirmationDialog.show(
           context,
           title: "Authentication Error",
-          message: _getFriendlyErrorMessage(e),
+          message: AuthErrorHelper.getFriendlyMessage(e),
+          confirmText: "Ok",
+          cancelText: null, 
+          icon: Icons.error_outline,
+          mainColor: Colors.redAccent,
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _handleForgotPassword(String email) async {
+    if (email.isEmpty || !email.contains("@")) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please enter a valid email first."),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      await AuthService.instance.resetPassword(email);
+      if (mounted) {
+        AppConfirmationDialog.show(
+          context,
+          title: "Email Sent",
+          message: "A password reset link has been sent to $email.",
+          confirmText: "Ok",
+          cancelText: null,
+          icon: Icons.mark_email_read,
+          mainColor: Colors.green,
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        AppConfirmationDialog.show(
+          context,
+          title: "Error",
+          message: AuthErrorHelper.getFriendlyMessage(e),
           confirmText: "Ok",
           cancelText: null,
           icon: Icons.error_outline,
@@ -94,6 +115,7 @@ class _AuthPageState extends State<AuthPage> {
         child: AuthFormContent(
           isLoading: _isLoading,
           onSubmit: _handleAuth,
+          onForgotPassword: _handleForgotPassword,
         ),
       ),
     );

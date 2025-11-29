@@ -6,6 +6,7 @@ class AuthFormContent extends StatefulWidget {
     super.key,
     required this.isLoading,
     required this.onSubmit,
+    required this.onForgotPassword, 
   });
 
   final bool isLoading;
@@ -15,6 +16,8 @@ class AuthFormContent extends StatefulWidget {
     required String password,
     String? nickname,
   }) onSubmit;
+  
+  final void Function(String email) onForgotPassword;
 
   @override
   State<AuthFormContent> createState() => _AuthFormContentState();
@@ -28,10 +31,18 @@ class _AuthFormContentState extends State<AuthFormContent> with SingleTickerProv
   final _passCtrl = TextEditingController();
   final _nickCtrl = TextEditingController();
 
+  static final _emailRegex = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging) {
+        _formKey.currentState?.reset();
+      }
+    });
   }
 
   void _submit() {
@@ -97,7 +108,11 @@ class _AuthFormContentState extends State<AuthFormContent> with SingleTickerProv
             label: "Email",
             icon: Icons.email_outlined,
             type: TextInputType.emailAddress,
-            validator: (v) => !v!.contains("@") ? "Invalid email" : null,
+            validator: (v) {
+              if (v == null || v.isEmpty) return 'Required';
+              if (!_emailRegex.hasMatch(v)) return 'Invalid email format';
+              return null;
+            },
           ),
           const SizedBox(height: 16),
           
@@ -109,7 +124,28 @@ class _AuthFormContentState extends State<AuthFormContent> with SingleTickerProv
             validator: (v) => v!.length < 6 ? "Min 6 chars" : null,
           ),
           
-          const SizedBox(height: 32),
+          AnimatedBuilder(
+            animation: _tabController,
+            builder: (context, _) {
+              return _tabController.index == 0
+                  ? Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: widget.isLoading 
+                            ? null 
+                            : () => widget.onForgotPassword(_emailCtrl.text.trim()),
+                        child: Text(
+                          "Forgot Password?",
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.7),
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    )
+                  : const SizedBox(height: 32);
+            },
+          ),
 
           SizedBox(
             width: double.infinity,
