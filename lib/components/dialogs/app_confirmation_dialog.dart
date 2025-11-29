@@ -7,7 +7,7 @@ class AppConfirmationDialog extends StatelessWidget {
     required this.title,
     required this.message,
     this.confirmText = 'Confirm',
-    this.cancelText = 'Cancel',
+    this.cancelText,
     this.icon = Icons.warning_amber_rounded,
     this.mainColor = Colors.redAccent,
   });
@@ -15,16 +15,16 @@ class AppConfirmationDialog extends StatelessWidget {
   final String title;
   final String message;
   final String confirmText;
-  final String cancelText;
+  final String? cancelText;
   final IconData icon;
-  final Color mainColor; 
+  final Color mainColor;
 
   static Future<bool> show(
     BuildContext context, {
     required String title,
     required String message,
     String confirmText = 'Confirm',
-    String cancelText = 'Cancel',
+    String? cancelText = 'Cancel',
     IconData icon = Icons.warning_amber_rounded,
     Color mainColor = Colors.redAccent,
   }) async {
@@ -43,6 +43,8 @@ class AppConfirmationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final showCancel = cancelText != null && cancelText!.isNotEmpty;
+
     return Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: const EdgeInsets.symmetric(horizontal: 20),
@@ -72,11 +74,7 @@ class AppConfirmationDialog extends StatelessWidget {
                 color: mainColor.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                icon,
-                color: mainColor,
-                size: 40,
-              ),
+              child: Icon(icon, color: mainColor, size: 40),
             ),
             const SizedBox(height: 16),
             
@@ -104,26 +102,29 @@ class AppConfirmationDialog extends StatelessWidget {
             
             Row(
               children: [
-                Expanded(
-                  child: TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        side: BorderSide(color: Colors.white.withValues(alpha: 0.2)),
+                if (showCancel) ...[
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          side: BorderSide(color: Colors.white.withValues(alpha: 0.2)),
+                        ),
                       ),
-                    ),
-                    child: Text(
-                      cancelText,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
+                      child: Text(
+                        cancelText!,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 12),
+                  const SizedBox(width: 12),
+                ],
+                
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () => Navigator.of(context).pop(true),
