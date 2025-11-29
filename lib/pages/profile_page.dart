@@ -2,16 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:rick_morty_app/components/app_bar/app_bar_component.dart';
 import 'package:rick_morty_app/components/dialogs/app_confirmation_dialog.dart';
 import 'package:rick_morty_app/components/navigation/side_bar_component.dart';
-import 'package:rick_morty_app/components/profile/profile_header.dart'; 
-import 'package:rick_morty_app/components/profile/profile_stats_card.dart'; 
+import 'package:rick_morty_app/components/profile/profile_view.dart'; 
 import 'package:rick_morty_app/services/auth_service.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   static const routeId = '/profile';
   const ProfilePage({super.key});
 
-  Future<void> _handleLogout(BuildContext context) async {
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
+  
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _checkVerification();
+    }
+  }
+
+  Future<void> _checkVerification() async {
+    await AuthService.instance.reloadUser();
+    if (mounted) setState(() {});
+  }
+
+  Future<void> _handleLogout() async {
     final confirm = await AppConfirmationDialog.show(
       context,
       title: "Logout?",
@@ -22,6 +51,23 @@ class ProfilePage extends StatelessWidget {
 
     if (confirm) {
       await AuthService.instance.signOut();
+    }
+  }
+
+  Future<void> _handleResendVerification() async {
+    try {
+      await AuthService.instance.sendVerificationEmail();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Verification email sent! Check your inbox.')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+        );
+      }
     }
   }
 
@@ -40,43 +86,18 @@ class ProfilePage extends StatelessWidget {
           );
         }
 
+        final isVerified = AuthService.instance.isEmailVerified;
+
         return Scaffold(
           backgroundColor: AppColors.backgroundColor,
           appBar: appBarComponent(context, isMenuAndHome: true),
           drawer: const SideBarComponent(),
-          body: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              children: [
-                ProfileHeader(
-                  nickname: user.nickname,
-                  email: user.email,
-                ),
-                
-                const SizedBox(height: 32),
-
-                ProfileStatsCard(user: user),
-
-                const Spacer(),
-
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: OutlinedButton.icon(
-                    onPressed: () => _handleLogout(context),
-                    icon: const Icon(Icons.logout, color: Colors.redAccent),
-                    label: const Text(
-                      "Logout", 
-                      style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold),
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Colors.redAccent),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          body: ProfileView(
+            user: user,
+            isEmailVerified: isVerified,
+            onRefresh: _checkVerification,
+            onResendVerification: _handleResendVerification,
+            onLogout: _handleLogout,
           ),
         );
       },

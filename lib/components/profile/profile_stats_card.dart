@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rick_morty_app/models/app_user.dart'; 
+import 'package:rick_morty_app/models/app_user.dart';
 import 'package:rick_morty_app/theme/app_colors.dart';
 
 class ProfileStatsCard extends StatelessWidget {

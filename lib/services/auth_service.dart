@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rick_morty_app/models/app_user.dart';
-import 'package:rick_morty_app/services/quiz_service.dart';
 
 class AuthService {
   AuthService._();
@@ -12,6 +11,8 @@ class AuthService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   final ValueNotifier<AppUser?> currentUser = ValueNotifier(null);
+
+  bool get isEmailVerified => _auth.currentUser?.emailVerified ?? false;
 
   Future<void> init() async {
     _auth.authStateChanges().listen((User? firebaseUser) async {
@@ -30,7 +31,7 @@ class AuthService {
         final user = AppUser.fromMap(doc.data()!);
         currentUser.value = user;
         
-        await QuizService.instance.syncWithCloud(user);
+        await _auth.currentUser?.reload();
       }
     } catch (e) {
       debugPrint("Auth Error: $e");
@@ -62,6 +63,8 @@ class AuthService {
 
     if (credential.user == null) throw Exception("Registration failed.");
 
+    await credential.user!.sendEmailVerification();
+
     final newUser = AppUser(
       id: credential.user!.uid,
       email: email,
@@ -76,12 +79,34 @@ class AuthService {
     currentUser.value = newUser;
   }
 
+  Future<void> sendVerificationEmail() async {
+    final user = _auth.currentUser;
+    if (user != null && !user.emailVerified) {
+      await user.sendEmailVerification();
+    }
+  }
+
+  Future<void> reloadUser() async {
+    await _auth.currentUser?.reload();
+    
+    final user = currentUser.value;
+    if (user != null) {
+      currentUser.value = AppUser(
+        id: user.id,
+        email: user.email,
+        nickname: user.nickname,
+        highScoreEasy: user.highScoreEasy,
+        highScoreMedium: user.highScoreMedium,
+        highScoreHard: user.highScoreHard,
+      );
+    }
+  }
+
   Future<void> resetPassword(String email) async {
     await _auth.sendPasswordResetEmail(email: email);
   }
 
   Future<void> signOut() async {
     await _auth.signOut();
-    await QuizService.instance.resetLocalScores();
   }
 }

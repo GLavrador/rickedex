@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:rick_morty_app/models/app_user.dart';
 import 'package:rick_morty_app/models/quiz_types.dart';
+import 'package:rick_morty_app/services/auth_service.dart'; 
 import 'package:rick_morty_app/services/leaderboard_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,6 +22,17 @@ class QuizService {
     highScoreEasy.value = prefs.getInt(_keyEasy) ?? 0;
     highScoreMedium.value = prefs.getInt(_keyMedium) ?? 0;
     highScoreHard.value = prefs.getInt(_keyHard) ?? 0;
+
+    AuthService.instance.currentUser.addListener(_onUserChanged);
+  }
+
+  void _onUserChanged() {
+    final user = AuthService.instance.currentUser.value;
+    if (user != null) {
+      syncWithCloud(user);
+    } else {
+      resetLocalScores();
+    }
   }
 
   Future<void> resetLocalScores() async {
