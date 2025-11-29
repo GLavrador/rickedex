@@ -36,7 +36,7 @@ class LeaderboardService {
       await _db.collection('users').doc(user.id).update({
         fieldToUpdate: newScore,
       });
-      
+
       await AuthService.instance.init(); 
     }
   }
@@ -58,8 +58,9 @@ class LeaderboardService {
     try {
       final query = await _db
           .collection('users')
+          .where('isVerified', isEqualTo: true)
           .orderBy(orderByField, descending: true)
-          .limit(20) 
+          .limit(20)
           .get();
 
       return query.docs.map((doc) => AppUser.fromMap(doc.data())).toList();
