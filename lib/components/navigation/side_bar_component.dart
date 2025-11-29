@@ -102,6 +102,13 @@ class SideBarComponent extends StatelessWidget {
                       selected: _isRoute(context, QuizPage.routeId),
                       onTap: () => _goToNamed(context, QuizPage.routeId),
                     ),
+                    ListTile(
+                      leading: const Icon(Icons.emoji_events_outlined),
+                      title: const Text('Leaderboard'),
+                      dense: true,
+                      selected: _isRoute(context, LeaderboardPage.routeId),
+                      onTap: () => _goToNamed(context, LeaderboardPage.routeId),
+                    ),
 
                     const SectionLabel('Pages'),
                     
@@ -144,13 +151,6 @@ class SideBarComponent extends StatelessWidget {
                       dense: true,
                       selected: _isRoute(context, RandomPage.routeId),
                       onTap: () => _goToNamed(context, RandomPage.routeId),
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.emoji_events_outlined),
-                      title: const Text('Leaderboard'),
-                      dense: true,
-                      selected: _isRoute(context, LeaderboardPage.routeId),
-                      onTap: () => _goToNamed(context, LeaderboardPage.routeId),
                     ),
                   ],
                 ),
