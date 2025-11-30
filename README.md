@@ -2,91 +2,207 @@
 
 Um app Flutter que funciona como uma Pokédex do universo de Rick and Morty: é possível pesquisar, filtrar e descobrir personagens, episódios e localidades consumindo a The Rick and Morty API.
 
-> **Stack**: Flutter + Dart
+> **Stack**: Flutter + Dart + Firebase
 
-![Flutter](https://camo.githubusercontent.com/031659092e85df76a0ab830ef77631a750b67d379b29c24f7969ccbc2829743a/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f466c75747465722d3032353639423f7374796c653d666f722d7468652d6261646765266c6f676f3d666c7574746572266c6f676f436f6c6f723d7768697465)
-![Made with Dio](https://img.shields.io/badge/HTTP-Dio-informational)
+![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
+
+![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=white)
+
+![Dio](https://img.shields.io/badge/Dio-0076FF?style=for-the-badge&logo=flutter&logoColor=white)
 
 ---
 
 ## Índice
-- [Funcionalidades](#funcionalidades)
-  - [Personagens](#personagens)
-  - [Localidades](#localidades)
-  - [Episódios](#episódios)
-  - [APK](#apk)
-- [Navegação principal](#navegação-principal)
+- [Funcionalidades Principais](#funcionalidades-principais)
+  - [Dashboard & Navegação](#dashboard--navegação)
+  - [Gamificação (Quiz & Ranking)](#gamificação-quiz--ranking)
+  - [Autenticação & Perfil](#autenticação--perfil)
+  - [Wiki (Personagens, Locais, Episódios)](#wiki-personagens-locais-episódios)
+- [Utilidades](#utilidades)
+  - [Favoritos](#favoritos)
+  - [Random](#random)
+- [APK](#apk)
+- [Navegação Geral](#navegação-geral)
 - [Componentes & Arquitetura](#componentes--arquitetura)
   - [Estrutura do Projeto](#estrutura-do-projeto)
   - [Padrões adotados](#padrões-adotados)
 - [Busca & Filtros](#busca--filtros)
+- [Compatibilidade](#compatibilidade)
 - [Como rodar](#como-rodar)
 - [Build de APK (Android)](#build-de-apk-android)
-  - [Ícone do APK (personalizado)](#ícone-do-apk-personalizado)
 - [API](#api)
 
 ---
 
-## Funcionalidades Principais
+## Funcionalidades Principais 
 
-### Personagens
-- **Listagem** (scroll + paginação)
-- **Cards**: nome, imagem
-- **Detalhes**: 
-  - nome, imagem, espécie, gênero, status, origem, última localização, primeira aparição (episódio)
-  - imagem com gesto de puxar para expandir
-- **Busca** por nome (parcial ou completo)
-- **Filtros**: gênero, status, espécie
-- **Navegação**: de listagem → para detalhes
+### Dashboard & Navegação
+
+A tela inicial (Feed) é como um hub central para o aplicativo.
+
+- Visualização em Stacks: Pré-visualização de personagens, localidades, episódios e mídias em formato de pilhas.
+
+- Skeleton Loading: Carregamento para melhor experiência do usuário.
+
+- Pull-to-Refresh: Atualização de dados e cache.
+
+- Menu Lateral (Drawer): Navegação entre os módulos do app.
+
 <p>
-  <a href="docs/screens/characters_list.jpeg">
-    <img src="docs/screens/characters_list.jpeg" width="260" alt="Lista de personagens">
+  <a href="docs/screens/feed_page.png">
+    <img src="docs/screens/feed_page.png" width="260" alt="Página Principal">
   </a>
-  <a href="docs/screens/character_detailed.jpeg">
-    <img src="docs/screens/character_detailed.jpeg" width="260" alt="Detalhes do personagem">
+  <a href="docs/screens/feed_loading.png">
+    <img src="docs/screens/feed_loading.png" width="260" alt="Feed Refresh">
   </a>
-  <a href="docs/screens/character_search.jpeg">
-    <img src="docs/screens/character_search.jpeg" width="260" alt="Busca por personagem">
-  </a>
-  <a href="docs/screens/character_filter.jpeg">
-    <img src="docs/screens/character_filter.jpeg" width="260" alt="Filtros de personagem">
+  <a href="docs/screens/leaderboard_page.png">
+    <img src="docs/screens/leaderboard_page.png" width="260" alt="Página Principal">
   </a>
 </p>
 
-### Localidades
-- **Listagem** (scroll + paginação)
-- **Cards**: tipo, dimensão, número de residentes
-- **Detalhes**: alguns moradores da localidade
-- **Navegação**: de listagem → para detalhes
+### Gamificação (Quiz & Ranking)
+
+Teste seu conhecimento sobre a série e compita com outros usuários.
+
+- **Quiz Interdimensional**: Jogo de perguntas e respostas com 3 níveis de dificuldade:
+
+  - *Fácil*: Apenas nomes e espécie.
+
+  - *Médio*: Aumenta opções das perguntas de nome e espécie, e adiciona questões sobre status de vida e origem.
+
+  - *Difícil*: Máximo de opções para nome e espécie, perguntas sobre status de vida, origem, primeiro episódio a aparecer e em quantos episódios participou.
+
+- **Leaderboard Global**: Ranking sincronizado com Firestore.
+
+  - Filtro por dificuldade (Easy, Medium, Hard).
+
+  - Destaque para o Top 3 (ouro, prata, bronze).
+
+  - *Regra de Negócio*: Apenas usuários com e-mail verificado aparecem no ranking.
+
 <p>
-  <a href="docs/screens/locations_list.jpeg">
-    <img src="docs/screens/locations_list.jpeg" width="260" alt="Lista de localidades">
+  <a href="docs/screens/quiz_page.png">
+    <img src="docs/screens/quiz_page.png" width="260" alt="Página de Quiz">
   </a>
-  <a href="docs/screens/location_detailed.jpeg">
-    <img src="docs/screens/location_detailed.jpeg" width="260" alt="Detalhes da localidade">
+  <a href="docs/screens/quiz_difficulties.png">
+    <img src="docs/screens/quiz_difficulties.png" width="260" alt="Dificuldades do Quiz">
   </a>
-  <a href="docs/screens/location_search.jpeg">
-    <img src="docs/screens/location_search.jpeg" width="260" alt="Busca de localidade">
+  <a href="docs/screens/leaderboard_page.png">
+    <img src="docs/screens/leaderboard_page.png" width="260" alt="Página de Ranking">
   </a>
 </p>
 
-### Episódios
-- **Listagem** (scroll + paginação)
-- **Cards**: nome, código
-- **Detalhes**: data de exibição
-- **Filtro**: temporada
-- **Navegação**: de listagem → para detalhes
+### Autenticação & Perfil
+
+Sistema de gestão de usuários integrado ao Firebase.
+
+- Login e Cadastro: Criação de conta com e-mail/senha e nickname único.
+
+- Segurança: Verificação de e-mail e recuperação de senha.
+
+- Cloud Sync: Sincronização automática de recordes (High Scores) entre dispositivos. Os pontos locais são migrados para a nuvem ao criar a conta.
+
+- Perfil: Gestão de conta, visualização de status e logout seguro.
+
 <p>
-  <a href="docs/screens/episodes_list.jpeg">
-    <img src="docs/screens/episodes_list.jpeg" width="260" alt="Lista de localidades">
+  <a href="docs/screens/login_page.png">
+    <img src="docs/screens/login_page.png" width="260" alt="Login">
   </a>
-  <a href="docs/screens/episode_filter.jpeg">
-    <img src="docs/screens/episode_filter.jpeg" width="260" alt="Detalhes da localidade">
+  <a href="docs/screens/register_page.png">
+    <img src="docs/screens/register_page.png" width="260" alt="Registro">
   </a>
-  <a href="docs/screens/episode_detailed.jpeg">
-    <img src="docs/screens/episode_detailed.jpeg" width="260" alt="Busca de localidade">
+  <a href="docs/screens/new_account.png">
+    <img src="docs/screens/new_account.png" width="260" alt="Nova Conta">
+  </a>
+  <a href="docs/screens/profile_page.png">
+    <img src="docs/screens/profile_page.png" width="260" alt="Página de Perfil">
   </a>
 </p>
+
+### Wiki (Personagens, Locais, Episódios)
+
+O núcleo clássico do Rickedex, com exibição de todos os dados que a API proporciona.
+
+- **Personagens:** Listagem com paginação, cards, busca e filtros (espécie, status, gênero).
+
+- **Detalhes de personagem:** Exibição de dados específicos: status de vida, espécie, gênero, última localização, primeira aparição, origem e número de episódios.
+
+<p>
+  <a href="docs/screens/characters_page.png">
+    <img src="docs/screens/characters_page.png" width="260" alt="Página de Personagens">
+  </a>
+  <a href="docs/screens/character_detailed.png">
+    <img src="docs/screens/character_detailed.png" width="260" alt="Detalhes do personagem">
+  </a>
+  <a href="docs/screens/character_search.png">
+    <img src="docs/screens/character_search.png" width="260" alt="Busca por personagem">
+  </a>
+  <a href="docs/screens/character_filter.png">
+    <img src="docs/screens/character_filter.png" width="260" alt="Filtros de personagem">
+  </a>
+</p>
+
+- **Localidades:** Listagem com paginação, cards e filtro por dimensão integrado à navegação da página principal.
+
+- **Detalhes de localidades:** Exibição de dados específicos: tipo, dimensão, número de residentes e lista de residentes.
+
+<p>
+  <a href="docs/screens/locations_page.png">
+    <img src="docs/screens/locations_page.png" width="260" alt="Página de Localidades">
+  </a>
+  <a href="docs/screens/location_detailed.png">
+    <img src="docs/screens/location_detailed.png" width="260" alt="Detalhes da localidade">
+  </a>
+  <a href="docs/screens/location_search.png">
+    <img src="docs/screens/location_search.png" width="260" alt="Busca por localidade">
+  </a>
+  <a href="docs/screens/location_filter.png">
+    <img src="docs/screens/location_filter.png" width="260" alt="Filtros de localidade">
+  </a>
+</p>
+
+- **Episódios:** Listagem de episódios, cards e filtro por temporada integrado à página principal.
+
+- **Detalhes de episódios:** Exibição de dados específicos: data de lançamento e personagens presentes.
+
+<p>
+  <a href="docs/screens/episodes_page.png">
+    <img src="docs/screens/episodes_page.png" width="260" alt="Página de Localidades">
+  </a>
+  <a href="docs/screens/episode_detailed.png">
+    <img src="docs/screens/episode_detailed.png" width="260" alt="Detalhes da localidade">
+  </a>
+  <a href="docs/screens/episode_search.png">
+    <img src="docs/screens/episode_search.png" width="260" alt="Busca por localidade">
+  </a>
+  <a href="docs/screens/episode_filter.png">
+    <img src="docs/screens/episode_filter.png" width="260" alt="Filtros de localidade">
+  </a>
+</p>
+
+## Utilidades
+
+Páginas extra com novas funções que enriquecem a experiência de explorar o universo do Rick and Morty.
+
+- **Favoritos:** Salva os personagens preferidos localmente, com exibição na barra lateral de navegação.
+
+<p>
+<a href="docs/screens/favorites_page.png">
+    <img src="docs/screens/favorites_page.png" width="260" alt="Página de Favoritos">
+  </a>
+</p>
+
+- **Random:** Página que randomiza um personagem dentre todos presentes na API, com card clicável para levar à página de detalhes.
+
+<p>
+    <a href="docs/screens/random_page.png">
+    <img src="docs/screens/random_page.png" width="260" alt="Página de Personagens Aleatórios">
+  </a>
+  <a href="docs/screens/random_char.png">
+    <img src="docs/screens/random_char.png" width="260" alt="Personagem aleatório gerado">
+  </a>
+</p>
+
 
 ### APK
 - **Ícone personalizado** no APK
@@ -96,74 +212,60 @@ Um app Flutter que funciona como uma Pokédex do universo de Rick and Morty: é 
   </a>
 </p>
 
-### Favoritos
-- **Página**: presente na sidebar
-- **Cards**: nome e imagem
-- **Ícone**: coração clicável sobre imagem dos cards
-<p>
-    <a href="docs/screens/sidebar_favorites.jpeg">
-    <img src="docs/screens/sidebar_favorites.jpeg" width="260" alt="Sidebar com Favoritos">
-  </a>
-  <a href="docs/screens/favorites_page.jpeg">
-    <img src="docs/screens/favorites_page.jpeg" width="260" alt="Página de Favoritos">
-  </a>
-</p>
 
-### Random
-- **Página**: presente na sidebar
-- **Cards**: nome e imagem
-- **Função**: botão clicável para randomizar um dentre todos os personagens presentes na API
-<p>
-    <a href="docs/screens/sidebar.jpeg">
-    <img src="docs/screens/sidebar.jpeg" width="260" alt="Sidebar com Favoritos">
-  </a>
-  <a href="docs/screens/random_char_example.jpeg">
-    <img src="docs/screens/random_char_example.jpeg" width="260" alt="Página de Favoritos">
-  </a>
-</p>
 
 > Todas as funcionalidades acima estão implementadas e integradas à UI.
 
 ---
 
-## Navegação principal
+## Navegação geral
 
-- **Home/Characters**: listagem de personagens + barra de busca + filtro (ícone de funil ao lado da busca)
-- **Detalhes do Personagem**: card expandido com metadados completos e imagem expansível
-- **Locations**: listagem de localidades + barra de busca
-- **Detalhes de Localidades**: card expandido com metadados completos
-- **Episodes**: listagem de episódios + barra de busca + filtro (ícone de funil ao lado da busca)
-- **Detalhes do Episódios**: card expandido com metadados completos
-- **Favoritos**: listagem de personagens favoritos previamente marcados
 - **Navegação Cruzada**: clicar em um local, episódio ou personagem dentro de um card leva ao card de detalhes específico referente ao selecionado.
+- **Home**: listagem com imagens de páginas e funções do aplicativo.
+- **Quiz**: quiz com 3 níveis de dificuldade + record.
+- **Leaderboard**: exibição dos maiores 20 recordes de cada dificuldade do quiz.
+- **Characters**: listagem de personagens + barra de busca + filtro.
+- **Detalhes do Personagem**: card expandido com metadados completos e imagem expansível.
+- **Locations**: listagem de localidades + barra de busca + filtro.
+- **Detalhes de Localidades**: card expandido com metadados completos
+- **Episodes**: listagem de episódios + barra de busca + filtro.
+- **Detalhes do Episódios**: card expandido com metadados completos
+- **Favoritos**: listagem de personagens favoritos previamente marcados.
+- **Random**: botão para gerar personagem aleatório.
+- **Profile sem conta**: opção de login ou registro.
+- **Profile com conta**: exibição do e-mail, nick e recordes + opção de logout.
+
 
 ---
-## Componentes & Arquitetura
+## Arquitetura & Padrões
 
-### Estrutura do Projeto
+O projeto segue uma arquitetura limpa e modular:
+
+- **Service Pattern:** Lógica de negócios e comunicação com Firebase isolada em serviços (AuthService, QuizService, LeaderboardService).
+
+- **Repository Pattern:** Abstração da camada de dados HTTP (Repository) usando Dio.
+
+- **State Management:** Uso de ValueNotifier e ChangeNotifier para reatividade sem boilerplates em excesso.
+
+- **Controller Pattern:** Separação de lógica de UI (ex: QuizGameController) da visualização (QuizPage).
+
+- **Componentização:** UI quebrada em pequenos widgets reutilizáveis (AppConfirmationDialog, FeedImageStack, etc.).
+
+### Estrutura de Pastas
 
 ```text
 .
 ├── android/                                           # projeto Android nativo
 ├── ios/                                               # projeto iOS nativo
-├── assets/                                            # recursos estáticos do app
-│   └── images/                                        # imagens do app
+├── assets/                                            # recursos estáticos do app: imagens
 ├── lib/                                               # código-fonte principal (Flutter/Dart)
 │   ├── components/                                    # componentes reutilizáveis de UI
-│   │   ├── app_bar/                                   # barra de navegação superior
-│   │   ├── buttons/                                   # botões customizados
-│   │   ├── cards/                                     # cards simples (ex: personagem, episódio, localidade)
-│   │   ├── detailed_cards/                            # cards detalhados com informações completas
-│   │   ├── filters/                                   # componentes de filtro (ex: gênero, status, temporada)
-│   │   ├── grids/                                     # grades de exibição (ex: favoritos)
-│   │   ├── navigation/                                # elementos de navegação (ex: sidebar, paginação, searchbar)
-│   │   └── organization/                              # componentes organizacionais (ex: label de seção)
-│   ├── data/                                          # camada de acesso a dados (repositories, chamadas HTTP)
-│   ├── models/                                        # modelos de domínio e respostas da API (Character, Episode, etc)
-│   ├── pages/                                         # telas do app (home, detalhes, favoritos, etc)
-│   ├── services/                                      # serviços auxiliares (ex: favoritos)
+│   ├── data/                                          # camada de acesso a dados
+│   ├── models/                                        # modelos de domínio e respostas da API (character, episode, etc)
+│   ├── pages/                                         # telas do app 
+│   ├── services/                                      # serviços auxiliares (ex: favoritos, quiz)
 │   ├── theme/                                         # tema centralizado (cores, tipografia, imagens)
-│   ├── utils/                                         # utilitários/helpers (ex: id_from_url)
+│   ├── utils/                                         # utilitários/helpers (ex: id_from_url, quiz_generator)
 │   └── main.dart                                      # ponto de entrada, MaterialApp, rotas e tema
 ├── test/                                              # testes (não utilizado no momento)
 ├── .dart_tool/                                        # artefatos internos do Dart/Flutter (gerado)
@@ -179,24 +281,6 @@ Um app Flutter que funciona como uma Pokédex do universo de Rick and Morty: é 
 ├── README.md                                          # documentação do projeto
 └── rick_morty_app.iml                                 # arquivo de projeto da IDE
 ```
-
-### Padrões adotados
-- **Repository Pattern** para isolar chamadas **HTTP** (via **Dio**) aos endpoints `/character`, `/location`, `/episode`
-- **Paginação** baseada em parâmetros da API
-- **Componentização** de UI (cards, filtros, barras, etc.)
-- **Tema centralizado** (cores, tipografia, imagens)
-
----
-
-## Busca & Filtros
-
-- **Busca por nome**: aceita trechos/parciais (ex: `ric`, `mort`)
-- **Filtros de personagem**:
-  - **Gênero**: Male, Female, Genderless, Unknown
-  - **Status**: Alive, Dead, Unknown
-  - **Espécie**: Human, Alien, Humanoid, Robot, Mythological Creature, Cronenberg, Poopybutthole, Disease, Unknown
-- **Filtro por temporada (Episódios)**: por número da temporada
-
 ---
 
 ## Compatibilidade
@@ -205,16 +289,17 @@ Um app Flutter que funciona como uma Pokédex do universo de Rick and Morty: é 
 
 ---
 
-## Como rodar
+## Instalação
 
 Pré‑requisitos:
 - Flutter instalado (canal **stable**)
-- Android SDK / Emulador ou dispositivo físico (modo desenvolvedor)
-
-Instalação e execução:
+- Para compilar o projeto é preciso configurar um projeto no Firebase e adicionar o arquivo google-services.json (Android) ou GoogleService-Info.plist (iOS) na pasta nativa, pois eles não são versionados no Git.
 
 ```
+# 1. Instale as dependências
 flutter pub get
+
+# 2. Rode o projeto
 flutter run
 ```
 
@@ -222,18 +307,12 @@ flutter run
 
 ## Build de APK (Android)
 
-Gerar APK **release**:
+Para gerar o instalável:
 ```
 flutter build apk --release
 ```
 
 Se aparecer um aviso de **NDK** (ex: algum plugin exige versão maior), ajuste a versão no arquivo `android/app/build.gradle.kts`:
-
-```kts
-android {
-    ndkVersion = "27.0.12077973"
-}
-```
 
 O APK final ficará em:
 ```
@@ -241,19 +320,14 @@ build/app/outputs/flutter-apk/app-release.apk
 ```
 
 ### Ícone do APK (personalizado)
-O app já inclui um ícone customizado. Para trocar rapidamente:
+O app já inclui um ícone customizado. Para trocar:
 1. Substitua o arquivo **icon.png** (ícone) em **assets/images** e rode ```dart run flutter_launcher_icons:main```
-2. Ajuste o **nome do app** (opcional) em `android/app/src/main/AndroidManifest.xml` (`android:label`)
 
 ---
 
 ## API
 
 - Base: `https://rickandmortyapi.com/api`
-- Recursos utilizados: /character, /location, /episode
-- Parâmetros comuns: page, id, name, status, gender, species 
-
----
 
 - Dados por **The Rick and Morty API**
   - [https://rickandmortyapi.com/](https://rickandmortyapi.com/)

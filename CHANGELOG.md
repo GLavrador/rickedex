@@ -7,19 +7,21 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Unreleased]
 
+## [v2.0.0] - 2025-11-30
+
 ### Added
 - **Main Feed Page**: nova página inicial do app, com seções de Characters, Episodes, Locations, Favorites e Random.  
   Possui pré-visualizações em formato de pilhas (image stack e text stack) e layout remodulado.
-
-- **Location Page**: agora possui filtragem por dimensão.
-
-- **Quiz Page**: nova página de Quiz interativo com diferentes tipos de pergunta e níveis de dificuldade.
 
 - **Authentication System**: adição de cadastro e login. Contém verificação de e-mail e recuperação de senha.
 
 - **Profile Page**: nova tela de perfil com exibição dos recordes globais (High Scores).
 
+- **Quiz Page**: nova página de Quiz interativo com diferentes tipos de pergunta e níveis de dificuldade.
+
 - **Leaderboard Page**: nova tela de ranking global onde é possível visualizar os Top 20 jogadores por nível de dificuldade - apenas para usuários verificados.
+
+- **Location Page**: agora possui filtragem por dimensão.
 
 ## [v1.2.0] - 2025-09-17
 
