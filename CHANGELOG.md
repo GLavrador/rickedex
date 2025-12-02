@@ -7,6 +7,9 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Unreleased]
 
+### Added
+- **Auth**: adiciona confirmação de senha ao criar nova conta.
+
 ### Fixed
 - **Auth/Sync**: corrige inconsistência de dados no Perfil entre telas de perfil, quiz e leaderboard. Agora as informações sÃo atualizadas e refletidas em todo o app sempre que puxar para recarregar, mesmo se vindas de meio externo (como conta logada em outro dispositivo).
 
