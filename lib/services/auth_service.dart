@@ -1,8 +1,8 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rick_morty_app/models/app_user.dart';
-import 'package:rick_morty_app/services/quiz_service.dart';
 
 class AuthService {
   AuthService._();
@@ -28,13 +28,26 @@ class AuthService {
   Future<void> _fetchUserDetails(String uid) async {
     try {
       final doc = await _db.collection('users').doc(uid).get();
-      
       if (doc.exists) {
-        final user = AppUser.fromMap(doc.data()!);
-        currentUser.value = user;
+        var user = AppUser.fromMap(doc.data()!);
         
         await _auth.currentUser?.reload();
-        await QuizService.instance.overwriteLocalWithCloud(user);
+        final verified = _auth.currentUser?.emailVerified ?? false;
+
+        if (user.isVerified != verified) {
+          await _db.collection('users').doc(uid).update({'isVerified': verified});
+          user = AppUser(
+            id: user.id,
+            email: user.email,
+            nickname: user.nickname,
+            highScoreEasy: user.highScoreEasy,
+            highScoreMedium: user.highScoreMedium,
+            highScoreHard: user.highScoreHard,
+            isVerified: verified,
+          );
+        }
+
+        currentUser.value = user;
       }
     } catch (e) {
       debugPrint("Auth Error: $e");
@@ -91,24 +104,9 @@ class AuthService {
   }
 
   Future<void> reloadUser() async {
-    await _auth.currentUser?.reload();
-    final verified = _auth.currentUser?.emailVerified ?? false;
-    
-    final user = currentUser.value;
+    final user = _auth.currentUser;
     if (user != null) {
-      if (user.isVerified != verified) {
-        await _db.collection('users').doc(user.id).update({'isVerified': verified});
-      }
-
-      currentUser.value = AppUser(
-        id: user.id,
-        email: user.email,
-        nickname: user.nickname,
-        highScoreEasy: user.highScoreEasy,
-        highScoreMedium: user.highScoreMedium,
-        highScoreHard: user.highScoreHard,
-        isVerified: verified,
-      );
+      await _fetchUserDetails(user.uid);
     }
   }
 
@@ -118,6 +116,5 @@ class AuthService {
 
   Future<void> signOut() async {
     await _auth.signOut();
-    await QuizService.instance.resetLocalScores();
   }
 }
