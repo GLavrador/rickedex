@@ -7,6 +7,8 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Unreleased]
 
+## [v2.0.1] - 2025-12-02
+
 ### Added
 - **Auth**: adiciona confirmação de senha ao criar nova conta.
 
