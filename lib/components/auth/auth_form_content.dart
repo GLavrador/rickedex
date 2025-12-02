@@ -6,7 +6,7 @@ class AuthFormContent extends StatefulWidget {
     super.key,
     required this.isLoading,
     required this.onSubmit,
-    required this.onForgotPassword, 
+    required this.onForgotPassword,
   });
 
   final bool isLoading;
@@ -29,6 +29,7 @@ class _AuthFormContentState extends State<AuthFormContent> with SingleTickerProv
   
   final _emailCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
+  final _passConfirmCtrl = TextEditingController(); 
   final _nickCtrl = TextEditingController();
 
   static final _emailRegex = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
@@ -41,6 +42,7 @@ class _AuthFormContentState extends State<AuthFormContent> with SingleTickerProv
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) {
         _formKey.currentState?.reset();
+        _passConfirmCtrl.clear(); 
       }
     });
   }
@@ -122,6 +124,28 @@ class _AuthFormContentState extends State<AuthFormContent> with SingleTickerProv
             icon: Icons.lock_outline,
             isPass: true,
             validator: (v) => v!.length < 6 ? "Min 6 chars" : null,
+          ),
+
+          AnimatedBuilder(
+            animation: _tabController,
+            builder: (context, _) {
+              return _tabController.index == 1
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: _buildTextField(
+                        controller: _passConfirmCtrl,
+                        label: "Confirm Password",
+                        icon: Icons.lock_reset,
+                        isPass: true,
+                        validator: (v) {
+                          if (v == null || v.isEmpty) return 'Required';
+                          if (v != _passCtrl.text) return 'Passwords do not match';
+                          return null;
+                        },
+                      ),
+                    )
+                  : const SizedBox.shrink();
+            },
           ),
           
           AnimatedBuilder(
